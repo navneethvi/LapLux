@@ -1,0 +1,94 @@
+<%- include("../partials/adminHeader") %>
+
+<!-- <section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Users</h2>
+            
+        </div>
+       
+    </div>
+    <div class="card mb-4">
+        <header class="card-header">
+            <div class="row align-items-center">
+                <div class="col col-check flex-grow-0">
+                    <div class="form-check ms-2">
+                        
+                    </div>
+                </div>
+                
+                </div>
+             
+                
+            </div>
+        </header> card-header end// -->
+
+
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Customers</h2>
+                
+            </div>
+           
+        </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <div class="row align-items-center">
+                    <div class="col col-check flex-grow-0">
+                        <div class="form-check ms-2">
+                            
+                        </div>
+                    </div>
+                    
+                    </div>
+                 
+                    
+                </div>
+            </header> <!-- card-header end// -->
+
+
+            <div class="right mt-5">
+                <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col"><b>Name</b></th>
+                        <th scope="col"><b>Email</b></th>
+                        <th scope="col"><b>Phone No</b></th>
+                        <th scope="col"><b>Action</b></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i = 0; i < data.length; i++) { %>
+                            <tr>
+                                <td><%= data[i].name %></td>
+                                <td><%= data[i].email %></td>
+                                <td><%= data[i].phone %></td>
+                                <td> 
+                                   <% if (data[i].isBlocked === false) { %>
+                                        <button class="btn btn-danger">
+                                            <a href="/admin/blockCustomer?id=<%= data[i]._id %>" class="text-white" style="text-decoration: none;">Block</a>
+                                        </button>
+                                   <% } else { %>
+                                        <button class="btn btn-success">
+                                            <a href="/admin/unblockCustomer?id=<%= data[i]._id %>" class="text-white" style="text-decoration: none;">Unblock</a>
+                                        </button> 
+                                   <% } %>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                    
+                  </table>
+            </div>
+
+                
+               
+                
+            </div> <!-- card-body end// -->
+        </div> <!-- card end// -->
+      
+    </section>  -->
+</section> 
+
+
+<%- include("../partials/adminFooter") %>
