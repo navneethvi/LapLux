@@ -1,0 +1,87 @@
+<%- include("../partials/adminHeader") %>
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Brands </h2>
+            <p>Add, edit or delete a category</p>
+        </div>
+        <div>
+            <input type="text" placeholder="Search cat" class="form-control bg-white">
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <form method="post" action="/admin/addBrand" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label for="product_name" class="form-label">Brand Name</label>
+                            <input type="text" name="name" placeholder="Type here" class="form-control" />                      
+                          </div>
+                       
+                            <div class="input-upload">
+                                <img src="assets/imgs/theme/upload.svg" alt="">
+                                <input class="form-control border" name="image" type="file">
+                            </div>
+                        
+                        <div class="d-grid">
+                            <button class="btn btn-primary" type="submit">Add Brand</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-7 ml-105">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                  
+                                  
+                                    <th> Brand</th>
+                                    <th>Status</th>
+                                    <th>Block/Unblock</th>
+                                 
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(let i = 0; i < data.length; i++) { %>
+                                  <tr>
+                                    
+                                    <td class="text-start"><%= data[i].brandName %></td>
+                                    
+                                    <td class="text-start">
+                                      <% if (data[i].isBlocked === true) { %>
+                                        <span class="badge rounded-pill alert-danger" style="width: 60px;">Blocked</span>
+                                      <% } else { %>
+                                        <span class="badge rounded-pill alert-success" style="width: 60px;">Active</span>
+                                      <% } %>
+                                    </td>
+                                    <td class="text-start">
+                                      <% if (data[i].isBlocked === false) { %>
+                                        <button class="btn btn-danger" style="width: 70px;">
+                                          <a href="/admin/listCategory?id=<%= data[i]._id %>" class="text-white">Block</a>
+                                        </button>
+                                      <% } else { %>
+                                        <button class="btn btn-success" style="width: 70px;">
+                                          <a href="/admin/unListCategory?id=<%= data[i]._id %>" class="text-white">Unblock</a>
+                                        </button>
+                                      <% } %>
+                                    </td>
+                                  </tr>
+                                <% } %>
+                              </tbody>
+                              
+                        </table>
+                        
+                    </div>
+                </div> <!-- .col// -->
+            </div> <!-- .row // -->
+        </div> <!-- card body .// -->
+    </div> <!-- card .// -->
+</section> <!-- content-main end// -->
+
+<%- include("../partials/adminFooter") %>
+
+
+
+

@@ -2,39 +2,58 @@ const express = require("express")
 const Router = express.Router()
 
 const adminController = require("../controllers/adminController")
+const customerController = require("../controllers/customerController")
+const categoryController = require("../controllers/categoryController")
+const productController = require("../controllers/productController")
+const brandController = require("../controllers/brandController")
 
 const {isAdmin} = require("../Authentication/auth")
 
-
+//Admin Actions
 Router.get("/login", adminController.getLoginPage)
 Router.post("/login", adminController.verifyLogin)
 Router.get("/logout", adminController.getLogout)
-
-//Admin actions
-
 Router.get("/",isAdmin, adminController.getDashboard)
-Router.get("/users",isAdmin, adminController.getCustomersInfo)
-Router.get("/category",isAdmin, adminController.getCategoryInfo)
-Router.post("/addCategory",isAdmin, adminController.addCategory)
-Router.get("/allCategory",isAdmin, adminController.getAllCategories)
-Router.get("/blockCustomer",isAdmin, adminController.getCustomerBlocked)
-Router.get("/unblockCustomer",isAdmin, adminController.getCustomerUnblocked)
-Router.get("/listCategory", adminController.getListCategory)
-Router.get("/unListCategory", adminController.getUnlistCategory)
-Router.get("/editCategory", adminController.getEditCategory)
-Router.post("/editCategory/:id", adminController.editCategory)
 
+//Category Management
+Router.get("/category",isAdmin, categoryController.getCategoryInfo)
+Router.post("/addCategory",isAdmin, categoryController.addCategory)
+Router.get("/allCategory",isAdmin, categoryController.getAllCategories)
+Router.get("/listCategory", categoryController.getListCategory)
+Router.get("/unListCategory", categoryController.getUnlistCategory)
+Router.get("/editCategory", categoryController.getEditCategory)
+Router.post("/editCategory/:id", categoryController.editCategory)
 
-//Product Management
+//Customer Management
+Router.get("/users",isAdmin, customerController.getCustomersInfo)
+Router.get("/blockCustomer",isAdmin, customerController.getCustomerBlocked)
+Router.get("/unblockCustomer",isAdmin, customerController.getCustomerUnblocked)
 
+// Multer Settings
 const multer = require("multer")
 const storage = require("../helpers/multer")
 const upload = multer({storage : storage})
-Router.use(express.static("public"))
-Router.use("/uploads", express.static("uploads"))
+Router.use("/public/uploads", express.static("/public/uploads"))
+
+//Brand Management
+Router.get("/brands", brandController.getBrandPage)
+Router.post("/addBrand",upload.single('image'), brandController.addBrand)
+Router.get("/allBrands", brandController.getAllBrands)
+
+//Product Management
+Router.get("/addProducts", productController.getProductAddPage)
+Router.post("/addProducts", upload.array("image",5),productController.addProducts)
 
 
-Router.get("/addProducts", adminController.getProductAddPage)
-Router.post("/addProducts", upload.array("images"))
+
+
+
+
+
+
+
+
+
+
 
 module.exports = Router

@@ -1,11 +1,7 @@
 const Mongoose = require("mongoose")
 
 const productSchema = Mongoose.Schema({
-    id : {
-        type : Number,
-        required : true,
-        unique : true,
-    },
+
     productName : {
         type : String,
         required : true,
@@ -32,10 +28,6 @@ const productSchema = Mongoose.Schema({
     },
     createdOn : {
         type : String,
-        required : true,
-    },
-    stock : {
-        type : Boolean,
         required : true,
     },
     quantity : {
