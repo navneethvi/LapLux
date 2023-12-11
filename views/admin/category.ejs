@@ -36,14 +36,12 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">
-                                        <!-- <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" />
-                                        </div> -->
                                     </th>
                                     <th>Name</th>
                                     <th>Description</th>
                                     <th>Status</th>
-                                    <th class="text-end">List/Unlist</th>
+                                    <th>List/Unlist</th>
+                                    <th class="text-start">Edit</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,28 +50,31 @@
                                         <td>
                                             <!-- Content for the first column, if needed -->
                                         </td>
-                                        <td><%= cat[i].name %></td>
-                                        <td><%= cat[i].description %></td>
-                                        <td>
+                                        <td class="text-start"><%= cat[i].name %></td>
+                                        <td class="text-start"><%= cat[i].description %></td>
+                                        <td class="text-start">
                                             <% if (cat[i].isListed === true) { %>
-                                                <span class="badge rounded-pill alert-success">Listed</span>
+                                                <span class="badge rounded-pill alert-success" style="width: 60px;">Listed</span>
                                             <% } else { %>
-                                                <span class="badge rounded-pill alert-danger">Unlisted</span>
+                                                <span class="badge rounded-pill alert-danger" style="width: 60px;">Unlisted</span>
                                             <% } %>
                                         </td>                                        
-                                       
-                                        <td class="text-end">
+                                        <td class="text-start">
                                             <% if (cat[i].isListed === true) { %>
-                                                <button class="btn btn-success">
+                                                <button class="btn btn-success" style="width: 70px;">
                                                     <a href="/admin/listCategory?id=<%= cat[i]._id %>" class="text-white">List</a>
                                                 </button>
                                             <% } else { %>
-                                                <button class="btn btn-danger">
+                                                <button class="btn btn-danger" style="width: 70px;">
                                                     <a href="/admin/unListCategory?id=<%= cat[i]._id %>" class="text-white">Unlist</a>
                                                 </button>
                                             <% } %>
                                         </td>
-                                        
+                                        <td class="text-start">
+                                            <button class="btn btn-info">
+                                                <a href="/admin/editCategory?id=<%= cat[i]._id %>" class="text-white">Edit</a>
+                                            </button>
+                                        </td>
                                     </tr>
                                 <% } %>
                             </tbody>

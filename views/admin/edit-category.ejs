@@ -1,0 +1,36 @@
+<%- include("../partials/adminHeader") %>
+
+
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mt-60">
+            <form method="post" action="/admin/editCategory/<%= category._id %>">
+                <div class="d-grid text-end mt-30 col-md-5">
+                    <button class="btn btn-primary" type="submit">Update category</button>
+                </div>
+                <div class="mb-4 mt-30">
+                    <label for="product_name" class="form-label">Name</label>
+                    <input type="text" name="categoryName" value="<%= category.name %>" class="form-control border" />
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control border"><%= category.description %></textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+      
+
+
+<script>
+    function hai(){
+     alert("HI")
+    }
+ </script>
+
+<%- include("../partials/adminFooter") %>

@@ -162,6 +162,39 @@ const getUnlistCategory = async (req, res)=>{
 }
 
 
+const getEditCategory = async (req, res)=>{
+    try{
+        const id = req.query.id
+        const category = await Category.findOne({_id : id})
+        res.render("edit-category", {category : category})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const editCategory = async (req, res)=>{
+    try {
+        const id = req.params.id
+        const {categoryName, description} = req.body
+        const findCategory = await Category.find({_id : id})
+        if(findCategory){
+            await Category.updateOne(
+                {_id : id},
+                {
+                name : categoryName,
+                description : description
+                })
+            res.redirect("/admin/category")
+        }else{
+            console.log("Category not found");
+        }
+      
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 
@@ -196,7 +229,6 @@ const addProducts = async (req, res)=>{
 
 
 
-
 module.exports = {
     getDashboard,
     getLoginPage,
@@ -205,6 +237,7 @@ module.exports = {
     getCustomersInfo,
     getCustomerBlocked,
     getCustomerUnblocked,
+    getEditCategory,
   
 
     //category
@@ -213,6 +246,7 @@ module.exports = {
     getAllCategories,
     getListCategory,
     getUnlistCategory,
+    editCategory,
 
 
     //product

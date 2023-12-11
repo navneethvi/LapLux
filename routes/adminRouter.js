@@ -21,6 +21,8 @@ Router.get("/blockCustomer",isAdmin, adminController.getCustomerBlocked)
 Router.get("/unblockCustomer",isAdmin, adminController.getCustomerUnblocked)
 Router.get("/listCategory", adminController.getListCategory)
 Router.get("/unListCategory", adminController.getUnlistCategory)
+Router.get("/editCategory", adminController.getEditCategory)
+Router.post("/editCategory/:id", adminController.editCategory)
 
 
 //Product Management
