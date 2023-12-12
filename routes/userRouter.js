@@ -18,4 +18,6 @@ Router.get("/logout", userController.getLogoutUser)
 //user profile
 Router.get("/profile",isLogged, userController.getUserProfile)
 
+Router.get("/productDetails", userController.getProductDetailsPage)
+
 module.exports = Router

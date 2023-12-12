@@ -216,6 +216,18 @@ const getLogoutUser = async (req, res)=>{
 }
 
 
+const getProductDetailsPage = async (req, res)=>{
+    try {
+        console.log("wrking");
+        const id = req.query.id
+        console.log(id);
+        const findProduct = await Product.find({id : id});
+        res.render("product-details", {data : findProduct})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 
@@ -225,8 +237,10 @@ module.exports = {
     getLoginPage,
     getSignupPage,
     signupUser,
+    getOtpPage,
     verifyOtp,
     userLogin,
     getUserProfile,
-    getLogoutUser
+    getLogoutUser,
+    getProductDetailsPage
 }

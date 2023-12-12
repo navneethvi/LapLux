@@ -58,7 +58,44 @@ const addProducts = async (req, res) => {
 }
 
 
+const getAllProducts = async (req, res)=>{
+    try {
+        const productData = await Product.find({})
+        res.render("products", {data : productData})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const getBlockProduct = async (req, res)=>{
+    try {
+        let id = req.query.id
+        await Product.updateOne({_id : id}, {$set : {isBlocked : true}})
+        console.log("product blocked")
+        res.redirect("/admin/products")
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const getUnblockProduct = async (req, res)=>{
+    try {
+        let id = req.query.id
+        await Product.updateOne({_id : id}, {$set : {isBlocked : false}})
+        console.log("product unblocked")
+        res.redirect("/admin/products")
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
 module.exports = {
     getProductAddPage,
-    addProducts
+    addProducts,
+    getAllProducts,
+    getBlockProduct,
+    getUnblockProduct
 }

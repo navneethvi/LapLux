@@ -1,0 +1,73 @@
+<%- include("../partials/adminHeader") %>
+
+
+<div class="content-header">
+    <div>
+        <h2 class="content-title card-title">Products</h2>
+        
+    </div>
+   
+</div>
+<div class="card mb-4">
+    <header class="card-header">
+        <div class="row align-items-center">
+            <div class="col col-check flex-grow-0">
+                <div class="form-check ms-2">
+                    
+                </div>
+            </div>
+            
+            </div>
+         
+            
+        </div>
+    </header> <!-- card-header end// -->
+
+
+    <div class="right mt-5">
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col"><b>Product name</b></th>
+                <th scope="col"><b>Brand</b></th>
+                <th scope="col"><b>Category</b></th>
+                <th scope="col"><b>Sale Price</b></th>
+                <th scope="col"><b>Action</b></th>
+              </tr>
+            </thead>
+            <tbody>
+                <% for(let i = 0; i < data.length; i++) { %>
+                    <tr>
+                        <td><%= data[i].productName %></td>
+                        <td><%= data[i].brand %></td>
+                        <td><%= data[i].category %></td>
+                        <td>₹<%= data[i].salePrice %></td>
+                        
+                        <td> 
+                           <% if (data[i].isBlocked === false) { %>
+                                <button class="btn btn-danger" style="width: 80px;">
+                                    <a href="/admin/blockProduct?id=<%= data[i]._id %>" class="text-white" style="text-decoration: none;">Block</a>
+                                </button>
+                           <% } else { %>
+                                <button class="btn btn-success" style="width: 80px;">
+                                    <a href="/admin/unBlockProduct?id=<%= data[i]._id %>" class="text-white" style="text-decoration: none;">Unblock</a>
+                                </button> 
+                           <% } %>
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+            
+          </table>
+    </div>
+
+        
+       
+        
+    </div> <!-- card-body end// -->
+</div> <!-- card end// -->
+
+</section>  -->
+</section> 
+
+<%- include("../partials/adminFooter") %>
