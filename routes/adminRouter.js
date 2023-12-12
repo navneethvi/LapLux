@@ -39,10 +39,12 @@ Router.use("/public/uploads", express.static("/public/uploads"))
 Router.get("/brands", brandController.getBrandPage)
 Router.post("/addBrand",upload.single('image'), brandController.addBrand)
 Router.get("/allBrands", brandController.getAllBrands)
+Router.get("/blockBrand", brandController.blockBrand)
+Router.get("/unBlockBrand", brandController.unBlockBrand)
 
 //Product Management
 Router.get("/addProducts", productController.getProductAddPage)
-Router.post("/addProducts", upload.array("image",5),productController.addProducts)
+Router.post("/addProducts", upload.array("images",5),productController.addProducts)
 
 
 

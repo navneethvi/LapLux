@@ -20,10 +20,11 @@
                             <div class="col-lg-4 mb-4">
                                 <label class="form-label">Brand</label>
                                 <select class="form-select border" name="brand">
-                                    <option> ASUS </option>
-                                    <option> APPLE </option>
-                                    <option> DELL </option>
-                                </select>
+                                    <% for (let i = 0; i < brand.length; i++) { %>
+                                        <option value="<%=brand[i].brandName %>"> <%= brand[i].brandName %> </option>
+                                    <% } %>
+                                  </select>
+                                  
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Full description</label>
@@ -79,7 +80,7 @@
                                             <label class="form-label">Category</label>
                                             <select class="form-select border" style="width: 150px;" name="category">
                                                 <% for (let i = 0; i < cat.length; i++) { %>
-                                                    <option value="<%= cat[i]._id %>"> <%= cat[i].name %> </option>
+                                                    <option value="<%= cat[i].name %>"> <%= cat[i].name %> </option>
                                                 <% } %>
                                             </select>
                                         </div>            

@@ -1,6 +1,8 @@
 const nodemailer = require("nodemailer")
 const bcrypt = require("bcrypt");
 const User = require("../models/userSchema");
+const Brand = require("../models/brandSchema")
+const Product = require("../models/productSchema")
 
 
 
@@ -20,7 +22,16 @@ const securePassword = async (password) => {
 
 const getHomePage = async (req, res) => {
     try {
-        res.render("home")
+        const user = req.session.user
+        const userData = await User.findOne({})
+        const brandData = await Brand.find({isBlocked : false})
+        const productData = await Product.find({isBlocked : false})
+        if(user){
+            res.render("home", {user : userData, data : brandData, products : productData})
+        }else{
+            res.render("home", {data : brandData, products : productData})
+        }
+       
     } catch (error) {
         console.log(error.message)
     }
@@ -180,12 +191,30 @@ const userLogin = async (req, res) => {
 
 const getUserProfile = async (req, res)=>{
     try {
+        const user = req.session.user
+        const userData = await User.findOne({})
         console.log("wrking");
-        res.render("profile")
+        res.render("profile", {user : userData})
     } catch (error) {
         console.log(error.message);
     }
 }
+
+
+const getLogoutUser = async (req, res)=>{
+    try {
+        req.session.destroy((err)=>{
+            if (err) {
+                console.log(err.message);
+            }
+            console.log("Logged out");
+            res.redirect("/login")
+        })
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 
@@ -199,4 +228,5 @@ module.exports = {
     verifyOtp,
     userLogin,
     getUserProfile,
+    getLogoutUser
 }

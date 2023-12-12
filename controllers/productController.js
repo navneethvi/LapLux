@@ -1,12 +1,14 @@
 const Product = require("../models/productSchema")
 const Category = require("../models/categorySchema")
+const Brand = require("../models/brandSchema")
 
 
 
 const getProductAddPage = async (req, res) => {
     try {
         const category = await Category.find({isListed : true})
-        res.render("product-add", {cat : category})
+        const brand = await Brand.find({isBlocked : false})
+        res.render("product-add", {cat : category, brand : brand})
     } catch (error) {
         console.log(error.message);
     }
@@ -24,10 +26,12 @@ const addProducts = async (req, res) => {
             const images = []
             if (req.files && req.files.length > 0) {
                 for (let i = 0; i < req.files.length; i++) {
-                    images.push(req.files[i].filename)
+                    images.push(req.files[i].filename);
                 }
             }
+            
             const newProduct = new Product({
+                id : Date.now(),
                 productName : products.productName,
                 description : products.description,
                 brand : products.brand,
@@ -39,7 +43,7 @@ const addProducts = async (req, res) => {
                 size : products.size,
                 color : products.color,
                 processor : products.processor,
-                images : images
+                productImage : images
             })
             await newProduct.save()
             // res.redirect("/admin/products")
@@ -52,6 +56,7 @@ const addProducts = async (req, res) => {
         console.log(error.message);
     }
 }
+
 
 module.exports = {
     getProductAddPage,

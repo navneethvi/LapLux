@@ -19,14 +19,15 @@
                             <label for="product_name" class="form-label">Brand Name</label>
                             <input type="text" name="name" placeholder="Type here" class="form-control" />                      
                           </div>
-                       
+                          <label for="product_name" class="form-label">Brand Image</label>
                             <div class="input-upload">
+                              
                                 <img src="assets/imgs/theme/upload.svg" alt="">
                                 <input class="form-control border" name="image" type="file">
                             </div>
                         
                         <div class="d-grid">
-                            <button class="btn btn-primary" type="submit">Add Brand</button>
+                            <button class="btn btn-primary mt-20" type="submit">Add Brand</button>
                         </div>
                     </form>
                 </div>
@@ -38,6 +39,7 @@
                                   
                                   
                                     <th> Brand</th>
+                                    <th>Logo</th>
                                     <th>Status</th>
                                     <th>Block/Unblock</th>
                                  
@@ -50,6 +52,12 @@
                                     <td class="text-start"><%= data[i].brandName %></td>
                                     
                                     <td class="text-start">
+                                      <div class="d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden;">
+                                        <img src="/uploads/brand-images/<%= data[i].brandImage[0] %>" alt="<%= data[i].brandName %>" class="img-fluid rounded-circle" style="width: 100%; height: auto;">
+                                      </div>
+                                    </td>
+
+                                    <td class="text-start">
                                       <% if (data[i].isBlocked === true) { %>
                                         <span class="badge rounded-pill alert-danger" style="width: 60px;">Blocked</span>
                                       <% } else { %>
@@ -58,12 +66,12 @@
                                     </td>
                                     <td class="text-start">
                                       <% if (data[i].isBlocked === false) { %>
-                                        <button class="btn btn-danger" style="width: 70px;">
-                                          <a href="/admin/listCategory?id=<%= data[i]._id %>" class="text-white">Block</a>
+                                        <button class="btn btn-danger" style="width: 90px;">
+                                          <a href="/admin/blockBrand?id=<%= data[i]._id %>" class="text-white">Block</a>
                                         </button>
                                       <% } else { %>
-                                        <button class="btn btn-success" style="width: 70px;">
-                                          <a href="/admin/unListCategory?id=<%= data[i]._id %>" class="text-white">Unblock</a>
+                                        <button class="btn btn-success" style="width: 90px;">
+                                          <a href="/admin/unBlockBrand?id=<%= data[i]._id %>" class="text-white">Unblock</a>
                                         </button>
                                       <% } %>
                                     </td>

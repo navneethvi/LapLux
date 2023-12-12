@@ -13,6 +13,7 @@ Router.post("/login", userController.userLogin)
 Router.get("/signup", userController.getSignupPage)
 Router.post("/verify-otp", userController.verifyOtp)
 Router.post("/signup", userController.signupUser)
+Router.get("/logout", userController.getLogoutUser)
 
 //user profile
 Router.get("/profile",isLogged, userController.getUserProfile)
