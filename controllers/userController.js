@@ -1,8 +1,10 @@
 const nodemailer = require("nodemailer")
+const Mongoose = require("mongoose")
 const bcrypt = require("bcrypt");
 const User = require("../models/userSchema");
 const Brand = require("../models/brandSchema")
-const Product = require("../models/productSchema")
+const Product = require("../models/productSchema");
+const { Db } = require("mongodb");
 
 
 
@@ -191,8 +193,9 @@ const userLogin = async (req, res) => {
 
 const getUserProfile = async (req, res)=>{
     try {
-        const user = req.session.user
-        const userData = await User.findOne({})
+        const userId = req.session.user
+        console.log(userId);
+        const userData = await User.findOne({ userId });
         console.log("wrking");
         res.render("profile", {user : userData})
     } catch (error) {
@@ -222,6 +225,7 @@ const getProductDetailsPage = async (req, res)=>{
         const id = req.query.id
         console.log(id);
         const findProduct = await Product.find({id : id});
+        console.log(findProduct);
         res.render("product-details", {data : findProduct})
     } catch (error) {
         console.log(error.message);
