@@ -23,6 +23,11 @@
             <div class="text-muted text-center pt-25">
                 <a href="/resend-otp">Resend OTP</a>
             </div>
+            <% if (locals.message&&message.length>0) { %>
+                <div class="alert alert-danger">
+                    <%= message %>
+                </div>
+                <% } %>
         </form>
 
         <div class="text-muted text-center pt-25">

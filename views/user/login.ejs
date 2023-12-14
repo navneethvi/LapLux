@@ -49,9 +49,9 @@
                                 <button type="submit" class="btn btn-primary w-100"> Login </button>
                             </div>
                             <!-- Display flash messages -->
-                            <% if (messages.error) { %>
+                            <% if (locals.message&&message.length>0) { %>
                                 <div class="alert alert-danger">
-                                    <%= messages.error %>
+                                    <%= message %>
                                 </div>
                                 <% } %>
 

@@ -118,6 +118,7 @@ const signupUser = async (req, res) => {
     }
 }
 
+
 // render the OTP verification page
 
 const getOtpPage = async (req, res) => {
@@ -152,7 +153,8 @@ const verifyOtp = async (req, res) => {
 
             res.redirect("/")
         } else {
-            res.json("Otp not matching")
+            res.render("verify-otp", {message : "Otp not matching"})
+            console.log("otp not matching");
         }
 
     } catch (error) {
@@ -186,8 +188,7 @@ const userLogin = async (req, res) => {
             console.log("User is blocked by admin");
         }
     } catch (error) {
-        console.log(error.message);
-        res.json("error in user login")
+        res.render("login", {message : "LOgin failed"})
     }
 }
 

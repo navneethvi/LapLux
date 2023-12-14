@@ -61,7 +61,8 @@ const addProducts = async (req, res) => {
 const getEditProduct = async (req, res)=>{
     try {
         const id = req.query.id
-        const findProduct = await Product.findOne({id : id})
+        const findProduct = await Product.findOne({_id : id})
+        // console.log(findProduct);
         const category = await Category.find({})
         const findBrand = await Brand.find({})
         res.render("edit-product", {product : findProduct, cat : category, brand : findBrand})
@@ -71,9 +72,26 @@ const getEditProduct = async (req, res)=>{
 }
 
 
-const editProduct = async (req, res)=>{
+// const editProduct = async (req, res)=>{
+//     try {
+//         const id = req.params.id
+//         const {productName} = req.body
+//         console.log(id);
+//         console.log(productName);
+//         const findProduct = await Product.findOne({_id : id})
+//         await findProduct.updateOne({
+            
+//         })
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+// }
+
+
+const editProduct = async (req, res) => {
     try {
-        
+        console.log(req.body);
+        // ... rest of your code
     } catch (error) {
         console.log(error.message);
     }
@@ -120,5 +138,6 @@ module.exports = {
     getAllProducts,
     getBlockProduct,
     getUnblockProduct,
-    getEditProduct
+    getEditProduct,
+    editProduct
 }
