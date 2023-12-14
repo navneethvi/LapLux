@@ -33,6 +33,7 @@
                 <th scope="col"><b>Category</b></th>
                 <th scope="col"><b>Sale Price</b></th>
                 <th scope="col"><b>Action</b></th>
+                <th scope="col"><b>Edit</b></th>
               </tr>
             </thead>
             <tbody>
@@ -54,6 +55,11 @@
                                 </button> 
                            <% } %>
                         </td>
+                     <td>
+                        <button class="btn btn-info" style="width: 80px;">
+                            <a href="/admin/editProduct?id=<%= data[i]._id %>" class="text-white" style="text-decoration: none;">Edit</a>
+                        </button>
+                     </td>
                     </tr>
                 <% } %>
             </tbody>

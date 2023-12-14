@@ -46,6 +46,7 @@ Router.get("/unBlockBrand", brandController.unBlockBrand)
 Router.get("/addProducts", productController.getProductAddPage)
 Router.post("/addProducts", upload.array("images",5),productController.addProducts)
 Router.get("/products", productController.getAllProducts)
+Router.get("/editProduct", productController.getEditProduct)
 Router.get("/blockProduct", productController.getBlockProduct)
 Router.get("/unBlockProduct", productController.getUnblockProduct)
 

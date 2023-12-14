@@ -8,6 +8,7 @@ const session = require("express-session")
 const nocache = require("nocache")
 const PORT = process.env.PORT || 3000
 const dotenv = require("dotenv").config()
+const flash = require('express-flash');
 
 require("./DB/dataBase")
 
@@ -15,6 +16,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
 app.use(nocache())
 
+app.use(flash());
 
 app.use(session({
     secret : process.env.SESSION_SECRET_KEY,

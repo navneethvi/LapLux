@@ -28,6 +28,7 @@ const getHomePage = async (req, res) => {
         const userData = await User.findOne({})
         const brandData = await Brand.find({isBlocked : false})
         const productData = await Product.find({isBlocked : false})
+        
         if(user){
             res.render("home", {user : userData, data : brandData, products : productData})
         }else{

@@ -4,6 +4,7 @@ const Brand = require("../models/brandSchema")
 
 
 
+
 const getProductAddPage = async (req, res) => {
     try {
         const category = await Category.find({isListed : true})
@@ -57,6 +58,27 @@ const addProducts = async (req, res) => {
     }
 }
 
+const getEditProduct = async (req, res)=>{
+    try {
+        const id = req.query.id
+        const findProduct = await Product.findOne({id : id})
+        const category = await Category.find({})
+        const findBrand = await Brand.find({})
+        res.render("edit-product", {product : findProduct, cat : category, brand : findBrand})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const editProduct = async (req, res)=>{
+    try {
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 const getAllProducts = async (req, res)=>{
     try {
@@ -97,5 +119,6 @@ module.exports = {
     addProducts,
     getAllProducts,
     getBlockProduct,
-    getUnblockProduct
+    getUnblockProduct,
+    getEditProduct
 }
