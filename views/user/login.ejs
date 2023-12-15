@@ -44,17 +44,16 @@
                                     <input type="checkbox" class="form-check-input" checked="">
                                     <span class="form-check-label">Remember</span>
                                 </label>
-                            </div> <!-- form-group form-check .// -->
+                            </div>
                             <div class="mb-4">
                                 <button type="submit" class="btn btn-primary w-100"> Login </button>
                             </div>
                             <!-- Display flash messages -->
-                            <% if (locals.message&&message.length>0) { %>
-                                <div class="alert alert-danger">
+                            <% if (locals.message && message.length > 0) { %>
+                                <div id="alertMessage" class="alert alert-danger">
                                     <%= message %>
                                 </div>
-                                <% } %>
-
+                            <% } %>
                         </form>
 
                         <p class="text-center small text-muted mb-15">or sign up with</p>
@@ -80,21 +79,19 @@
                     </div>
                 </div>
             </section>
-            <footer class="main-footer text-center">
-                <p class="font-xs">
-                    <script>
-                        document.write(new Date().getFullYear())
-                    </script> ©, Evara - HTML Ecommerce Template .
-                </p>
-                <p class="font-xs mb-30">All rights reserved</p>
-            </footer>
-        </main>
-        <script src="admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
-        <!-- Main Script -->
-        <script src="admin-assets/js/main.js" type="text/javascript"></script>
+           
     </body>
+    <script>
+        // Check if the alert element exists
+        const alertElement = document.getElementById('alertMessage');
+    
+        // If the alert element exists, hide it after 3 seconds
+        if (alertElement) {
+            setTimeout(function () {
+                alertElement.style.display = 'none';
+            }, 3000);
+        }
+    </script>
 
 
     <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-account-login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:33 GMT -->

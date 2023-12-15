@@ -45,7 +45,6 @@ const blockBrand = async (req, res)=>{
     try {
         const id = req.query.id
         await Brand.updateOne({_id : id}, {$set : {isBlocked : true}})
-        await Product.update({brandName : id}, {$set : {isListed : false}})
         console.log("brand blocked");
         res.redirect("/admin/brands")
     } catch (error) {

@@ -178,17 +178,21 @@ const userLogin = async (req, res) => {
                     console.log("Logged in");
                     res.redirect("/")
                 } else {
-                    console.log("Login details are incorrect");
-    
+                    console.log("Password is not matching");
+                    res.render("login", {message : "Password is not matching"})
                 }
             } else {
-                console.log("Login details are incorrect");
+                console.log("User is not found");
+                res.render("login", {message : "User is not found"})
+
             }
         }else{
             console.log("User is blocked by admin");
+            res.render("login", {message : "User is blocked by admin"})
         }
     } catch (error) {
-        res.render("login", {message : "LOgin failed"})
+        console.log(error.message);
+        res.render("login", {message : "Login failed"})
     }
 }
 

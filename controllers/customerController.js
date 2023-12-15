@@ -3,7 +3,11 @@ const User = require("../models/userSchema");
 
 const getCustomersInfo = async (req, res)=>{
     try {
-        const userData = await User.find({isAdmin : "0"})
+        let search = ""
+        if(req.query.search){
+            search = req.query.search
+        }
+        const userData = await User.find({isAdmin : "0", $or : {name : {$regex: ".*/"+search+".*"}}})
         // res.json(userData)
         res.render("customers", {data : userData})
     } catch (error) {

@@ -13,11 +13,11 @@ Router.post("/login", userController.userLogin)
 Router.get("/signup", userController.getSignupPage)
 Router.post("/verify-otp", userController.verifyOtp)
 Router.post("/signup", userController.signupUser)
-Router.get("/logout", userController.getLogoutUser)
+Router.get("/logout",isLogged, userController.getLogoutUser)
 
 //user profile
 Router.get("/profile",isLogged, userController.getUserProfile)
 
-Router.get("/productDetails", userController.getProductDetailsPage)
+Router.get("/productDetails",isLogged, userController.getProductDetailsPage)
 
 module.exports = Router

@@ -12,17 +12,17 @@ const {isAdmin} = require("../Authentication/auth")
 //Admin Actions
 Router.get("/login", adminController.getLoginPage)
 Router.post("/login", adminController.verifyLogin)
-Router.get("/logout", adminController.getLogout)
+Router.get("/logout",isAdmin, adminController.getLogout)
 Router.get("/",isAdmin, adminController.getDashboard)
 
 //Category Management
 Router.get("/category",isAdmin, categoryController.getCategoryInfo)
 Router.post("/addCategory",isAdmin, categoryController.addCategory)
 Router.get("/allCategory",isAdmin, categoryController.getAllCategories)
-Router.get("/listCategory", categoryController.getListCategory)
-Router.get("/unListCategory", categoryController.getUnlistCategory)
-Router.get("/editCategory", categoryController.getEditCategory)
-Router.post("/editCategory/:id", categoryController.editCategory)
+Router.get("/listCategory",isAdmin, categoryController.getListCategory)
+Router.get("/unListCategory",isAdmin, categoryController.getUnlistCategory)
+Router.get("/editCategory",isAdmin, categoryController.getEditCategory)
+Router.post("/editCategory/:id",isAdmin, categoryController.editCategory)
 
 //Customer Management
 Router.get("/users",isAdmin, customerController.getCustomersInfo)
@@ -36,20 +36,20 @@ const upload = multer({storage : storage})
 Router.use("/public/uploads", express.static("/public/uploads"))
 
 //Brand Management
-Router.get("/brands", brandController.getBrandPage)
-Router.post("/addBrand",upload.single('image'), brandController.addBrand)
-Router.get("/allBrands", brandController.getAllBrands)
-Router.get("/blockBrand", brandController.blockBrand)
-Router.get("/unBlockBrand", brandController.unBlockBrand)
+Router.get("/brands",isAdmin, brandController.getBrandPage)
+Router.post("/addBrand",isAdmin,upload.single('image'), brandController.addBrand)
+Router.get("/allBrands",isAdmin, brandController.getAllBrands)
+Router.get("/blockBrand",isAdmin, brandController.blockBrand)
+Router.get("/unBlockBrand",isAdmin, brandController.unBlockBrand)
 
 //Product Management
-Router.get("/addProducts", productController.getProductAddPage)
-Router.post("/addProducts", upload.array("images",5),productController.addProducts)
-Router.get("/products", productController.getAllProducts)
-Router.get("/editProduct", productController.getEditProduct)
-Router.post("/editProduct/:id", productController.editProduct)
-Router.get("/blockProduct", productController.getBlockProduct)
-Router.get("/unBlockProduct", productController.getUnblockProduct)
+Router.get("/addProducts",isAdmin, productController.getProductAddPage)
+Router.post("/addProducts",isAdmin, upload.array("images",5),productController.addProducts)
+Router.get("/products",isAdmin, productController.getAllProducts)
+Router.get("/editProduct",isAdmin, productController.getEditProduct)
+Router.post("/editProduct/:id",isAdmin, productController.editProduct)
+Router.get("/blockProduct",isAdmin, productController.getBlockProduct)
+Router.get("/unBlockProduct",isAdmin, productController.getUnblockProduct)
 
 
 

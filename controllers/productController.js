@@ -90,8 +90,10 @@ const getEditProduct = async (req, res)=>{
 
 const editProduct = async (req, res) => {
     try {
+        const id = req.params.id
+        console.log(id);
         console.log(req.body);
-        // ... rest of your code
+        
     } catch (error) {
         console.log(error.message);
     }
