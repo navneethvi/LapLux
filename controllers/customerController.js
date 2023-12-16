@@ -7,7 +7,7 @@ const getCustomersInfo = async (req, res)=>{
         if(req.query.search){
             search = req.query.search
         }
-        const userData = await User.find({isAdmin : "0", $or : {name : {$regex: ".*/"+search+".*"}}})
+        const userData = await User.find({isAdmin : "0"})
         // res.json(userData)
         res.render("customers", {data : userData})
     } catch (error) {

@@ -10,119 +10,144 @@
             </div>
             <div class="col-lg-6">
                 <div class="card mb-4">
+
                     <div class="card-body">
-                            <form method="post" action="/admin/editProduct/<%=product._id%>" enctype="multipart/form-data"> 
-                                <div class="mb-4">
-                                    <label for="product_name" class="form-label">Product Name</label>
-                                    <input type="text" name="productName"
-                                    value="<%= product.productName %>" class="form-control border" id="product_name">
-                                </div>
-                                <div class="col-lg-4 mb-4">
-                                    <label class="form-label">Brand</label>
-                                    <select class="form-select border" name="brand">
-                                        <% for (let i=0; i < brand.length; i++) { %>
-                                            <option value="<%=brand[i].brandName %>">
-                                                <%= brand[i].brandName %>
-                                            </option>
-                                            <% } %>
-                                    </select>
+                        <form method="post" action="/admin/editProduct/<%=product._id%>" enctype="multipart/form-data"
+                            multiple>
+                            <div class="mb-4">
+                                <label for="product_name" class="form-label">Product Name</label>
+                                <input type="text" name="productName" value="<%= product.productName %>"
+                                    class="form-control border" id="product_name">
+                            </div>
+                            <div class="col-lg-4 mb-4">
+                                <label class="form-label">Brand</label>
+                                <select class="form-select border" name="brand">
+                                    <% for (let i=0; i < brand.length; i++) { %>
+                                        <option value="<%=brand[i].brandName %>">
+                                            <%= brand[i].brandName %>
+                                        </option>
+                                        <% } %>
+                                </select>
 
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Full description</label>
-                                    <textarea  name="description" class="form-control border"
-                                      rows="4"><%= product.description %></textarea>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="mb-4">
-                                            <label class="form-label">Regular price</label>
-                                            <input placeholder="$" name="regularPrice" type="text"
-                                            value="<%= product.regularPrice %>"  class="form-control border">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="mb-4">
-                                            <label class="form-label">Sale price</label>
-                                            <input  name="salePrice" type="text" value="<%= product.salePrice %>" class="form-control border">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="mb-4">
-                                            <label class="form-label">Quantity</label>
-                                            <input  name="quantity" type="text" value="<%= product.quantity %>" class="form-control border">
-                                        </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Full description</label>
+                                <textarea name="description" class="form-control border"
+                                    rows="4"><%= product.description %></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label">Regular price</label>
+                                        <input placeholder="$" name="regularPrice" type="text"
+                                            value="<%= product.regularPrice %>" class="form-control border">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="mb-4">
-                                            <label class="form-label">Laptop Size</label>
-                                            <input  name="size" type="text" value="<%= product.size %>" class="form-control border">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="mb-4">
-                                            <label class="form-label">Color</label>
-                                            <input  name="color" type="text" value="<%= product.color %>" class="form-control border">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="mb-3">
-                                            <label class="form-label">Processor</label>
-                                            <input  name="processor" type="text" value="<%= product.processor %>" class="form-control border">
-                                        </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label">Sale price</label>
+                                        <input name="salePrice" type="text" value="<%= product.salePrice %>"
+                                            class="form-control border">
                                     </div>
                                 </div>
-                                <div class="card mb-4">
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label">Quantity</label>
+                                        <input name="quantity" type="text" value="<%= product.quantity %>"
+                                            class="form-control border">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label">Laptop Size</label>
+                                        <input name="size" type="text" value="<%= product.size %>"
+                                            class="form-control border">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label">Color</label>
+                                        <input name="color" type="text" value="<%= product.color %>"
+                                            class="form-control border">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Processor</label>
+                                        <input name="processor" type="text" value="<%= product.processor %>"
+                                            class="form-control border">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-4">
 
-                                    <div class="card-body">
-                                        <div class="row gx-2">
-                                            <div class="col-sm-6 mb-3">
-                                                <label class="form-label">Category</label>
-                                                <select class="form-select border" style="width: 150px;" name="category">
-                                                    <% for (let i=0; i < cat.length; i++) { %>
-                                                        <option value="<%= cat[i].name %>">
-                                                            <%= cat[i].name %>
-                                                        </option>
-                                                        <% } %>
-                                                </select>
+                                <div class="card-body">
+                                    <div class="row gx-2">
+                                        <div class="col-sm-6 mb-3">
+                                            <label class="form-label">Category</label>
+                                            <select class="form-select border" style="width: 150px;" name="category">
+                                                <% for (let i=0; i < cat.length; i++) { %>
+                                                    <option value="<%= cat[i].name %>">
+                                                        <%= cat[i].name %>
+                                                    </option>
+                                                    <% } %>
+                                            </select>
+                                        </div>
+                                    </div> <!-- row.// -->
+                                </div>
+                            </div> <!-- card end// -->
+
+
+                            <div class="card mb-2">
+                                <div class="card-header">
+                                    <h4>Choose images</h4>
+                                </div>
+
+                                <div id="addedImagesContainer" class="col-md-6">
+                                    <% for (let i=0; i < product.productImage.length; i++) { %>
+                                        <div class="col-md-12">
+                                            <div class="mb-4">
+                                                <div class="col-12">
+                                                    <td> <img class="rounded" style="width: 50px; height: 60px;"
+                                                            src="/uploads/product-images/<%= product.productImage[i] %>"
+                                                            alt="image"></td>
+                                                    <td><a
+                                                        
+                                                            href="/admin/deleteImage/<%= product.productImage[i] %>"><span
+                                                                class="badge rounded-pill alert-danger">x</span></a>
+                                                    </td>
+                                                </div>
                                             </div>
-                                        </div> <!-- row.// -->
-                                    </div>
-                                </div> <!-- card end// -->
+                                        </div> <!-- col.// -->
+                                        <% } %>
 
-
-                                <div class="card mb-2">
-                                    <div class="card-header">
-                                        <h4>Choose images</h4>
-                                    </div>
-                                    <div class="border row">
-                                        <div id="addedImagesContainer" class="thumbnails-container">
-
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="input-upload">
-                                            <img src="assets/imgs/theme/upload.svg" alt="">
-                                            <input class="form-control border" name="images" id="imageInput" type="file"
-                                                multiple>
-                                        </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="input-upload">
+                                        <img src="assets/imgs/theme/upload.svg" alt="">
+                                        <input class="form-control border" name="images" id="imageInput" type="file"
+                                            multiple>
                                     </div>
                                 </div>
+                            </div>
 
 
-                                <!-- card end// -->
+                            <!-- card end// -->
 
-                                <div>
-                                
-                                    <button class="btn btn-md rounded font-sm hover-up" type="submit">Update</button>
-                                </div>
-                            </form>
+                            <div>
+
+                                <button class="btn btn-md rounded font-sm hover-up" id="updatebtn"
+                                    type="submit">Update</button>
+                            </div>
+                        </form>
                     </div>
                 </div> <!-- card end// -->
 
             </div>
+
+
 
         </div>
         </div>
@@ -147,6 +172,16 @@
 
         // Function to handle file input change
         document.getElementById("imageInput").addEventListener("change", handleFileSelect);
+
+        // document.getElementById("updatebtn").addEventListener("click", ()=>{
+        //      Swal.fire({
+        //             title: 'WISHLIST',
+        //             text: 'Product updated.',
+        //             icon: 'success',
+        //             confirmButtonText: "Okey",
+        //             timer: 5000
+        //             })
+        // })
 
         function handleFileSelect(event) {
             // Target the container for displaying thumbnails
