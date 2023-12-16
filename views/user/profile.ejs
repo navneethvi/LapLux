@@ -56,22 +56,25 @@
                             </div>
                             <div class="col-md-8">
                                 <div class="tab-content dashboard-content">
-                                    <div class="tab-pane fade" id="dashboard" role="tabpanel" aria-labelledby="orders-tab">
-                                    <div class="container mt-5">
-                                        <div class="card mx-auto" style="max-width: 400px;">
-                                            <img src="/user-assets/imgs/theme/icons/user-profile.svg"
-                                                class="card-img-top rounded-circle mx-auto mt-3" alt="Profile Image"
-                                                style="width: 100px; height: 100px; object-fit: cover;">
+                                    <div class="tab-pane fade" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">User Profile</h5>
+                                            </div>
                                             <div class="card-body text-center">
-                                                <h5 class="card-title">John Doe</h5>
-                                                <p class="card-text"><strong>Email:</strong> john.doe@example.com</p>
-                                                <p class="card-text"><strong>Phone:</strong> +1 123-456-7890</p>
-                                                <p class="card-text"><strong>Account Created On:</strong> January 1,
-                                                    2023</p>
+                                                <img src="/user-assets/imgs/theme/icons/user-profile.svg"
+                                                    class="card-img-top rounded-circle mx-auto mt-3" alt="Profile Image"
+                                                    style="width: 100px; height: 100px; object-fit: cover;">
+                                                <div class="card-body text-center">
+                                                    <h5 class="card-title"><%= user.name %></h5>
+                                                    <p class="card-text"><strong>Email:</strong><%= user.email %></p>
+                                                    <p class="card-text"><strong>Phone:</strong><%= user.phone %></p>
+                                                    <p class="card-text"><strong>Account Created On:</strong><%= user._id %></p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                    
                                     <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
                                         <div class="card">
                                             <div class="card-header">

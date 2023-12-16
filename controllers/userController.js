@@ -201,7 +201,7 @@ const getUserProfile = async (req, res)=>{
     try {
         const userId = req.session.user
         console.log(userId);
-        const userData = await User.findOne({ userId });
+        const userData = await User.findById({ _id : userId });
         console.log("wrking");
         res.render("profile", {user : userData})
     } catch (error) {

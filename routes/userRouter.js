@@ -2,6 +2,7 @@ const express = require("express")
 const Router = express.Router()
 
 const userController = require("../controllers/userController")
+const cartController = require("../controllers/cartController,")
 
 const {isLogged} = require("../Authentication/auth")
 
@@ -18,6 +19,10 @@ Router.get("/logout",isLogged, userController.getLogoutUser)
 //user profile
 Router.get("/profile",isLogged, userController.getUserProfile)
 
+//Products based routes
 Router.get("/productDetails",isLogged, userController.getProductDetailsPage)
+
+//User cart
+Router.get("/cart", isLogged, cartController.getCartPage)
 
 module.exports = Router
