@@ -12,6 +12,8 @@
     "nocache": "^4.0.0",
     "nodemailer": "^6.9.7",
     "nodemon": "^3.0.2",
+    "passport": "^0.7.0",
+    "passport-google-oauth2": "^0.2.0",
     "sweetalert": "^2.1.2"
   },
   "name": "laplux-main",

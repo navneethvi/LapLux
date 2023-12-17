@@ -22,19 +22,7 @@
             
 
              <!-- card-header end// -->
-             <div class="container mt-3">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center mb-20" style="margin-right: 200px;">
-            
-                        <% for (let i = 1; i <= totalPages; i++) { %>
-                            <li class="page-item <%=(i === currentPage) ? 'active' : '' %>">
-                                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                            </li>
-                        <% } %>
-            
-                    </ul>
-                </nav>
-            </div>
+        
 
             <div class="right mt-5">
                 <table class="table table-striped">
@@ -70,10 +58,20 @@
                   </table>
          <!-- card-body end// -->
         </div> <!-- card end// -->
-      
-    </section> 
+        <div class="container mt-3">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center mb-20" style="margin-right: 200px;">
+        
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                        <li class="page-item <%=(i === currentPage) ? 'active' : '' %>">
+                            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                        </li>
+                    <% } %>
+        
+                </ul>
+            </nav>
+        </div>
 
-</section> 
 
 
 

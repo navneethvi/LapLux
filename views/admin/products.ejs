@@ -17,19 +17,7 @@
     </form>
 </header><!-- card-header end// -->
 
-<div class="container mt-3">
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center mb-20" style="margin-right: 200px;">
 
-            <% for (let i = 1; i <= totalPages; i++) { %>
-                <li class="page-item <%=(i === currentPage) ? 'active' : '' %>">
-                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                </li>
-            <% } %>
-
-        </ul>
-    </nav>
-</div>
 
 
     <div class="right mt-5">
@@ -81,7 +69,18 @@
     </div> <!-- card-body end// -->
 </div> <!-- card end// -->
 
-</section>  
-</section> 
+<div class="container mt-3">
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mb-20" style="margin-right: 200px;">
+
+            <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <%=(i === currentPage) ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                </li>
+            <% } %>
+
+        </ul>
+    </nav>
+</div>
 
 <%- include("../partials/adminFooter") %>

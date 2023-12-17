@@ -8,33 +8,33 @@ const getCustomersInfo = async (req, res) => {
             search = req.query.search
         }
         let page = 1
-        if(req.query.page){
+        if (req.query.page) {
             page = req.query.page
         }
-        const limit = 4
+        const limit = 3
         const userData = await User.find({
-             isAdmin: "0",
-             $or: [
+            isAdmin: "0",
+            $or: [
                 { name: { $regex: ".*" + search + ".*" } },
                 { email: { $regex: ".*" + search + ".*" } },
             ]
         }).limit(limit * 1)
-          .skip((page - 1) * limit)
-          .exec()
+            .skip((page - 1) * limit)
+            .exec()
 
-          const count = await User.find({
+        const count = await User.find({
             isAdmin: "0",
             $or: [
-               { name: { $regex: ".*" + search + ".*" } },
-               { email: { $regex: ".*" + search + ".*" } },
-           ]
-       }).countDocuments()
+                { name: { $regex: ".*" + search + ".*" } },
+                { email: { $regex: ".*" + search + ".*" } },
+            ]
+        }).countDocuments()
 
-        res.render("customers", { 
-                data: userData,
-                totalPages : Math.ceil(count/limit),
-                currentPage : page
-            })
+        res.render("customers", {
+            data: userData,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page
+        })
     } catch (error) {
         console.log(error.message);
     }
