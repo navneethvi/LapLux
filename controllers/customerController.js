@@ -7,15 +7,34 @@ const getCustomersInfo = async (req, res) => {
         if (req.query.search) {
             search = req.query.search
         }
+        let page = 1
+        if(req.query.page){
+            page = req.query.page
+        }
+        const limit = 4
         const userData = await User.find({
              isAdmin: "0",
              $or: [
                 { name: { $regex: ".*" + search + ".*" } },
                 { email: { $regex: ".*" + search + ".*" } },
             ]
-        })
-        // res.json(userData)
-        res.render("customers", { data: userData })
+        }).limit(limit * 1)
+          .skip((page - 1) * limit)
+          .exec()
+
+          const count = await User.find({
+            isAdmin: "0",
+            $or: [
+               { name: { $regex: ".*" + search + ".*" } },
+               { email: { $regex: ".*" + search + ".*" } },
+           ]
+       }).countDocuments()
+
+        res.render("customers", { 
+                data: userData,
+                totalPages : Math.ceil(count/limit),
+                currentPage : page
+            })
     } catch (error) {
         console.log(error.message);
     }
