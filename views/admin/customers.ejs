@@ -5,30 +5,23 @@
 <div class="content-header row">
     <div class="d-flex justify-content-between align-items-center">
         <h2 class="content-title card-title">Customers</h2>
-        <div class="input-group w-25 mr-150">
-            <input type="text" class="form-control border" placeholder="Search customers...">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button">Search</button>
-            </div>
-        </div>
+       
     </div>
 </div>
            
         </div>
-        <div class="card mb-4">
-            <header class="card-header">
-                <div class="row align-items-center">
-                    <div class="col col-check flex-grow-0">
-                        <div class="form-check ms-2">
-                            
-                        </div>
+        
+            <header class="card-header text-center mb-20">
+                <form action="/admin/users/" method="get" class="d-inline">
+                    <div class="input-group input-group-sm border border-1 border-grey rounded-pill" style="width: 500px; margin-left: 230px;">
+                        <input type="text" class="form-control border-0 rounded-pill" placeholder="Search customers..." name="search">
+                        <button class="btn  border-0" type="submit">Search</button>
                     </div>
-                    
-                    </div>
-                 
-                    
-                </div>
-            </header> <!-- card-header end// -->
+                </form>
+            </header>
+            
+
+             <!-- card-header end// -->
 
 
             <div class="right mt-5">

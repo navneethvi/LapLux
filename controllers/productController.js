@@ -135,8 +135,17 @@ const editProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
     try {
-        const productData = await Product.find({})
-        res.render("products", { data: productData })
+        const search = req.query.search || ""; 
+
+        const productData = await Product.find({
+            $or: [
+                { productName: { $regex: new RegExp(".*" + search + ".*", "i") } },
+                { brand: { $regex: new RegExp(".*" + search + ".*", "i") } }
+            ],
+        });
+        
+        res.render("products", { data: productData });
+        
     } catch (error) {
         console.log(error.message);
     }
