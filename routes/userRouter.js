@@ -21,6 +21,7 @@ Router.get("/profile",isLogged, userController.getUserProfile)
 
 //Products based routes
 Router.get("/productDetails",isLogged, userController.getProductDetailsPage)
+Router.get("/shop", isLogged, userController.getShopPage)
 
 //User cart
 Router.get("/cart", isLogged, cartController.getCartPage)

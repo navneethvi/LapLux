@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/userSchema");
 const Brand = require("../models/brandSchema")
 const Product = require("../models/productSchema");
+const Category = require("../models/categorySchema")
 const { Db } = require("mongodb");
 
 
@@ -27,7 +28,7 @@ const getHomePage = async (req, res) => {
         const user = req.session.user
         const userData = await User.findOne({})
         const brandData = await Brand.find({isBlocked : false})
-        const productData = await Product.find({isBlocked : false})
+        const productData = await Product.find({isBlocked : false}).sort({ createdOn: -1 }).limit(4)
         
         if(user){
             res.render("home", {user : userData, data : brandData, products : productData})
@@ -227,12 +228,32 @@ const getLogoutUser = async (req, res)=>{
 
 const getProductDetailsPage = async (req, res)=>{
     try {
+        const user = req.session.id
         console.log("wrking");
         const id = req.query.id
         console.log(id);
         const findProduct = await Product.find({id : id});
         console.log(findProduct);
-        res.render("product-details", {data : findProduct})
+        res.render("product-details", {data : findProduct, user : user})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const getShopPage = async (req, res)=>{
+    try {
+        const user = req.session.id
+        const products = await Product.find({isBlocked : false})
+        const brands = await Brand.find({})
+        const categories = await Category.find({isListed : true})
+        res.render("shop",
+                {
+                user : user,
+                product : products,
+                category : categories,
+                brand : brands
+            })
     } catch (error) {
         console.log(error.message);
     }
@@ -252,5 +273,6 @@ module.exports = {
     userLogin,
     getUserProfile,
     getLogoutUser,
-    getProductDetailsPage
+    getProductDetailsPage,
+    getShopPage
 }
