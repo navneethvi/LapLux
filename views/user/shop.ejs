@@ -9,7 +9,7 @@
             <div class="col-lg-9">
                 <div class="shop-product-fillter">
                     <div class="totall-product">
-                        <p> We found <strong class="text-brand">688</strong> items for you!</p>
+                        <p> We found <strong class="text-brand"><%= count %></strong> items for you!</p>
                     </div>
                     <div class="sort-by-product-area">
                         <div class="sort-by-cover mr-10">
@@ -85,8 +85,8 @@
                                         </span>
                                     </div> -->
                                     <div class="product-price">
-                                        <span>₹<%= product[i].salePrice %></span>
-                                        <span class="old-price">₹<%= product[i].regularPrice %></span>
+                                        <span>₹<%= product[i].salePrice.toLocaleString('en-IN') %></span>
+                                        <span class="old-price">₹<%= product[i].regularPrice.toLocaleString('en-IN') %></span>
                                     </div>
                                     <div class="product-action-1 show">
                                         <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>

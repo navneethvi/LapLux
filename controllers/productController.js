@@ -5,8 +5,6 @@ const fs = require("fs")
 const path = require("path")
 
 
-
-
 const getProductAddPage = async (req, res) => {
     try {
         const category = await Category.find({ isListed: true })

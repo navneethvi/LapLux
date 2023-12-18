@@ -17,9 +17,19 @@ const getCartPage = async (req, res)=>{
 const addToCart = async (req, res)=>{
     try {
         const id = req.query.id
+        const userId = req.session.id
+        console.log(userId);
         const product = await Product.findById({_id : id})
-        if(product.quantity > 1){
-            
+        if(product.quantity > 0){
+            const newCart = await User.findByIdAndUpdate(userId,{
+                $addToSet : {
+                    cart : {
+                        productId : product._id,
+                        quantity : product.quantity,
+                        
+                    }
+                }
+            })
         }
 
     } catch (error) {
@@ -29,5 +39,6 @@ const addToCart = async (req, res)=>{
 
 
 module.exports = {
-    getCartPage
+    getCartPage,
+    addToCart
 }

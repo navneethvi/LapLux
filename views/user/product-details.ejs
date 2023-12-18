@@ -64,18 +64,21 @@
                                     <span> Size : <%= data[0].size %></span>
                                 </div>
                                 <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+
                                 <div class="detail-extralink">
-                                    <div class="detail-qty border radius">
-                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                        <span class="qty-val">1</span>
-                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                    <div class="btn-group" style="position: relative; display: inline-block;">
+                                        <button class="btn btn-success" onclick="addToCart('<%=data[0]._id%>')" style="width: 120px; height: 42px; display: flex; align-items: center; overflow: hidden;">
+                                            <a class="text-white" style="display: block; width: 100%; text-align: center;">Add to cart</a>
+                                        </button>
                                     </div>
+                                
                                     <div class="product-extra-link2">
-                                        <button type="submit" class="button button-add-to-cart">Add to cart</button>
+                                        <button type="submit" class="button button-add-to-cart">Buy Now</button>
                                         <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                        <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                     </div>
                                 </div>
+                                
+                                
                                 <ul class="product-meta font-xs color-grey mt-50">
                                     <li class="mb-5">ID: <%= data[0].id %></li>
                                     <li class="mb-5">Tags: Laptop, <%= data[0].category %></li>
@@ -171,3 +174,39 @@
 
 
 <%- include("../partials/footer") %>
+
+
+
+<script>
+    function addToCart(prodId) {
+        var quantity = 1
+        $.ajax({
+            url: `/addToCart?id=${prodId}`,
+            method: "post",
+            data: {
+                quantity: quantity
+            },
+            success: (res) => {
+                if (res.status === true) {
+                    location.reload()
+                    Swal.fire({
+                        title: 'Added to Cart!',
+                        text: 'Continue Shopping',
+                        icon: 'success',
+                        timer: 3000,
+                        showConfirmButton: false
+                    })
+                } else if (res.status === "outOfStock") {
+                    Swal.fire({
+                        title: 'Stock!!',
+                        text: "the products is out of stock",
+                        icon: 'fail',
+                        timer: 5000
+                    })
+                }else{
+                    alert("error occured")
+                }
+            }
+        })
+    }
+</script>

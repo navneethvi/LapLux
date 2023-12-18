@@ -151,6 +151,7 @@ const verifyOtp = async (req, res) => {
             await saveUserData.save()
 
             req.session.user = saveUserData._id
+            
 
             res.redirect("/")
         } else {
@@ -233,7 +234,6 @@ const getProductDetailsPage = async (req, res)=>{
         const id = req.query.id
         console.log(id);
         const findProduct = await Product.find({id : id});
-        console.log(findProduct);
         res.render("product-details", {data : findProduct, user : user})
     } catch (error) {
         console.log(error.message);
@@ -245,6 +245,7 @@ const getShopPage = async (req, res)=>{
     try {
         const user = req.session.id
         const products = await Product.find({isBlocked : false})
+        const count = await Product.find({isBlocked : false}).count()
         const brands = await Brand.find({})
         const categories = await Category.find({isListed : true})
         res.render("shop",
@@ -252,7 +253,8 @@ const getShopPage = async (req, res)=>{
                 user : user,
                 product : products,
                 category : categories,
-                brand : brands
+                brand : brands,
+                count : count
             })
     } catch (error) {
         console.log(error.message);
