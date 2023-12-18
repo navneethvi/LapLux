@@ -179,6 +179,7 @@
 
 <script>
     function addToCart(prodId) {
+       alert('hi')
         var quantity = 1
         $.ajax({
             url: `/addToCart?id=${prodId}`,

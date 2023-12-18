@@ -17,20 +17,24 @@ const getCartPage = async (req, res)=>{
 const addToCart = async (req, res)=>{
     try {
         const id = req.query.id
-        const userId = req.session.id
-        console.log(userId);
+        console.log(id,'hiii');
+        const userId = req.session.user
+        console.log(userId,"user id ");
         const product = await Product.findById({_id : id})
+       
         if(product.quantity > 0){
             const newCart = await User.findByIdAndUpdate(userId,{
                 $addToSet : {
                     cart : {
                         productId : product._id,
                         quantity : product.quantity,
-                        
                     }
                 }
             })
         }
+
+res.json({status:true})
+
 
     } catch (error) {
         console.log(error.message);
