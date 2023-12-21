@@ -27,15 +27,15 @@ const getHomePage = async (req, res) => {
     try {
         const user = req.session.user
         const userData = await User.findOne({})
-        const brandData = await Brand.find({isBlocked : false})
-        const productData = await Product.find({isBlocked : false}).sort({ createdOn: -1 }).limit(4)
-        
-        if(user){
-            res.render("home", {user : userData, data : brandData, products : productData})
-        }else{
-            res.render("home", {data : brandData, products : productData})
+        const brandData = await Brand.find({ isBlocked: false })
+        const productData = await Product.find({ isBlocked: false }).sort({ createdOn: -1 }).limit(4)
+
+        if (user) {
+            res.render("home", { user: userData, data: brandData, products: productData })
+        } else {
+            res.render("home", { data: brandData, products: productData })
         }
-       
+
     } catch (error) {
         console.log(error.message)
     }
@@ -45,9 +45,9 @@ const getHomePage = async (req, res) => {
 
 const getLoginPage = async (req, res) => {
     try {
-        if(!req.session.user){
+        if (!req.session.user) {
             res.render("login")
-        }else{
+        } else {
             res.redirect("/")
         }
     } catch (error) {
@@ -112,9 +112,11 @@ const signupUser = async (req, res) => {
                 }
             } else {
                 console.log("User already Exist");
+                res.render("signup", { message: "User with this email already exists" })
             }
         } else {
             console.log("the confirm pass is not matching");
+            res.render("signup", { message: "The confirm pass is not matching" })
         }
 
 
@@ -155,11 +157,11 @@ const verifyOtp = async (req, res) => {
             await saveUserData.save()
 
             req.session.user = saveUserData._id
-            
+
 
             res.redirect("/")
         } else {
-            res.render("verify-otp", {message : "Otp not matching"})
+            res.render("verify-otp", { message: "Otp not matching" })
             console.log("otp not matching");
         }
 
@@ -207,22 +209,22 @@ const userLogin = async (req, res) => {
 
 
 
-const getUserProfile = async (req, res)=>{
+const getUserProfile = async (req, res) => {
     try {
         const userId = req.session.user
         console.log(userId);
-        const userData = await User.findById({ _id : userId });
+        const userData = await User.findById({ _id: userId });
         console.log("wrking");
-        res.render("profile", {user : userData})
+        res.render("profile", { user: userData })
     } catch (error) {
         console.log(error.message);
     }
 }
 
 
-const getLogoutUser = async (req, res)=>{
+const getLogoutUser = async (req, res) => {
     try {
-        req.session.destroy((err)=>{
+        req.session.destroy((err) => {
             if (err) {
                 console.log(err.message);
             }
@@ -235,34 +237,34 @@ const getLogoutUser = async (req, res)=>{
 }
 
 
-const getProductDetailsPage = async (req, res)=>{
+const getProductDetailsPage = async (req, res) => {
     try {
         const user = req.session.id
         console.log("wrking");
         const id = req.query.id
         console.log(id);
-        const findProduct = await Product.find({id : id});
-        res.render("product-details", {data : findProduct, user : user})
+        const findProduct = await Product.find({ id: id });
+        res.render("product-details", { data: findProduct, user: user })
     } catch (error) {
         console.log(error.message);
     }
 }
 
 
-const getShopPage = async (req, res)=>{
+const getShopPage = async (req, res) => {
     try {
         const user = req.session.id
-        const products = await Product.find({isBlocked : false})
-        const count = await Product.find({isBlocked : false}).count()
+        const products = await Product.find({ isBlocked: false })
+        const count = await Product.find({ isBlocked: false }).count()
         const brands = await Brand.find({})
-        const categories = await Category.find({isListed : true})
+        const categories = await Category.find({ isListed: true })
         res.render("shop",
-                {
-                user : user,
-                product : products,
-                category : categories,
-                brand : brands,
-                count : count
+            {
+                user: user,
+                product: products,
+                category: categories,
+                brand: brands,
+                count: count
             })
     } catch (error) {
         console.log(error.message);

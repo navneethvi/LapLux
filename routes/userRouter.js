@@ -4,7 +4,7 @@ const Router = express.Router()
 const userController = require("../controllers/userController")
 const cartController = require("../controllers/cartController,")
 
-const {isLogged} = require("../Authentication/auth")
+const { isLogged } = require("../Authentication/auth")
 
 
 //user actions
@@ -14,18 +14,19 @@ Router.post("/login", userController.userLogin)
 Router.get("/signup", userController.getSignupPage)
 Router.post("/verify-otp", userController.verifyOtp)
 Router.post("/signup", userController.signupUser)
-Router.get("/logout",isLogged, userController.getLogoutUser)
+Router.get("/logout", isLogged, userController.getLogoutUser)
 
 //user profile
-Router.get("/profile",isLogged, userController.getUserProfile)
+Router.get("/profile", isLogged, userController.getUserProfile)
 
 //Products based routes
-Router.get("/productDetails",isLogged, userController.getProductDetailsPage)
+Router.get("/productDetails", isLogged, userController.getProductDetailsPage)
 Router.get("/shop", isLogged, userController.getShopPage)
 
 //User cart
 Router.get("/cart", isLogged, cartController.getCartPage),
-Router.post("/addToCart", cartController.addToCart)
+Router.post("/addToCart", isLogged, cartController.addToCart)
+Router.post("/deleteItem", isLogged, cartController.deleteProduct)
 
 module.exports = Router
 

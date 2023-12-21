@@ -31,11 +31,51 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                   
-                                    <% for (let i = 0; i < array.length; i++) {
-                                        const element = array[i];
-                                        
-                                    } %>
+
+                                    <% if (product.length> 0) { %>
+
+                                        <% for (let i=0; i < product.length;i++) { %>
+
+                                            <tr>
+                                                <td class="image product-thumbnail">
+                                                    <img src="/uploads/product-images/<%= product[i].productImage[0] %>"
+                                                        alt="#" />
+                                                </td>
+                                                <td class="product-des product-name">
+                                                    <h5 class="product-name">
+                                                        <a href="shop-product-right.html">
+                                                            <%= product[i].productName %>
+                                                        </a>
+                                                    </h5>
+                                                    <p class="font-xs">
+                                                        <%= product[i].category %><br />
+                                                            <%= product[i].brand %>.
+                                                    </p>
+                                                </td>
+                                                <td class="price" data-title="Price"><span>₹ <%= product[i].regularPrice
+                                                            %> </span></td>
+                                                <td class="text-center" data-title="Stock">
+                                                    <div class="detail-qty border radius m-auto">
+
+                                                    </div>
+                                                </td>
+                                                
+
+                                                <td class="action" data-title="Remove">
+                                                    <button class="btn btn-sm"
+                                                        onclick="itemDelete('<%= product[i].id %>')"><i
+                                                            class="fi-rs-trash"></i></button>
+                                                </td>
+
+
+
+                                                <% } %>
+                                                    <% } else { %>
+                                            <tr>
+                                                <td colspan="2">No item found in Cart</td>
+                                            </tr>
+                                            <% } %>
+
 
                                 </tbody>
                             </table>
@@ -57,35 +97,21 @@
 
 
         <script>
-            function addToCart(prodId) {
-                var quantity = 1
+            function itemDelete(productId) {
+                console.log("wrkng");
                 $.ajax({
-                    url: `/addToCart?id=${prodId}`,
-                    method: "post",
+                    url: '/admin/deleteItem',
+                    method: 'POST',
                     data: {
-                        quantity: quantity
+                        productId: productId
                     },
-                    success: (res) => {
-                        if (res.status === true) {
+                    success: function (response) {
+                        // alert('yes it out side the success')
+                        if (response.status) {
                             location.reload()
-                            Swal.fire({
-                                title: 'Added to Cart!',
-                                text: 'Continue Shopping',
-                                icon: 'success',
-                                timer: 3000,
-                                showConfirmButton: false
-                            })
-                        } else if (res.status === "outOfStock") {
-                            Swal.fire({
-                                title: 'Stock!!',
-                                text: "the products is out of stock",
-                                icon: 'fail',
-                                timer: 5000
-                            })
-                        }else{
-                            alert("error occured")
                         }
                     }
                 })
+
             }
         </script>

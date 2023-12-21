@@ -13,6 +13,7 @@
             <div class="form-group">
                 <input type="text" required="" name="email" placeholder="Enter Email">
             </div>
+            
             <div class="form-group">
                 <input type="text" required="" name="phone" placeholder="Enter Phone">
             </div>
@@ -31,10 +32,16 @@
                 </div>
                 <a href="page-privacy-policy.html"><i class="fi-rs-book-alt mr-5 text-muted"></i>Learn more</a>
             </div>
+            <% if (locals.message && message.length> 0) { %>
+                <div id="alertMessage" class="alert alert-danger">
+                    <%= message %>
+                </div>
+                <% } %>
             <div class="form-group">
                 <button type="submit" class="btn btn-fill-out btn-block hover-up mt-25 " name="login">Submit &amp; Register</button>
             </div>
         </form>
+        
 
         <div class="text-muted text-center pt-25">Already have an account? <a href="/login">Login now</a></div>
     </div>
@@ -43,6 +50,16 @@
 <%- include("../partials/footer") %>
 
 <script>
+
+      // Check if the alert element exists
+      const alertElement = document.getElementById('alertMessage');
+
+// If the alert element exists, hide it after 3 seconds
+if (alertElement) {
+    setTimeout(function () {
+        alertElement.style.display = 'none';
+    }, 3000);
+}
     function validateForm() {
         // Trim the values before submitting the form
         var nameInput = document.getElementsByName("name")[0];
