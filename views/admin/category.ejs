@@ -61,12 +61,12 @@
                                         </td>                                        
                                         <td class="text-start">
                                             <% if (cat[i].isListed === true) { %>
-                                                <button class="btn btn-success" style="width: 70px;">
-                                                    <a href="/admin/listCategory?id=<%= cat[i]._id %>" class="text-white">List</a>
+                                                <button class="btn btn-danger" style="width: 70px;">
+                                                    <a href="/admin/listCategory?id=<%= cat[i]._id %>" class="text-white">Unlist</a>
                                                 </button>
                                             <% } else { %>
-                                                <button class="btn btn-danger" style="width: 70px;">
-                                                    <a href="/admin/unListCategory?id=<%= cat[i]._id %>" class="text-white">Unlist</a>
+                                                <button class="btn btn-success" style="width: 70px;">
+                                                    <a href="/admin/unListCategory?id=<%= cat[i]._id %>" class="text-white">List</a>
                                                 </button>
                                             <% } %>
                                         </td>

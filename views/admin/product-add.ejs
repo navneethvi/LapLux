@@ -110,7 +110,7 @@
                             <!-- card end// -->
                              
                                 <div>
-                                    <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+        
                                     <button class="btn btn-md rounded font-sm hover-up" type="submit">Publish</button>
                                 </div>
                         </form>
@@ -195,6 +195,45 @@
         addedImagesContainer.appendChild(thumbnail);
       }
     }
+
+
+
+//     function addProduct() {
+ 
+//  var quantity = 1;
+//  $.ajax({
+//      url: `/addToCart?id=${prodId}`,
+//      method: "post",
+//      data: {
+//          quantity: quantity
+//      },
+//      success: (res) => {
+//          if (res.status === true) {
+             
+//              Swal.fire({
+//                  title: 'Added to Cart!',
+//                  text: 'Continue Shopping',
+//                  icon: 'success',
+//                  timer: 2000,
+//                  showConfirmButton: false
+//              }).then(()=>location.reload())
+//          } else if (res.status === "outOfStock") {
+//              Swal.fire({
+//                  title: 'Stock!!',
+//                  text: "The product is out of stock",
+//                  icon: 'error', // Corrected from 'fail' to 'error'
+//                  timer: 2000,
+//              }).then(()=>location.reload())
+//          } else {
+//              alert("Error occurred");
+//          }
+//      },
+//      error: (err) => {
+//          console.error(err);
+//          alert("Error occurred");
+//      }
+//  });
+// }
   </script>
 
 

@@ -1,11 +1,11 @@
 const nodemailer = require("nodemailer")
-const Mongoose = require("mongoose")
+
 const bcrypt = require("bcrypt");
 const User = require("../models/userSchema");
 const Brand = require("../models/brandSchema")
 const Product = require("../models/productSchema");
 const Category = require("../models/categorySchema")
-const { Db } = require("mongodb");
+
 
 
 
@@ -173,11 +173,14 @@ const verifyOtp = async (req, res) => {
 const userLogin = async (req, res) => {
     try {
         const { email, password } = req.body
-        const findUser = await User.findOne({ email })
-        console.log("wrking");
-        const isUserBlocked =  findUser.isBlocked === false
-        if(isUserBlocked){
-            if (findUser) {
+        const findUser = await User.findOne({ isAdmin: "0", email: email })
+
+        console.log("working");
+
+        if (findUser) {
+            const isUserNotBlocked = findUser.isBlocked === false;
+
+            if (isUserNotBlocked) {
                 const passwordMatch = await bcrypt.compare(password, findUser.password)
                 if (passwordMatch) {
                     req.session.user = findUser._id
@@ -185,22 +188,23 @@ const userLogin = async (req, res) => {
                     res.redirect("/")
                 } else {
                     console.log("Password is not matching");
-                    res.render("login", {message : "Password is not matching"})
+                    res.render("login", { message: "Password is not matching" })
                 }
             } else {
-                console.log("User is not found");
-                res.render("login", {message : "User is not found"})
-
+                console.log("User is blocked by admin");
+                res.render("login", { message: "User is blocked by admin" })
             }
-        }else{
-            console.log("User is blocked by admin");
-            res.render("login", {message : "User is blocked by admin"})
+        } else {
+            console.log("User is not found");
+            res.render("login", { message: "User is not found" })
         }
+
     } catch (error) {
         console.log(error.message);
-        res.render("login", {message : "Login failed"})
+        res.render("login", { message: "Login failed" })
     }
 }
+
 
 
 const getUserProfile = async (req, res)=>{

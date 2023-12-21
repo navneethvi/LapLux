@@ -34,14 +34,22 @@
                                 <input class="form-control" name="email" placeholder="Enter email" type="text"
                                     style="border: 1px solid #ced4da;">
                             </div> <!-- form-group// -->
-                            <div class="mb-3">
-                                <input class="form-control" name="password" placeholder="Enter password" type="password"
-                                    style="border: 1px solid #ced4da;">
-                            </div> <!-- form-group// -->
+                            <div class="mb-3" style="position: relative;">
+                                <input class="form-control" name="password" id="password" placeholder="Enter password"
+                                    type="password" style="border: 1px solid #ced4da; padding-right: 30px;">
+                                <button id="togglePassword" class="border-0" type="button"
+                                    style="position: absolute; top: 50%; right: 5px; transform: translateY(-50%);">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+
+
+                            <!-- form-group// -->
                             <div class="mb-3">
                                 <a href="#" class="float-end font-sm text-muted">Forgot password?</a>
                                 <label class="form-check">
                                     <input type="checkbox" class="form-check-input" checked="">
+
                                     <span class="form-check-label">Remember</span>
                                 </label>
                             </div>
@@ -49,11 +57,11 @@
                                 <button type="submit" class="btn btn-primary w-100"> Login </button>
                             </div>
                             <!-- Display flash messages -->
-                            <% if (locals.message && message.length > 0) { %>
+                            <% if (locals.message && message.length> 0) { %>
                                 <div id="alertMessage" class="alert alert-danger">
                                     <%= message %>
                                 </div>
-                            <% } %>
+                                <% } %>
                         </form>
 
                         <p class="text-center small text-muted mb-15">or sign up with</p>
@@ -79,18 +87,25 @@
                     </div>
                 </div>
             </section>
-           
+
     </body>
     <script>
         // Check if the alert element exists
         const alertElement = document.getElementById('alertMessage');
-    
+
         // If the alert element exists, hide it after 3 seconds
         if (alertElement) {
             setTimeout(function () {
                 alertElement.style.display = 'none';
             }, 3000);
         }
+
+        document.getElementById("togglePassword").addEventListener("click", () => {
+            const passInput = document.getElementById("password");
+            passInput.type = passInput.type === "password" ? "text" : "password";
+        });
+
+
     </script>
 
 
