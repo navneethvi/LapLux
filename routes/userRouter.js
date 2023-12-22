@@ -6,6 +6,8 @@ const cartController = require("../controllers/cartController,")
 
 const { isLogged } = require("../Authentication/auth")
 
+
+'*'
 Router.get("/pageNotFound", userController.pageNotFound)
 //user actions
 Router.get("/", userController.getHomePage)

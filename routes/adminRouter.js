@@ -54,14 +54,4 @@ Router.get("/unBlockProduct", isAdmin, productController.getUnblockProduct)
 
 
 
-
-
-
-
-
-
-
-
-
-
 module.exports = Router
