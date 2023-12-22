@@ -17,13 +17,13 @@
                     <form method="post" action="/admin/addCategory">
                         <div class="mb-4">
                             <label for="product_name" class="form-label">Name</label>
-                            <input type="text" name="name" placeholder="Type here" class="form-control" id="product_name" />
+                            <input type="text" name="name" placeholder="Type here" class="form-control" id="product_name" required/>
                         </div>
                        
                       
                         <div class="mb-4">
                             <label class="form-label">Description</label>
-                            <textarea placeholder="Type here" name="description" class="form-control"></textarea>
+                            <textarea placeholder="Type here" name="description" class="form-control" required></textarea>
                         </div>
                         <div class="d-grid">
                             <button class="btn btn-primary" type="submit">Create category</button>
