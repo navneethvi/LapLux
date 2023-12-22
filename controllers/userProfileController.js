@@ -7,12 +7,12 @@ const getUserProfile = async (req, res) => {
     try {
         const userId = req.session.user
         // console.log(userId);
-        const userData = await User.findById({_id : userId});
+        const userData = await User.findById({ _id: userId });
         // console.log(userData);
-        const addressData = await Address.findOne({userId : userId})
-        console.log(addressData);
+        const addressData = await Address.findOne({ userId: userId })
+        // console.log(addressData);
         console.log("wrking");
-        res.render("profile", { user: userData , userAddress : addressData})
+        res.render("profile", { user: userData, userAddress: addressData })
     } catch (error) {
         console.log(error.message);
     }
@@ -32,7 +32,7 @@ const postAddress = async (req, res) => {
     try {
         const user = req.session.user
         console.log(user);
-        const userData = await User.findOne({ _id : user })
+        const userData = await User.findOne({ _id: user })
         const {
             addressType,
             name,
@@ -78,9 +78,27 @@ const postAddress = async (req, res) => {
             })
             await userAddress.save()
         }
-        
+
         res.redirect("/profile")
 
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const getEditAddress = async (req, res) => {
+    try {
+        const addressId = req.query.id
+        console.log(addressId);
+        const user = req.session.user
+        // console.log(id);
+       
+       
+        const currAddress = await Address.findOne({
+            "address._id": addressId,
+        });
+        console.log(currAddress);
+        res.render("edit-address", { address: currAddress })
     } catch (error) {
         console.log(error.message);
     }
@@ -90,5 +108,6 @@ const postAddress = async (req, res) => {
 module.exports = {
     getUserProfile,
     getAddressAddPage,
-    postAddress
+    postAddress,
+    getEditAddress
 }
