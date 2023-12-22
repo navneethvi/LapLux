@@ -62,10 +62,11 @@
                                                 
 
                                                 <td class="action" data-title="Remove">
-                                                    <button class="btn btn-sm"
-                                                        onclick="itemDelete('<%= product[i].id %>')"><i
-                                                            class="fi-rs-trash"></i></button>
+                                                    <a class="btn btn-sm" href="/deleteItem?id=<%= product[i].id %>">
+                                                        <i class="fi-rs-trash"></i>
+                                                    </a>
                                                 </td>
+                                                
 
 
 
@@ -97,21 +98,5 @@
 
 
         <script>
-            function itemDelete(productId) {
-                console.log("wait");
-                $.ajax({
-                    url: '/admin/deleteItem',
-                    method: 'POST',
-                    data: {
-                        productId: productId
-                    },
-                    success: function (response) {
-                        // alert('yes it out side the success')
-                        if (response.status) {
-                            location.reload()
-                        }
-                    }
-                })
-
-            }
+       
         </script>

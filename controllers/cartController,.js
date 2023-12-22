@@ -1,6 +1,7 @@
 const User = require("../models/userSchema")
 const Product = require("../models/productSchema")
 const Mongoose = require("mongoose")
+const { use } = require("passport")
 
 
 const getCartPage = async (req, res) => {
@@ -13,7 +14,7 @@ const getCartPage = async (req, res) => {
         const productIds = await user.cart.map(cartItem => cartItem.productId)
         const objectIdArray = productIds.map(id => new ObjectId(id))
         const findProduct = await Product.find({ _id: { $in: objectIdArray } }).lean()
-        // .then((data)=> console.log(data))
+    
         res.render("cart", { user: user, product : findProduct})
     } catch (error) {
         console.log(error.message);
@@ -55,23 +56,24 @@ const addToCart = async (req, res) => {
 const deleteProduct = async (req, res)=>{
     try {
         const user = req.session.user
-        const id = req.body.productId
-        console.log(user);
-
-        const userData = await User.find({user})
-        
-        if(userData){
-            const existingCartItemIndex = userData.cart.findIndex(item => item.productId === id)
-            if(existingCartItemIndex!==-1){
-                userData.cart.splice(existingCartItemIndex, 1)
-                await userData.save()
-                res.json({status : true})
-            }else{
-                res.json({status : false, error : "item not found in cart" })
-            }
-        }else{
-            res.json({status : false, error : "user not found"})
+    
+        if(!user){
+            res.json("User not found")
+            console.log("User not found");
+            return
         }
+        const id = req.query.id
+        console.log(id);
+        const userData = await User.findOne({_id : user})
+  
+        if(!userData){
+            res.json("User not found")
+            console.log("User not found 2");
+            return
+        }
+
+        const existingCartItemIndex = userData.cart.findIndex(item => item.productId === id)
+        console.log(existingCartItemIndex);
         
     } catch (error) {
         console.log(error.message);

@@ -218,17 +218,7 @@ const userLogin = async (req, res) => {
 
 
 
-const getUserProfile = async (req, res) => {
-    try {
-        const userId = req.session.user
-        console.log(userId);
-        const userData = await User.findById({ _id: userId });
-        console.log("wrking");
-        res.render("profile", { user: userData })
-    } catch (error) {
-        console.log(error.message);
-    }
-}
+
 
 
 const getLogoutUser = async (req, res) => {
@@ -292,7 +282,6 @@ module.exports = {
     getOtpPage,
     verifyOtp,
     userLogin,
-    getUserProfile,
     getLogoutUser,
     getProductDetailsPage,
     getShopPage,

@@ -56,7 +56,7 @@
                             </div>
                             <div class="col-md-8">
                                 <div class="tab-content dashboard-content">
-                                    <div class="tab-pane fade" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                    <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
                                         <div class="card">
                                             <div class="card-header">
                                                 <h5 class="mb-0">User Profile</h5>
@@ -157,33 +157,53 @@
                                     <div class="tab-pane fade" id="address" role="tabpanel"
                                         aria-labelledby="address-tab">
                                         <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="card mb-3 mb-lg-0">
-                                                    <div class="card-header">
-                                                        <h5 class="mb-0">Billing Address</h5>
+                                         
+                                            <%if(userAddress){%>
+                                                <%userAddress.address.forEach((address)=>{%>
+                                              <div class="col-lg-6">
+                                                <div class="card  mb-3 mb-lg-0">
+                                                  <div class="card-header">
+                                                    <h5 class="mb-0"><%=address.addressType%></h5>
+                                                  </div>
+                                                    
+                                                  <div class="card-body">
+                                                    <address>
+                                                      <%=address.name%><br />
+                                                      <%=address.city%>,<br />
+                                                      <%=address.landMark%> <br /><%=address.state%>
+                                                    </address>
+                                                    <p><%=address.pincode%></p>
+                                                    <p><%=address.phone%></p>
+                                                    <p><%=address.altPhone%></p>
+                                                    <div class="d-flex justify-content-between">
+                                                      <a href="/address/edit?id=<%=address._id%>" class="btn-small">Edit</a>
+                                                      <a href="/address/delete?id=<%=address._id%>" class="btn-small">Delete</a>
                                                     </div>
-                                                    <div class="card-body">
-                                                        <address>3522 Interstate<br> 75 Business Spur,<br> Sault Ste.
-                                                            <br>Marie, MI 49783</address>
-                                                        <p>New York</p>
-                                                        <a href="#" class="btn-small">Edit</a>
-                                                    </div>
+                                                  </div>    
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="card">
+                                              </div>
+                                              <%})%>
+                                              <%}else{%>
+                                                <div class="col-lg-6">
+                                                  <div class="card  mb-3 mb-lg-0">
                                                     <div class="card-header">
-                                                        <h5 class="mb-0">Shipping Address</h5>
+                                                      <h5 class="mb-0"></h5>
                                                     </div>
-                                                    <div class="card-body">
-                                                        <address>4299 Express Lane<br>
-                                                            Sarasota, <br>FL 34249 USA <br>Phone: 1.941.227.4444
-                                                        </address>
-                                                        <p>Sarasota</p>
-                                                        <a href="#" class="btn-small">Edit</a>
-                                                    </div>
+                                                <div class="card-body">
+                                                  <address>
+                                                    No address
+                                                  </address>
                                                 </div>
-                                            </div>
+                                                </div>
+                                              </div>
+                                              <%}%>
+                                           <div>
+                                            <a href="/addAddress">
+                                                <button  class="btn btn-primary w-70">Add address</button>
+                                            </a>
+                                           </div>
+
+
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="account-detail" role="tabpanel"
