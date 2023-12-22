@@ -107,23 +107,46 @@ const editProduct = async (req, res) => {
                 images.push(req.files[i].filename);
             }
         }
-        const updatedProduct = await Product.findByIdAndUpdate(id,{
-            id: Date.now(),
-            productName: data.productName,
-            description: data.description,
-            brand: data.brand,
-            category: data.category,
-            regularPrice: data.regularPrice,
-            salePrice: data.salePrice,
-            quantity: data.quantity,
-            size: data.size,
-            color: data.color,
-            processor: data.processor,
-            createdOn: new Date(),
-            productImage : images
-        }  , {new:true})
-        console.log("product updated");
-        res.redirect("/admin/products")
+        console.log(req.files)
+        if(req.files.length>0){
+            console.log("Yes image is there")
+            const updatedProduct = await Product.findByIdAndUpdate(id,{
+                id: Date.now(),
+                productName: data.productName,
+                description: data.description,
+                brand: data.brand,
+                category: data.category,
+                regularPrice: data.regularPrice,
+                salePrice: data.salePrice,
+                quantity: data.quantity,
+                size: data.size,
+                color: data.color,
+                processor: data.processor,
+                createdOn: new Date(),
+                productImage : images
+            }  , {new:true})
+            console.log("product updated");
+            res.redirect("/admin/products")
+        }else{
+            console.log("No images i thter")
+            const updatedProduct = await Product.findByIdAndUpdate(id,{
+                id: Date.now(),
+                productName: data.productName,
+                description: data.description,
+                brand: data.brand,
+                category: data.category,
+                regularPrice: data.regularPrice,
+                salePrice: data.salePrice,
+                quantity: data.quantity,
+                size: data.size,
+                color: data.color,
+                processor: data.processor,
+                createdOn: new Date(),
+            }  , {new:true})
+            console.log("product updated");
+            res.redirect("/admin/products")
+        }
+
        
 
     } catch (error) {

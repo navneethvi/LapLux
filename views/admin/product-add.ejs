@@ -5,31 +5,35 @@
             <div class="col-9">
                 <div class="content-header">
                     <h2 class="content-title">Add New Product</h2>
-                    
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <form method="post" action="/admin/addProducts" enctype="multipart/form-data">
+
+                        <form method="post" action="/admin/addProducts" enctype="multipart/form-data"
+                            onsubmit="return validateForm()">
                             <div class="mb-4">
                                 <label for="product_name" class="form-label">Product Name</label>
                                 <input type="text" placeholder="Type here" name="productName"
                                     class="form-control border" id="product_name">
+                                <div id="productName-error" class="error-message"></div>
                             </div>
                             <div class="col-lg-4 mb-4">
                                 <label class="form-label">Brand</label>
                                 <select class="form-select border" name="brand">
-                                    <% for (let i = 0; i < brand.length; i++) { %>
-                                        <option value="<%=brand[i].brandName %>"> <%= brand[i].brandName %> </option>
-                                    <% } %>
-                                  </select>
-                                  
+                                    <% for (let i=0; i < brand.length; i++) { %>
+                                        <option value="<%=brand[i].brandName %>">
+                                            <%= brand[i].brandName %>
+                                        </option>
+                                        <% } %>
+                                </select>
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Full description</label>
                                 <textarea placeholder="Type here" name="description" class="form-control border"
                                     rows="4"></textarea>
+                                <div id="description" class="error-message"></div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-4">
@@ -73,168 +77,181 @@
                                 </div>
                             </div>
                             <div class="card mb-4">
-                
                                 <div class="card-body">
                                     <div class="row gx-2">
                                         <div class="col-sm-6 mb-3">
                                             <label class="form-label">Category</label>
                                             <select class="form-select border" style="width: 150px;" name="category">
-                                                <% for (let i = 0; i < cat.length; i++) { %>
-                                                    <option value="<%= cat[i].name %>"> <%= cat[i].name %> </option>
-                                                <% } %>
+                                                <% for (let i=0; i < cat.length; i++) { %>
+                                                    <option value="<%= cat[i].name %>">
+                                                        <%= cat[i].name %>
+                                                    </option>
+                                                    <% } %>
                                             </select>
-                                        </div>            
-                                    </div> <!-- row.// -->
+                                        </div>
+                                    </div>
                                 </div>
-                            </div> <!-- card end// -->
-                           
-                          
+                            </div>
                             <div class="card mb-2">
                                 <div class="card-header">
                                     <h4>Choose images</h4>
                                 </div>
                                 <div class="border row">
-                                    <div id="addedImagesContainer" class="thumbnails-container">
-    
-                                    </div>
+                                    <div id="addedImagesContainer" class="thumbnails-container"></div>
                                 </div>
                                 <div class="card-body">
                                     <div class="input-upload">
                                         <img src="assets/imgs/theme/upload.svg" alt="">
-                                        <input class="form-control border" name="images" id="imageInput" type="file" multiple>
+                                        <input class="form-control border" name="images" id="imageInput" type="file"
+                                            multiple>
                                     </div>
                                 </div>
                             </div>
-
-                            
-                            <!-- card end// -->
-                             
-                                <div>
-        
-                                    <button class="btn btn-md rounded font-sm hover-up" type="submit">Publish</button>
-                                </div>
+                            <div>
+                                <button class="btn btn-md rounded font-sm hover-up" type="submit">Publish</button>
+                            </div>
                         </form>
                     </div>
-                </div> <!-- card end// -->
-
-            </div>
-            
+                </div>
             </div>
         </div>
     </section>
 
-<!-- Add an empty container div for displaying image thumbnails -->
-<style>
-    .thumbnails-container {
-  display: flex;
-  overflow-x: auto;
-}
+    <!-- Add an empty container div for displaying image thumbnails -->
+    <style>
+        .thumbnails-container {
+            display: flex;
+            overflow-x: auto;
+        }
 
-.thumbnail {
-  margin-right: 10px; /* Adjust margin as needed for spacing between thumbnails */
-}
-</style>
+        .thumbnail {
+            margin-right: 10px;
+            /* Adjust margin as needed for spacing between thumbnails */
+        }
+    </style>
 
-<script>
-    // Array to store selected images
-    const selectedImages = [];
-  
-    // Function to handle file input change
-    document.getElementById("imageInput").addEventListener("change", handleFileSelect);
-  
-    function handleFileSelect(event) {
-      // Target the container for displaying thumbnails
-      const addedImagesContainer = document.getElementById("addedImagesContainer");
-  
-      // Clear previous content
-      addedImagesContainer.innerHTML = "";
-  
-      const files = event.target.files;
-  
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-  
-        // Add the file to the selected images array
-        selectedImages.push(file);
-  
-        // Create thumbnail element
-        const thumbnail = document.createElement("div");
-        thumbnail.classList.add("thumbnail");
-  
-        // Create image element
-        const img = document.createElement("img");
-        img.src = URL.createObjectURL(file);
-        img.alt = "thumbnail";
-  
-        // Set a fixed width for the image
-        img.style.width = "50px"; // Adjust the width as needed
-        img.style.height = "auto";
-  
-        // Create remove icon
-        const removeIcon = document.createElement("span");
-        removeIcon.classList.add("remove-icon");
-        removeIcon.innerHTML = "&times;"; // Multiplication symbol as a cross
-  
-        // Event listener to remove the image on icon click
-        removeIcon.addEventListener("click", function () {
-          // Remove the file from the selected images array
-          const index = selectedImages.indexOf(file);
-          if (index !== -1) {
-            selectedImages.splice(index, 1);
-          }
-  
-          // Remove the thumbnail from the container
-          thumbnail.remove();
-        });
-  
-        // Append elements to thumbnail
-        thumbnail.appendChild(img);
-        thumbnail.appendChild(removeIcon);
-  
-        // Append thumbnail to the container
-        addedImagesContainer.appendChild(thumbnail);
-      }
-    }
+    <script>
+        // Array to store selected images
+        const selectedImages = [];
+
+        // Function to handle file input change
+        document.getElementById("imageInput").addEventListener("change", handleFileSelect);
+
+        function handleFileSelect(event) {
+            // Target the container for displaying thumbnails
+            const addedImagesContainer = document.getElementById("addedImagesContainer");
+
+            // Clear previous content
+            addedImagesContainer.innerHTML = "";
+
+            const files = event.target.files;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                // Add the file to the selected images array
+                selectedImages.push(file);
+
+                // Create thumbnail element
+                const thumbnail = document.createElement("div");
+                thumbnail.classList.add("thumbnail");
+
+                // Create image element
+                const img = document.createElement("img");
+                img.src = URL.createObjectURL(file);
+                img.alt = "thumbnail";
+
+                // Set a fixed width for the image
+                img.style.width = "50px"; // Adjust the width as needed
+                img.style.height = "auto";
+
+                // Create remove icon
+                const removeIcon = document.createElement("span");
+                removeIcon.classList.add("remove-icon");
+                removeIcon.innerHTML = "&times;"; // Multiplication symbol as a cross
+
+                // Event listener to remove the image on icon click
+                removeIcon.addEventListener("click", function () {
+                    // Remove the file from the selected images array
+                    const index = selectedImages.indexOf(file);
+                    if (index !== -1) {
+                        selectedImages.splice(index, 1);
+                    }
+
+                    // Remove the thumbnail from the container
+                    thumbnail.remove();
+                });
+
+                // Append elements to thumbnail
+                thumbnail.appendChild(img);
+                thumbnail.appendChild(removeIcon);
+
+                // Append thumbnail to the container
+                addedImagesContainer.appendChild(thumbnail);
+            }
+        }
+
+        function validateForm() {
+            clearErrorMessages();
+
+            const name = document.getElementsByName('productName')[0].value;
+            const description = document.getElementsByName('description')[0].value;
+            const brand = document.getElementsByName('brand')[0].value;
+            const price = document.getElementsByName('regularPrice')[0].value;
+            const color = document.getElementsByName('color')[0].value;
+            const processor = document.getElementsByName('processor')[0].value;
+            const size = document.getElementsByName('size')[0].value;
+            const category = document.getElementsByName('category')[0].value;
+            const images = document.getElementsByName('images')[0].files;
+
+            let isValid = true
 
 
 
-//     function addProduct() {
- 
-//  var quantity = 1;
-//  $.ajax({
-//      url: `/addToCart?id=${prodId}`,
-//      method: "post",
-//      data: {
-//          quantity: quantity
-//      },
-//      success: (res) => {
-//          if (res.status === true) {
-             
-//              Swal.fire({
-//                  title: 'Added to Cart!',
-//                  text: 'Continue Shopping',
-//                  icon: 'success',
-//                  timer: 2000,
-//                  showConfirmButton: false
-//              }).then(()=>location.reload())
-//          } else if (res.status === "outOfStock") {
-//              Swal.fire({
-//                  title: 'Stock!!',
-//                  text: "The product is out of stock",
-//                  icon: 'error', // Corrected from 'fail' to 'error'
-//                  timer: 2000,
-//              }).then(()=>location.reload())
-//          } else {
-//              alert("Error occurred");
-//          }
-//      },
-//      error: (err) => {
-//          console.error(err);
-//          alert("Error occurred");
-//      }
-//  });
-// }
-  </script>
 
+
+            if (name.trim() === "") {
+                displayErrorMessage('productName', 'Please enter a product name.');
+                isValid = false;
+            }
+            if (!isValid) {
+                // If there are validation errors, prevent form submission
+                return false;
+            }
+            if (description.trim() === '') {
+                displayErrorMessage('description', 'Please enter a product description.');
+                isValid = false;
+            }
+
+           
+
+            if (!/^\d+$/.test(quantity) || parseInt(quantity) < 0) {
+                displayErrorMessage('quantity', 'Please enter a valid non-negative quantity.');
+                isValid = false;
+            }
+
+
+            if (!/^\d+(\.\d{1,2})?$/.test(price) || parseFloat(price) < 0) {
+                displayErrorMessage('regularPrice', 'Please enter a valid non-negative price.');
+                isValid = false;
+            }
+        
+
+            return isValid;
+        }
+        function displayErrorMessage(field, message) {
+            const errorElement = document.getElementById(`${field}-error`);
+            if (errorElement) {
+                errorElement.innerText = message;
+            }
+        }
+        function clearErrorMessages() {
+            const errorElements = document.getElementsByClassName('error-message');
+            Array.from(errorElements).forEach(element => {
+                element.innerText = '';
+            });
+        }
+
+    </script>
 
     <%- include("../partials/adminFooter") %>

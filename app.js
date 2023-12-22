@@ -43,6 +43,9 @@ const adminRoutes = require("./routes/adminRouter")
 
 app.use("/", userRoutes)
 app.use("/admin", adminRoutes)
+app.get('*', function(req, res){
+    res.redirect("/pageNotFound");
+  });
 
 
 app.listen(PORT, ()=> console.log(`Server running on  http://localhost:${PORT}`))

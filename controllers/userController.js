@@ -8,7 +8,13 @@ const Category = require("../models/categorySchema")
 
 
 
-
+const pageNotFound = async (req, res)=>{
+    try {
+        res.render("page-404")
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 //Generate Hashed Password
 
@@ -28,14 +34,13 @@ const getHomePage = async (req, res) => {
         const user = req.session.user
         const userData = await User.findOne({})
         const brandData = await Brand.find({ isBlocked: false })
-        const productData = await Product.find({ isBlocked: false }).sort({ createdOn: -1 }).limit(4)
+        const productData = await Product.find({ isBlocked: false }).sort({id:-1}).limit(4)
 
         if (user) {
             res.render("home", { user: userData, data: brandData, products: productData })
         } else {
             res.render("home", { data: brandData, products: productData })
         }
-
     } catch (error) {
         console.log(error.message)
     }
@@ -59,7 +64,11 @@ const getLoginPage = async (req, res) => {
 
 const getSignupPage = async (req, res) => {
     try {
-        res.render("signup")
+        if (!req.session.user) {
+            res.render("signup")
+        } else {
+            res.redirect("/")
+        }
     } catch (error) {
         console.log(error.message);
     }
@@ -286,5 +295,6 @@ module.exports = {
     getUserProfile,
     getLogoutUser,
     getProductDetailsPage,
-    getShopPage
+    getShopPage,
+    pageNotFound
 }

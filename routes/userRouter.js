@@ -6,7 +6,7 @@ const cartController = require("../controllers/cartController,")
 
 const { isLogged } = require("../Authentication/auth")
 
-
+Router.get("/pageNotFound", userController.pageNotFound)
 //user actions
 Router.get("/", userController.getHomePage)
 Router.get("/login", userController.getLoginPage)
@@ -20,7 +20,7 @@ Router.get("/logout", isLogged, userController.getLogoutUser)
 Router.get("/profile", isLogged, userController.getUserProfile)
 
 //Products based routes
-Router.get("/productDetails", isLogged, userController.getProductDetailsPage)
+Router.get("/productDetails", userController.getProductDetailsPage)
 Router.get("/shop", isLogged, userController.getShopPage)
 
 //User cart
