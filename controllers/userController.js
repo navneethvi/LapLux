@@ -238,12 +238,16 @@ const getLogoutUser = async (req, res) => {
 
 const getProductDetailsPage = async (req, res) => {
     try {
-        const user = req.session.id
+        const user = req.session.user
         console.log("wrking");
         const id = req.query.id
         console.log(id);
         const findProduct = await Product.find({ id: id });
-        res.render("product-details", { data: findProduct, user: user })
+        if(user){
+            res.render("product-details", { data: findProduct, user: user })
+        }else{
+            res.render("product-details", { data: findProduct})
+        }
     } catch (error) {
         console.log(error.message);
     }

@@ -11,7 +11,7 @@ const getUserProfile = async (req, res) => {
         // console.log(userData);
         const addressData = await Address.findOne({ userId: userId })
         // console.log(addressData);
-        console.log("wrking");
+       
         res.render("profile", { user: userData, userAddress: addressData })
     } catch (error) {
         console.log(error.message);
@@ -89,25 +89,62 @@ const postAddress = async (req, res) => {
 const getEditAddress = async (req, res) => {
     try {
         const addressId = req.query.id
-        console.log(addressId);
         const user = req.session.user
-        // console.log(id);
-       
-       
         const currAddress = await Address.findOne({
             "address._id": addressId,
         });
-        console.log(currAddress);
-        res.render("edit-address", { address: currAddress })
+
+        const addressData = currAddress.address.find((item) => {
+            return item._id.toString() == addressId.toString()
+        })
+        // console.log(addressData);
+        res.render("edit-address", { address: addressData, user : user })
     } catch (error) {
         console.log(error.message);
     }
 }
 
 
+const postEditAddress = async (req, res)=>{
+    try {
+        const data = req.body
+        console.log(data);
+        const addressId = req.query.id
+        // console.log(addressId, "address id")
+        const user = req.session.user
+        const findAddress = await Address.findOne({"address._id" : addressId})
+        const matchingAddress = findAddress.address.find((item)=>{
+            return item._id == addressId
+        })
+        await Address.updateOne(
+            {"address._id" : matchingAddress._id},
+            {$set : {
+                addressType : data.addressType,
+                name : data.name,
+                city : data.city,
+                landMark : data.landMark,
+                state : data.landMark,
+                pincode : data.pincode,
+                phone : data.phone,
+                altPhone : data.altPhone
+            }}
+          
+        ).then((data)=>{
+            console.log(data)
+        })
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
+
 module.exports = {
     getUserProfile,
     getAddressAddPage,
     postAddress,
-    getEditAddress
+    getEditAddress,
+    postEditAddress
 }

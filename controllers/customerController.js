@@ -8,7 +8,7 @@ const getCustomersInfo = async (req, res) => {
         }
         let page = 1
         if (req.query.page) {
-            page = req.query.page
+            page = req.query.page   
         }
         const limit = 3
         const userData = await User.find({

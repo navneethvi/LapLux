@@ -23,7 +23,8 @@ Router.get("/logout", isLogged, userController.getLogoutUser)
 Router.get("/profile", isLogged, userProfileController.getUserProfile)
 Router.get("/addAddress", isLogged, userProfileController.getAddressAddPage)
 Router.post("/addAddress", isLogged, userProfileController.postAddress)
-Router.get("/editAddress", isLogged, userProfileController.getEditAddress)
+Router.get("/editAddress", isLogged, userProfileController.getEditAddress),
+Router.post("/editAddress", isLogged, userProfileController.postEditAddress)
 
 //Products based routes
 Router.get("/productDetails", userController.getProductDetailsPage)

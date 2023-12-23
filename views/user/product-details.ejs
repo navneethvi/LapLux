@@ -205,12 +205,18 @@ function addToCart(prodId) {
                     timer: 2000,
                 }).then(()=>location.reload())
             } else {
-                alert("Error occurred");
+                Swal.fire({
+                    title: 'You need to Login first',
+                    text: 'Continue Shopping',
+                    icon: 'warning',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => { window.location.href = '/login'});
             }
         },
         error: (err) => {
             console.error(err);
-            alert("Error occurred");
+            res.alert("error occured")
         }
     });
 }
