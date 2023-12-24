@@ -11,7 +11,7 @@ const getUserProfile = async (req, res) => {
         // console.log(userData);
         const addressData = await Address.findOne({ userId: userId })
         // console.log(addressData);
-       
+
         res.render("profile", { user: userData, userAddress: addressData })
     } catch (error) {
         console.log(error.message);
@@ -98,46 +98,59 @@ const getEditAddress = async (req, res) => {
             return item._id.toString() == addressId.toString()
         })
         // console.log(addressData);
-        res.render("edit-address", { address: addressData, user : user })
+        res.render("edit-address", { address: addressData, user: user })
     } catch (error) {
         console.log(error.message);
     }
 }
 
 
-const postEditAddress = async (req, res)=>{
+const postEditAddress = async (req, res) => {
     try {
         const data = req.body
-        console.log(data);
         const addressId = req.query.id
-        // console.log(addressId, "address id")
+        console.log(addressId, "address id")
         const user = req.session.user
-        const findAddress = await Address.findOne({"address._id" : addressId})
-        const matchingAddress = findAddress.address.find((item)=>{
-            return item._id == addressId
-        })
+        const findAddress = await Address.findOne({ "address._id": addressId });
+        const matchedAddress = findAddress.address.find(item => item._id == addressId)
+        console.log(matchedAddress);
         await Address.updateOne(
-            {"address._id" : matchingAddress._id},
-            {$set : {
-                addressType : data.addressType,
-                name : data.name,
-                city : data.city,
-                landMark : data.landMark,
-                state : data.landMark,
-                pincode : data.pincode,
-                phone : data.phone,
-                altPhone : data.altPhone
-            }}
-          
-        ).then((data)=>{
-            console.log(data)
+            {
+                "address._id": addressId,
+                "_id": findAddress._id,
+            },
+            {
+                $set: {
+                    "address.$": {
+                        _id: addressId, 
+                        addressType: data.addressType,
+                        name: data.name,
+                        city: data.city,
+                        landMark: data.landMark,
+                        state: data.state,
+                        pincode: data.pincode,
+                        phone: data.phone,
+                        altPhone: data.altPhone,
+                    },
+                }
+            }
+        ).then((result) => {
+            console.log(result)
+            res.redirect("/profile")
         })
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const getDeleteAddress = async (req, res)=>{
+    try {
         
     } catch (error) {
         console.log(error.message);
     }
 }
-
 
 
 
