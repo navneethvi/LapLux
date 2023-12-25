@@ -8,7 +8,7 @@ const Category = require("../models/categorySchema")
 
 
 
-const pageNotFound = async (req, res)=>{
+const pageNotFound = async (req, res) => {
     try {
         res.render("page-404")
     } catch (error) {
@@ -34,7 +34,7 @@ const getHomePage = async (req, res) => {
         const user = req.session.user
         const userData = await User.findOne({})
         const brandData = await Brand.find({ isBlocked: false })
-        const productData = await Product.find({ isBlocked: false }).sort({id:-1}).limit(4)
+        const productData = await Product.find({ isBlocked: false }).sort({ id: -1 }).limit(4)
 
         if (user) {
             res.render("home", { user: userData, data: brandData, products: productData })
@@ -109,7 +109,7 @@ const signupUser = async (req, res) => {
                     to: email,
                     subject: "Verify Your Account ✔",
                     text: `Your OTP is ${otp}`,
-                    html: `<b>  <h4 >Your OTP  ${otp}</h4>    <br>  <a href="/api/user/emailOTP/">Click here</a></b>`,
+                    html: `<b>  <h4 >Your OTP  ${otp}</h4>    <br>  <a href="">Click here</a></b>`,
                 })
                 if (info) {
                     req.session.userOtp = otp
@@ -243,10 +243,10 @@ const getProductDetailsPage = async (req, res) => {
         const id = req.query.id
         console.log(id);
         const findProduct = await Product.find({ id: id });
-        if(user){
+        if (user) {
             res.render("product-details", { data: findProduct, user: user })
-        }else{
-            res.render("product-details", { data: findProduct})
+        } else {
+            res.render("product-details", { data: findProduct })
         }
     } catch (error) {
         console.log(error.message);
@@ -273,6 +273,9 @@ const getShopPage = async (req, res) => {
         console.log(error.message);
     }
 }
+
+
+
 
 
 

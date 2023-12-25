@@ -7,9 +7,8 @@ const userProfileController = require("../controllers/userProfileController")
 
 const { isLogged } = require("../Authentication/auth")
 
-
-'*'
 Router.get("/pageNotFound", userController.pageNotFound)
+
 //user actions
 Router.get("/", userController.getHomePage)
 Router.get("/login", userController.getLoginPage)
@@ -18,6 +17,9 @@ Router.get("/signup", userController.getSignupPage)
 Router.post("/verify-otp", userController.verifyOtp)
 Router.post("/signup", userController.signupUser)
 Router.get("/logout", isLogged, userController.getLogoutUser)
+Router.get("/forgotPassword", userProfileController.getForgotPassPage)
+Router.post("/forgotEmailValid", userProfileController.forgotEmailValid)
+Router.post("/verifyEmail", userProfileController.verifyForgotPassOtp)
 
 //user profile
 Router.get("/profile", isLogged, userProfileController.getUserProfile)

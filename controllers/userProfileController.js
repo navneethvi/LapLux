@@ -1,7 +1,7 @@
 const User = require("../models/userSchema")
 const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
-
+const nodemailer = require("nodemailer")
 
 const getUserProfile = async (req, res) => {
     try {
@@ -33,7 +33,7 @@ const editUserDetails = async (req, res) => {
             }
         )
             .then((data) => console.log(data))
-            res.redirect("/profile")
+        res.redirect("/profile")
 
     } catch (error) {
         console.log(error.message);
@@ -189,7 +189,83 @@ const getDeleteAddress = async (req, res) => {
 }
 
 
+const getForgotPassPage = async (req, res) => {
+    try {
+        res.render("forgot-password")
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
+
+function generateOtp() {
+    const digits = "1234567890"
+    var otp = ""
+    for (i = 0; i < 6; i++) {
+        otp += digits[Math.floor(Math.random() * 10)]
+    }
+    return otp
+}
+
+
+
+
+
+
+const forgotEmailValid = async (req, res) => {
+    try {
+        const { email } = req.body
+
+        const findUser = await User.findOne({ email: email })
+
+        if (findUser) {
+            const otp = generateOtp()
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                port: 587,
+                secure: false,
+                requireTLS: true,
+                auth: {
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASSWORD
+                }
+            })
+            const info = await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: "Verify Your Account ✔",
+                text: `Your OTP is ${otp}`,
+                html: `<b>  <h4 >Your OTP  ${otp}</h4>    <br>  <a href="">Click here</a></b>`,
+            })
+            if (info) {
+                req.session.userOtp = otp
+                req.session.userData = req.body
+                res.redirect("/verifyEmail")
+                console.log("Email sented", info.messageId);
+            } else {
+                res.json("email-error")
+            }
+        } else {
+            res.render("forgot-password", { message: "User with this email already exists" })
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const verifyForgotPassOtp = async (req, res) => {
+    try {
+        const enteredOtp = req.body.otp
+        if (enteredOtp === req.session.userOtp) {
+            res.render("reset-password")
+        } else {
+            res.render("forgotPass-otp", { message: "Otp not matching" })
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 
 module.exports = {
@@ -199,5 +275,9 @@ module.exports = {
     getEditAddress,
     postEditAddress,
     getDeleteAddress,
-    editUserDetails
+    editUserDetails,
+    getForgotPassPage,
+    forgotEmailValid,
+    verifyForgotPassOtp
+
 }

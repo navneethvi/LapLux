@@ -50,7 +50,7 @@ const addProducts = async (req, res) => {
             res.redirect("/admin/products")
             // res.json("success")
         } else {
-           
+
             res.json("failed");
         }
 
@@ -63,7 +63,7 @@ const getEditProduct = async (req, res) => {
     try {
         const id = req.query.id
         const findProduct = await Product.findOne({ _id: id })
-        
+
         const category = await Category.find({})
         const findBrand = await Brand.find({})
         res.render("edit-product", { product: findProduct, cat: category, brand: findBrand })
@@ -73,12 +73,12 @@ const getEditProduct = async (req, res) => {
 }
 
 
-const deleteSingleImage = async (req, res)=>{
+const deleteSingleImage = async (req, res) => {
     try {
         const id = req.query.id
         const image = req.params.image
-        const product = await Product.findByIdAndUpdate(id,{
-            $pull : {productImage : image}
+        const product = await Product.findByIdAndUpdate(id, {
+            $pull: { productImage: image }
         })
         console.log(image);
         const imagePath = path.join('public', 'uploads', 'product-images', image);
@@ -108,9 +108,9 @@ const editProduct = async (req, res) => {
             }
         }
         console.log(req.files)
-        if(req.files.length>0){
+        if (req.files.length > 0) {
             console.log("Yes image is there")
-            const updatedProduct = await Product.findByIdAndUpdate(id,{
+            const updatedProduct = await Product.findByIdAndUpdate(id, {
                 id: Date.now(),
                 productName: data.productName,
                 description: data.description,
@@ -123,13 +123,13 @@ const editProduct = async (req, res) => {
                 color: data.color,
                 processor: data.processor,
                 createdOn: new Date(),
-                productImage : images
-            }  , {new:true})
+                productImage: images
+            }, { new: true })
             console.log("product updated");
             res.redirect("/admin/products")
-        }else{
+        } else {
             console.log("No images i thter")
-            const updatedProduct = await Product.findByIdAndUpdate(id,{
+            const updatedProduct = await Product.findByIdAndUpdate(id, {
                 id: Date.now(),
                 productName: data.productName,
                 description: data.description,
@@ -142,12 +142,12 @@ const editProduct = async (req, res) => {
                 color: data.color,
                 processor: data.processor,
                 createdOn: new Date(),
-            }  , {new:true})
+            }, { new: true })
             console.log("product updated");
             res.redirect("/admin/products")
         }
 
-       
+
 
     } catch (error) {
         console.log(error.message);
@@ -166,25 +166,25 @@ const getAllProducts = async (req, res) => {
                 { brand: { $regex: new RegExp(".*" + search + ".*", "i") } }
             ],
         }).limit(limit * 1)
-          .skip((page - 1) * limit)
-          .exec()
+            .skip((page - 1) * limit)
+            .exec()
 
-          const count = await Product.find({
+        const count = await Product.find({
             $or: [
                 { productName: { $regex: new RegExp(".*" + search + ".*", "i") } },
                 { brand: { $regex: new RegExp(".*" + search + ".*", "i") } }
             ],
         }).countDocuments()
 
-        
-        
-        res.render("products", { 
+
+
+        res.render("products", {
             data: productData,
-            currentPage : page,
-            totalPages : Math.ceil(count/limit)
-        
+            currentPage: page,
+            totalPages: Math.ceil(count / limit)
+
         });
-        
+
     } catch (error) {
         console.log(error.message);
     }

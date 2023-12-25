@@ -1,7 +1,7 @@
 const User = require("../models/userSchema")
 const Product = require("../models/productSchema")
 const Mongoose = require("mongoose")
-const { use } = require("passport")
+
 
 
 const getCartPage = async (req, res) => {
@@ -57,22 +57,26 @@ const deleteProduct = async (req, res)=>{
     try {
        
         const id = req.query.id
-        await User.updateOne(
-            {"cart.productId" : id},
-            {
-                $pull : {
-                    cart : {
-                        productId : id
-                    }
-                }
-            }
-        )
-        .then((data)=>console.log(data))
+        // console.log(id, "id");
+        const userId = req.session.user
+        // await User.updateOne(
+        //     {"cart.productId" : id},
+        //     {
+        //         $pull : {
+        //             cart : {
+        //                 productId : id
+        //             }
+        //         }
+        //     }
+        // )
+        // .then((data)=>console.log(data))
            
+        await User.findOne({"cart.productId" : id})
+        .then((data)=>console.log(data))
+     
        res.redirect("/cart")
 
-        // const existingCartItemIndex = userData.cart.findIndex(item => item.productId === id)
-        // console.log(existingCartItemIndex);
+        
         
     } catch (error) {
         console.log(error.message);
