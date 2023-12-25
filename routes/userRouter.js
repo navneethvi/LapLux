@@ -25,6 +25,8 @@ Router.get("/addAddress", isLogged, userProfileController.getAddressAddPage)
 Router.post("/addAddress", isLogged, userProfileController.postAddress)
 Router.get("/editAddress", isLogged, userProfileController.getEditAddress),
 Router.post("/editAddress", isLogged, userProfileController.postEditAddress)
+Router.get("/deleteAddress", isLogged, userProfileController.getDeleteAddress)
+Router.post("/editUserDetails", isLogged, userProfileController.editUserDetails)
 
 //Products based routes
 Router.get("/productDetails", userController.getProductDetailsPage)

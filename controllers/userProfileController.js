@@ -18,6 +18,28 @@ const getUserProfile = async (req, res) => {
     }
 }
 
+const editUserDetails = async (req, res) => {
+    try {
+        const userId = req.query.id
+        const data = req.body
+        await User.updateOne(
+            { _id: userId },
+            {
+                $set: {
+                    name: data.name,
+                    phone: data.phone
+                    // email: data.email,
+                }
+            }
+        )
+            .then((data) => console.log(data))
+            res.redirect("/profile")
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 const getAddressAddPage = async (req, res) => {
     try {
         const user = req.session.user
@@ -122,7 +144,7 @@ const postEditAddress = async (req, res) => {
             {
                 $set: {
                     "address.$": {
-                        _id: addressId, 
+                        _id: addressId,
                         addressType: data.addressType,
                         name: data.name,
                         city: data.city,
@@ -144,13 +166,29 @@ const postEditAddress = async (req, res) => {
 }
 
 
-const getDeleteAddress = async (req, res)=>{
+const getDeleteAddress = async (req, res) => {
     try {
-        
+
+        const addressId = req.query.id
+        const findAddress = await Address.findOne({ "address._id": addressId })
+        await Address.updateOne(
+            { "address._id": addressId },
+            {
+                $pull: {
+                    address: {
+                        _id: addressId
+                    }
+                }
+            }
+        )
+            .then((data) => console.log(data)
+            )
     } catch (error) {
         console.log(error.message);
     }
 }
+
+
 
 
 
@@ -159,5 +197,7 @@ module.exports = {
     getAddressAddPage,
     postAddress,
     getEditAddress,
-    postEditAddress
+    postEditAddress,
+    getDeleteAddress,
+    editUserDetails
 }

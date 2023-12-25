@@ -177,7 +177,7 @@
                                                     <p><%=address.altPhone%></p>
                                                     <div class="d-flex justify-content-between">
                                                       <a href="/editAddress?id=<%=address._id%>" class="btn-small">Edit</a>
-                                                      <a href="/address/delete?id=<%=address._id%>" class="btn-small">Delete</a>
+                                                      <a href="/deleteAddress?id=<%=address._id%>" class="btn-small">Delete</a>
                                                     </div>
                                                   </div>    
                                                 </div>
@@ -213,33 +213,29 @@
                                                 <h5>Account Details</h5>
                                             </div>
                                             <div class="card-body">
-                                                <p>Already have an account? <a href="page-login-register.html">Log in
-                                                        instead!</a></p>
-                                                <form method="post" name="enq">
+                                              
+                                                <form method="post" action="/editUserDetails?id=<%= user._id %>">
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <label>First Name <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="name"
+                                                            <label> Name <span class="required">*</span></label>
+                                                            <input required="" value="<%= user.name %>" class="form-control square" name="name"
                                                                 type="text">
                                                         </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label>Last Name <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="phone">
-                                                        </div>
+                                                        
                                                         <div class="form-group col-md-12">
-                                                            <label>Display Name <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="dname"
+                                                            <label>Mobile Number <span class="required">*</span></label>
+                                                            <input required="" value="<%= user.phone %>" class="form-control square" name="phone"
                                                                 type="text">
                                                         </div>
-                                                        <div class="form-group col-md-12">
+                                                        <!-- <div class="form-group col-md-12">
                                                             <label>Email Address <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="email"
+                                                            <input required="" value="" class="form-control square" name="email"
                                                                 type="email">
-                                                        </div>
+                                                        </div> -->
                                                         <div class="form-group col-md-12">
                                                             <label>Current Password <span
                                                                     class="required">*</span></label>
-                                                            <input required="" class="form-control square"
+                                                            <input required=""  class="form-control square"
                                                                 name="password" type="password">
                                                         </div>
                                                         <div class="form-group col-md-12">

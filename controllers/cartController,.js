@@ -55,25 +55,24 @@ const addToCart = async (req, res) => {
 
 const deleteProduct = async (req, res)=>{
     try {
-        const user = req.session.user
-    
-        if(!user){
-            res.json("User not found")
-            console.log("User not found");
-            return
-        }
+       
         const id = req.query.id
-        console.log(id);
-        const userData = await User.findOne({_id : user})
-  
-        if(!userData){
-            res.json("User not found")
-            console.log("User not found 2");
-            return
-        }
+        await User.updateOne(
+            {"cart.productId" : id},
+            {
+                $pull : {
+                    cart : {
+                        productId : id
+                    }
+                }
+            }
+        )
+        .then((data)=>console.log(data))
+           
+       res.redirect("/cart")
 
-        const existingCartItemIndex = userData.cart.findIndex(item => item.productId === id)
-        console.log(existingCartItemIndex);
+        // const existingCartItemIndex = userData.cart.findIndex(item => item.productId === id)
+        // console.log(existingCartItemIndex);
         
     } catch (error) {
         console.log(error.message);
