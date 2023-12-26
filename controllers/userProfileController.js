@@ -208,7 +208,13 @@ function generateOtp() {
 }
 
 
-
+// const getForgotPassOtpPage = async (req, res)=>{
+//     try {
+//         res.render("forgotPass-otp")
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+// }
 
 
 
@@ -240,7 +246,7 @@ const forgotEmailValid = async (req, res) => {
             if (info) {
                 req.session.userOtp = otp
                 req.session.userData = req.body
-                res.redirect("/verifyEmail")
+                res.render("forgotPass-otp")
                 console.log("Email sented", info.messageId);
             } else {
                 res.json("email-error")
@@ -278,6 +284,8 @@ module.exports = {
     editUserDetails,
     getForgotPassPage,
     forgotEmailValid,
-    verifyForgotPassOtp
+    verifyForgotPassOtp,
+
+ 
 
 }

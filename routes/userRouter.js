@@ -19,7 +19,8 @@ Router.post("/signup", userController.signupUser)
 Router.get("/logout", isLogged, userController.getLogoutUser)
 Router.get("/forgotPassword", userProfileController.getForgotPassPage)
 Router.post("/forgotEmailValid", userProfileController.forgotEmailValid)
-Router.post("/verifyEmail", userProfileController.verifyForgotPassOtp)
+// Router.post("/getForgotPassOtpPage", userProfileController.postForgotOtp)
+Router.get("/resetPassword", userProfileController.verifyForgotPassOtp)
 
 //user profile
 Router.get("/profile", isLogged, userProfileController.getUserProfile)
@@ -35,9 +36,10 @@ Router.get("/productDetails", userController.getProductDetailsPage)
 Router.get("/shop", isLogged, userController.getShopPage)
 
 //User cart
-Router.get("/cart", isLogged, cartController.getCartPage),
+Router.get("/cart", isLogged, cartController.getCartPage)
 Router.post("/addToCart", isLogged, cartController.addToCart)
 Router.get("/deleteItem", isLogged, cartController.deleteProduct)
+
 
 module.exports = Router
 
