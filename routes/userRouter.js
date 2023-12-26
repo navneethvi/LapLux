@@ -19,8 +19,9 @@ Router.post("/signup", userController.signupUser)
 Router.get("/logout", isLogged, userController.getLogoutUser)
 Router.get("/forgotPassword", userProfileController.getForgotPassPage)
 Router.post("/forgotEmailValid", userProfileController.forgotEmailValid)
-// Router.post("/getForgotPassOtpPage", userProfileController.postForgotOtp)
-Router.get("/resetPassword", userProfileController.verifyForgotPassOtp)
+Router.post("/verifyPassOtp", userProfileController.verifyForgotPassOtp)
+Router.get("/resetPassword", userProfileController.getResetPassPage)
+Router.post("/changePassword", userProfileController.postNewPassword)
 
 //user profile
 Router.get("/profile", isLogged, userProfileController.getUserProfile)
@@ -42,4 +43,3 @@ Router.get("/deleteItem", isLogged, cartController.deleteProduct)
 
 
 module.exports = Router
-

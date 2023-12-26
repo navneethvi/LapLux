@@ -2,6 +2,7 @@ const User = require("../models/userSchema")
 const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
 const nodemailer = require("nodemailer")
+const bcrypt = require("bcrypt")
 
 const getUserProfile = async (req, res) => {
     try {
@@ -246,6 +247,7 @@ const forgotEmailValid = async (req, res) => {
             if (info) {
                 req.session.userOtp = otp
                 req.session.userData = req.body
+                req.session.email = email
                 res.render("forgotPass-otp")
                 console.log("Email sented", info.messageId);
             } else {
@@ -260,14 +262,58 @@ const forgotEmailValid = async (req, res) => {
 }
 
 
+const getResetPassPage = async (req, res) => {
+    try {
+        res.render("reset-password")
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 const verifyForgotPassOtp = async (req, res) => {
     try {
         const enteredOtp = req.body.otp
         if (enteredOtp === req.session.userOtp) {
-            res.render("reset-password")
+            res.redirect('/resetPassword')
         } else {
             res.render("forgotPass-otp", { message: "Otp not matching" })
         }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const securePassword = async (password) => {
+    try {
+        const passwordHash = await bcrypt.hash(password, 10)
+        return passwordHash
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const postNewPassword = async (req, res) => {
+    try {
+        const { newPass1, newPass2 } = req.body
+        const email = req.session.email
+       if(newPass1 === newPass2){
+        const passwordHash = await securePassword(newPass1)
+        await User.updateOne(
+            { email: email },
+            {
+                $set : {
+                    password : passwordHash
+                }
+            }
+        )
+        .then((data)=>console.log(data))
+        res.redirect("/login")
+       }else{
+        console.log("Password not match");
+        res.render("reset-password", {message : "Password not matching"})
+       }
+
+
     } catch (error) {
         console.log(error.message);
     }
@@ -285,7 +331,7 @@ module.exports = {
     getForgotPassPage,
     forgotEmailValid,
     verifyForgotPassOtp,
-
- 
+    getResetPassPage,
+    postNewPassword
 
 }
