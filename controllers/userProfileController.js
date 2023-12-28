@@ -333,5 +333,4 @@ module.exports = {
     verifyForgotPassOtp,
     getResetPassPage,
     postNewPassword
-
 }

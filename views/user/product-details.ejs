@@ -196,7 +196,7 @@ function addToCart(prodId) {
                     icon: 'success',
                     timer: 2000,
                     showConfirmButton: false
-                }).then(()=>location.reload())
+                })
             } else if (res.status === "outOfStock") {
                 Swal.fire({
                     title: 'Stock!!',
