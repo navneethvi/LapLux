@@ -65,18 +65,13 @@
                                 </div>
                                 <div class="bt-1 border-color-1 mt-30 mb-30"></div>
 
-                                <div class="detail-extralink">
-                                    <div class="btn-group" style="position: relative; display: inline-block;">
-                                        <button class="btn btn-success" onclick="addToCart('<%=data[0]._id%>')" style="width: 120px; height: 42px; display: flex; align-items: center; overflow: hidden;">
-                                            <a class="text-white" style="display: block; width: 100%; text-align: center;">Add to cart</a>
-                                        </button>
-                                    </div>
-                                
-                                    <div class="product-extra-link2">
-                                        <button type="submit" class="button button-add-to-cart">Buy Now</button>
-                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                    </div>
-                                </div>
+                                <div class="d-flex justify-content gap-3">
+                                    <button class="btn btn-success" onclick="addToCart('<%=data[0]._id%>')">Add to Cart</button>
+                                    <a href="/checkout">
+                                      <button class="btn btn-primary">Buy Now</button>
+                                    </a>
+                                  </div>
+                                  
                                 
                                 
                                 <ul class="product-meta font-xs color-grey mt-50">

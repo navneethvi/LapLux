@@ -17,7 +17,7 @@
         <section class="mt-50 mb-50">
             <div class="container">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-9">
                         <div class="table-responsive">
                             <table class="table shopping-summery text-center clean">
                                 <thead>
@@ -26,7 +26,6 @@
                                         <th scope="col">Name</th>
                                         <th scope="col">Price</th>
                                         <th scope="col">Quantity</th>
-                                        <th scope="col">Subtotal</th>
                                         <th scope="col">Remove</th>
                                     </tr>
                                 </thead>
@@ -54,11 +53,26 @@
                                                 </td>
                                                 <td class="price" data-title="Price"><span>₹ <%= product[i].regularPrice
                                                             %> </span></td>
+
+
                                                 <td class="text-center" data-title="Stock">
                                                     <div class="detail-qty border radius m-auto">
+                                                        <div class="quantity-control">
 
+                                                            <button class="btn btn-sm increment-button"
+                                                                onclick="">+</button>
+                                                            <input class="quantity-input<%= i %>" id=""
+                                                                style="width: 45px;" type="text" readonly value="">
+                                                            <button class="btn btn-sm decrement-button"
+                                                                onclick="">-</button>
+
+
+                                                        </div>
                                                     </div>
                                                 </td>
+
+
+
                                                 
 
                                                 <td class="action" data-title="Remove">
@@ -66,7 +80,7 @@
                                                         <i class="fi-rs-trash"></i>
                                                     </a>
                                                 </td>
-                                                
+
 
 
 
@@ -81,10 +95,34 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="cart-action text-end">
-                            <a class="btn  mr-10 mb-sm-15"><i class="fi-rs-shuffle mr-10"></i>Update Cart</a>
-                            <a class="btn "><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
                         </div>
+                        <div class="col-3">
+                            <div class="border p-md-4 p-30 border-radius cart-totals">
+                                <div class="heading_s1 mb-3">
+                                    <h4>Cart Totals</h4>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="cart_total_label">Cart Subtotal</td>
+                                                <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">$240.00</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="cart_total_label">Shipping</td>
+                                                <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="cart_total_label">Total</td>
+                                                <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand">$240.00</span></strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <a href="#" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
+                            </div>
+                        </div>
+                      
                     </div>
 
                 </div>
@@ -94,9 +132,47 @@
         </section>
     </main>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <%- include("../partials/footer") %>
 
 
         <script>
-       
+
         </script>

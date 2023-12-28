@@ -4,6 +4,7 @@ const Router = express.Router()
 const userController = require("../controllers/userController")
 const cartController = require("../controllers/cartController,")
 const userProfileController = require("../controllers/userProfileController")
+const orderController = require("../controllers/orderContoller")
 
 const { isLogged } = require("../Authentication/auth")
 
@@ -40,6 +41,9 @@ Router.get("/shop", isLogged, userController.getShopPage)
 Router.get("/cart", isLogged, cartController.getCartPage)
 Router.post("/addToCart", isLogged, cartController.addToCart)
 Router.get("/deleteItem", isLogged, cartController.deleteProduct)
+
+//Orders
+Router.get("/checkout", orderController.getCheckoutPage)
 
 
 module.exports = Router
