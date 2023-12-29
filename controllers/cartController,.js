@@ -15,7 +15,7 @@ const getCartPage = async (req, res) => {
             const userId = id
             // console.log(userId);
             const oid = new mongodb.ObjectId(userId)
-           
+
             const cartProducts = await User.aggregate([
                 { $match: { _id: oid } },
                 { $unwind: "$cart" },
@@ -44,14 +44,14 @@ const getCartPage = async (req, res) => {
             const products = await Product.find().lean()
             res.render("cart", {
                 user,
-                product : products,
-                data : cartProducts,
-                total : totalPrice,
+                product: products,
+                data: cartProducts,
+                total: totalPrice,
             })
 
         }
 
-        res.render("cart", { user: user , data : cartProducts})
+       
     } catch (error) {
         console.log(error.message);
     }
@@ -90,7 +90,7 @@ const addToCart = async (req, res) => {
                 const productInCart = findUser.cart[cartIndex]
                 console.log(productInCart);
                 const newQuantity = parseInt(productInCart.quantity) + parseInt(req.body.quantity)
-                console.log(productInCart, "product", newQuantity );
+                console.log(productInCart, "product", newQuantity);
 
                 await User.updateOne(
                     { _id: userId, "cart.productId": id },
@@ -101,7 +101,35 @@ const addToCart = async (req, res) => {
         } else {
             res.json({ status: "Out of stock" })
         }
-     
+
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const changeQuantity = async (req, res) => {
+    try {
+        const { prodId, userId } = req.bod
+
+        count = parseInt(req.body.count)
+        quantity = parseInt(req.body.quantity)
+        total = count + quantity
+        if ((quantity >= 1 && count == 1) || (quantity > 1 && count == -1)) {
+            User.updateOne({
+                "cart.productId": prodId, _id: userId
+            },
+                {
+                    $set: {
+                        "cart.$.quantity": total
+                    }
+                }
+            )
+                .then((status) => {
+                    res.json({ status: false })
+                })
+        }
 
     } catch (error) {
         console.log(error.message);
@@ -128,5 +156,6 @@ const deleteProduct = async (req, res) => {
 module.exports = {
     getCartPage,
     addToCart,
+    changeQuantity,
     deleteProduct
 }

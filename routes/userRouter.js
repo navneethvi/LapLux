@@ -40,6 +40,7 @@ Router.get("/shop", isLogged, userController.getShopPage)
 //User cart
 Router.get("/cart", isLogged, cartController.getCartPage)
 Router.post("/addToCart", isLogged, cartController.addToCart)
+Router.post("/changeQuantity", isLogged, cartController.changeQuantity)
 Router.get("/deleteItem", isLogged, cartController.deleteProduct)
 
 //Orders
