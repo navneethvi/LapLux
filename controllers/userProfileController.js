@@ -182,7 +182,7 @@ const getDeleteAddress = async (req, res) => {
                 }
             }
         )
-            .then((data) => console.log(data)
+            .then((data) => res.redirect("/profile")
             )
     } catch (error) {
         console.log(error.message);

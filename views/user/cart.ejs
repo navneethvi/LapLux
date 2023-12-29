@@ -33,25 +33,25 @@
 
                                     <% if (product.length> 0) { %>
 
-                                        <% for (let i=0; i < product.length;i++) { %>
+                                        <% for (let i=0; i < data.length;i++) { %>
 
                                             <tr>
                                                 <td class="image product-thumbnail">
-                                                    <img src="/uploads/product-images/<%= product[i].productImage[0] %>"
+                                                    <img src="/uploads/product-images/<%= data[i].productDetails[0].productImage[0] %>"
                                                         alt="#" />
                                                 </td>
                                                 <td class="product-des product-name">
                                                     <h5 class="product-name">
                                                         <a href="shop-product-right.html">
-                                                            <%= product[i].productName %>
+                                                            <%= data[i].productDetails[0].productName %>
                                                         </a>
                                                     </h5>
                                                     <p class="font-xs">
-                                                        <%= product[i].category %><br />
-                                                            <%= product[i].brand %>.
+                                                        <%= data[i].productDetails[0].category %><br />
+                                                            <%= data[i].productDetails[0].brand %>.
                                                     </p>
                                                 </td>
-                                                <td class="price" data-title="Price"><span>₹ <%= product[i].regularPrice
+                                                <td class="price" data-title="Price"><span>₹ <%= data[i].productDetails[0].salePrice
                                                             %> </span></td>
 
 
@@ -61,8 +61,8 @@
 
                                                             <button class="btn btn-sm increment-button"
                                                                 onclick="">+</button>
-                                                            <input class="quantity-input<%= i %>" id=""
-                                                                style="width: 45px;" type="text" readonly value="">
+                                                            <input class="quantity-input<%= i %>" id="quantity<%= data[i].quantity %>" value="<%= data[i].quantity %>"
+                                                                style="width: 45px;"  type="text" readonly value="">
                                                             <button class="btn btn-sm decrement-button"
                                                                 onclick="">-</button>
 
@@ -76,7 +76,7 @@
                                                 
 
                                                 <td class="action" data-title="Remove">
-                                                    <a class="btn btn-sm" href="/deleteItem?id=<%= product[i]._id %>">
+                                                    <a class="btn btn-sm" href="/deleteItem?id=<%= data[i].productDetails[0]._id %>">
                                                         <i class="fi-rs-trash"></i>
                                                     </a>
                                                 </td>
@@ -106,7 +106,7 @@
                                         <tbody>
                                             <tr>
                                                 <td class="cart_total_label">Cart Subtotal</td>
-                                                <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">$240.00</span></td>
+                                                <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">₹ <%=total.toLocaleString('en-IN')%></span></td>
                                             </tr>
                                             <tr>
                                                 <td class="cart_total_label">Shipping</td>
@@ -114,7 +114,7 @@
                                             </tr>
                                             <tr>
                                                 <td class="cart_total_label">Total</td>
-                                                <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand">$240.00</span></strong></td>
+                                                <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand">₹ <%=total.toLocaleString('en-IN')%></span></strong></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -134,45 +134,31 @@
 
 
 
+<script>
+    function changeQuantity(userId, prodId, count, unit){
+      let quantity = document.getElementById("quantity")
+      quantity = parseInt(quantity)
+      if(unit < quantity+1){
+        let quantity = getElementById("prodId").value
+        quantity = parseInt(quantity)
+        unit = parseInt(unit)
+        if(quantity+1>unit){
+            Swal.fire({
+                title: 'STOCK!',
+                   text: 'Product is out of stock.',
+                   icon: 'error',
+                   timer: 3000
+            })
+        }
+      }else{
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      }
+    } 
+</script>
 
 
 
     <%- include("../partials/footer") %>
 
 
-        <script>
-
-        </script>
+      
