@@ -34,7 +34,7 @@ const getCartPage = async (req, res) => {
                     }
                 }
             ])
-            // console.log(cartProducts);
+            console.log(cartProducts);
             let totalPrice = 0
             let quantity = 0
             for (let i = 0; i < cartProducts.length; i++) {
@@ -48,7 +48,6 @@ const getCartPage = async (req, res) => {
                 data: cartProducts,
                 total: totalPrice,
             })
-
         }
 
        
@@ -111,8 +110,9 @@ const addToCart = async (req, res) => {
 
 const changeQuantity = async (req, res) => {
     try {
-        const { prodId, userId } = req.bod
-
+        console.log(req.body);
+        const { prodId, userId } = req.body
+      
         count = parseInt(req.body.count)
         quantity = parseInt(req.body.quantity)
         total = count + quantity
@@ -127,7 +127,7 @@ const changeQuantity = async (req, res) => {
                 }
             )
                 .then((status) => {
-                    res.json({ status: false })
+                    res.json({ status: true })
                 })
         }
 

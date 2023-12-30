@@ -51,12 +51,13 @@
                                                             <%= data[i].productDetails[0].brand %>.
                                                     </p>
                                                 </td>
-                                                <td class="price" data-title="Price"><span>₹ <%=
-                                                            data[i].productDetails[0].salePrice.toLocaleString('en-IN')
-                                                            %> </span><br>
-                                                    <small class="text-muted text-nowrap">₹<span id="price">
-                                                            <%=data[i].productDetails[0].salePrice.toLocaleString('en-IN')%></span>
-                                                        / per item </small>
+                                                <td class="price" data-title="Price">₹<span> <text id="productTotal">
+                                                            <%= data[i].productDetails[0].salePrice %>
+                                                        </text><br>
+                                                        <small class="text-muted text-nowrap">₹<span id="price">
+                                                                <%=data[i].productDetails[0].salePrice%>
+                                                            </span>
+                                                            / per item </small>
 
                                                 </td>
 
@@ -66,14 +67,14 @@
                                                         <div class="quantity-control">
 
                                                             <button class="btn btn-sm increment-button"
-                                                                onclick="console.log('Button clicked')">+</button>
+                                                                onclick="changeQuantity('<%=data[i]._id%>' , '<%=data[i].proId%>' ,1,'<%=data[i].productDetails[0].quantity%>')">+</button>
 
-                                                            <input class="quantity-input<%= i %>"
-                                                                id="quantity<%= data[i].quantity %>"
+                                                            <input class="quantity-input<%= i %>" id="quantity"
                                                                 value="<%= data[i].quantity %>" style="width: 45px;"
                                                                 type="text" readonly value="">
+
                                                             <button class="btn btn-sm decrement-button"
-                                                                onclick="console.log('Button clicked'),changeQuantity('<%=data[i]._id%>' , '<%=data[i].productId%>' ,-1,'<%=data[i].productDetails[0].quantity%>')">-</button>
+                                                                onclick="changeQuantity('<%=data[i]._id%>' , '<%=data[i].proId%>' ,-1,'<%=data[i].productDetails[0].quantity%>')">-</button>
 
 
                                                         </div>
@@ -109,15 +110,17 @@
                     <div class="col-3">
                         <div class="border p-md-4 p-30 border-radius cart-totals">
                             <div class="heading_s1 mb-3">
-                                <h4>Cart Totals</h4>
+                                <h4>PRICE DETAILS</h4>
                             </div>
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
                                         <tr>
                                             <td class="cart_total_label">Cart Subtotal</td>
-                                            <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">₹
-                                                    <text id="grandTotal"><%=total.toLocaleString('en-IN')%></text>
+                                            <td class="cart_total_amount"><span class="font-awesome fw-900 text-brand">₹
+                                                    <text id="grandTotal">
+                                                        <%=total%>
+                                                    </text>
                                                 </span></td>
                                         </tr>
                                         <tr>
@@ -127,9 +130,11 @@
                                         </tr>
                                         <tr>
                                             <td class="cart_total_label">Total</td>
-                                            <td class="cart_total_amount"><strong><span
-                                                        class="font-xl fw-900 text-brand">₹
-                                                        <%=total.toLocaleString('en-IN')%></span></strong></td>
+                                            <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">₹
+                                                    <text id="grandTotal2">
+                                                        <%=total%>
+                                                    </text>
+                                                </span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -151,12 +156,13 @@
 
     <script>
         function changeQuantity(userId, prodId, count, unit) {
-            console.log("IM HERE");
-            let quantity = document.getElementById("quantity")
+            let quantity = document.getElementById("quantity").value
             quantity = parseInt(quantity)
+            alert("IM HERE");
             if (unit < quantity + 1) {
-                let quantity = getElementById("prodId").value
-                quantity = parseInt(quantity)
+                alert("if case");
+                let quantityInput = document.getElementById("quantity").value
+                quantity = parseInt(quantityInput)
                 unit = parseInt(unit)
                 if (quantity + 1 > unit) {
                     Swal.fire({
@@ -167,29 +173,39 @@
                     })
                 }
             } else {
+                console.log("else case");
                 let proTotal = document.getElementById("productTotal").innerHTML
                 let price = document.getElementById("price").innerHTML
                 proTotal = parseInt(proTotal)
                 price = parseInt(price)
+                console.log(proTotal, "==============", price);
                 if (count == 1) {
                     document.getElementById("productTotal").innerHTML = proTotal + price
                     price = document.getElementById("price").innerHTML
                     let grandTotal = document.getElementById("grandTotal").innerHTML
+                    // console.log(grandTotal, "grandTotal");
                     document.getElementById("grandTotal").innerHTML = parseInt(grandTotal) + parseInt(price)
+                    document.getElementById("grandTotal2").innerHTML = parseInt(grandTotal) + parseInt(price)
+                } else if (quantity > 1) {
+                    document.getElementById('productTotal').innerHTML = proTotal - price
+                    price = document.getElementById('price').innerHTML;
+                    let grandTotal = document.getElementById('grandTotal').innerHTML
+                    document.getElementById('grandTotal').innerHTML = parseInt(grandTotal) - parseInt(price);
+                    document.getElementById("grandTotal2").innerHTML = parseInt(grandTotal) - parseInt(price)
                 }
                 $.ajax({
                     url: "/changeQuantity",
                     method: "post",
                     data: {
-                        userId: userId,
                         prodId: prodId,
+                        userId: userId,
                         count: count,
                         quantity: quantity
                     },
                     success: (response) => {
                         console.log(response.status);
                         if (response.status == true) {
-                            location.reload()
+                            // location.reload()
                         } else {
                             let total = parseInt(quantity) + parseInt(count);
                             document.getElementById(prodId).value = total;
@@ -199,6 +215,7 @@
             }
         } 
     </script>
+
 
 
 
