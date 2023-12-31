@@ -8,47 +8,26 @@ const getCartPage = async (req, res) => {
         const id = req.session.user
         // console.log(id);
         // console.log("cart is workding");
-        const user = await User.findById({ _id: id })
-        if (!user) {
-            res.redirect("/login")
-        } else {
-            const userId = id
-            // console.log(userId);
-            const oid = new mongodb.ObjectId(userId)
+        const user = await User.findOne({ _id : id })
+        const productIds = user.cart.map(item=>item.productId)
+        // console.log(productIds);
+        const products = await Product.find({ _id : {$in : productIds}})
+        // console.log(user.cart[0].quantity); 
+        
 
-            const cartProducts = await User.aggregate([
-                { $match: { _id: oid } },
-                { $unwind: "$cart" },
-                {
-                    $project: {
-                        proId: { $toObjectId: "$cart.productId" },
-                        quantity: "$cart.quantity"
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "products",
-                        localField: "proId",
-                        foreignField: "_id",
-                        as: "productDetails"
-                    }
-                }
-            ])
-            console.log(cartProducts);
-            let totalPrice = 0
-            let quantity = 0
-            for (let i = 0; i < cartProducts.length; i++) {
-                quantity = cartProducts[i].quantity
-                totalPrice = totalPrice + quantity * cartProducts[i].productDetails[0].salePrice
-            }
-            const products = await Product.find().lean()
+
+        let quantity = 0
+        for(const i of user.cart){
+            quantity += i.quantity
+        }
+        
             res.render("cart", {
                 user,
+                quantity,
                 product: products,
-                data: cartProducts,
-                total: totalPrice,
+                cart : user.cart
             })
-        }
+        
 
        
     } catch (error) {
@@ -110,27 +89,7 @@ const addToCart = async (req, res) => {
 
 const changeQuantity = async (req, res) => {
     try {
-        console.log(req.body);
-        const { prodId, userId } = req.body
-      
-        count = parseInt(req.body.count)
-        quantity = parseInt(req.body.quantity)
-        total = count + quantity
-        if ((quantity >= 1 && count == 1) || (quantity > 1 && count == -1)) {
-            User.updateOne({
-                "cart.productId": prodId, _id: userId
-            },
-                {
-                    $set: {
-                        "cart.$.quantity": total
-                    }
-                }
-            )
-                .then((status) => {
-                    res.json({ status: true })
-                })
-        }
-
+       
     } catch (error) {
         console.log(error.message);
     }
