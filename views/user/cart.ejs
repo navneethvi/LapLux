@@ -67,16 +67,24 @@
                                                     <div class="detail-qty border radius m-auto">
                                                         <div class="quantity-control">
 
+
+                                                            <script>
+
+                                                            </script>
                                                             <button class="btn btn-sm increment-button"
-                                                                onclick="changeQuantity()">+</button>
+                                                                onclick="changeQuantity('<%= cart[i].productId %>', '<%= cart[i].quantity %>', 1, '<%= product[i].salePrice %>',  '<%= i %>', '<%= product[i].quantity %>' )">+</button>
+
 
                                                             <input class="quantity-input"
                                                                 id="cartProductQuantity<%= i %>"
                                                                 value="<%= cart[i].quantity %>" style="width: 45px;"
                                                                 type="text" readonly value="">
 
+
+
                                                             <button class="btn btn-sm decrement-button"
-                                                                onclick="changeQuantity()">-</button>
+                                                                onclick="changeQuantity('<%= cart[i].productId %>', '<%= cart[i].quantity %>', -1, '<%= product[i].salePrice %>',  '<%= i %>', '<%= product[i].quantity %>')">-</button>
+
 
 
                                                         </div>
@@ -99,7 +107,12 @@
                                                 <% } %>
                                                     <% } else { %>
                                             <tr>
-                                                <td colspan="2">No item found in Cart</td>
+
+                                                <td colspan="2" class="text-center">
+                                                    <p class="lead mb-4">No item found in Cart</p>
+                                                </td>
+
+
                                             </tr>
                                             <% } %>
 
@@ -120,7 +133,7 @@
                                             <td class="cart_total_label">Cart Subtotal</td>
                                             <td class="cart_total_amount"><span class="font-awesome fw-900 text-brand">₹
                                                     <text id="total">
-
+                                                        <%= total %>
                                                     </text>
                                                 </span></td>
                                         </tr>
@@ -133,7 +146,7 @@
                                             <td class="cart_total_label">Total</td>
                                             <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">₹
                                                     <text id="grandTotal">
-
+                                                        <%= total %>
                                                     </text>
                                                 </span></td>
                                         </tr>
@@ -157,6 +170,8 @@
 
     <script>
         function changeQuantity(productId, cartQuantity, count, productPrice, i, productQuantity) {
+            // alert('hia')
+            console.log(productId, cartQuantity, count, productPrice, i, productQuantity);
             const cartProductQuantityElement = document.querySelector(`#cartProductQuantity${i}`)
             const subtotalElement = document.querySelector(`#subTotal${i}`);
             const totalElement = document.querySelector('#total');
@@ -167,9 +182,49 @@
 
             const newQuantity = currentQuantity + count
 
-            if(count == -1 && newQuantity > productQuantity){
-                
+            if (count == 1 && newQuantity > productQuantity) {
+
+                Swal.fire({
+                    title: 'STOCK!',
+                    text: 'Product is out of stock.',
+                    icon: 'error',
+                    timer: 5000
+                })
+                return
             }
+
+            const newSubtotal = newQuantity * productPrice
+            const newTotal = currentTotal - currentSubTotal + newSubtotal
+            totalElement.innerHTML = `${newSubtotal}`
+            console.log(newQuantity);
+            // alert('in starting ')
+            $.ajax({
+                url: '/changeQuantity',
+                method: 'POST',
+                data: {
+                    productId: productId,
+                    quantity: newQuantity,
+                    count: count
+                },
+
+                success: (response) => {
+                    //   alert('sucess')
+                    // location.reload()
+
+
+                    let currentQuantity = parseInt(cartProductQuantityElement.value)
+                    let currentSubTotal = parseInt(subtotalElement.value)
+                    const currentTotal = parseInt(totalElement.value)
+                    document.getElementById(`cartProductQuantity${i}`).value = currentQuantity + count
+
+                    document.getElementById(`subTotal${i}`).value = currentSubTotal * cou
+
+
+                },
+                error: (error) => {
+                    // alert(error)    
+                }
+            })
         }
     </script>
 

@@ -8,28 +8,34 @@ const getCartPage = async (req, res) => {
         const id = req.session.user
         // console.log(id);
         // console.log("cart is workding");
-        const user = await User.findOne({ _id : id })
-        const productIds = user.cart.map(item=>item.productId)
+        const user = await User.findOne({ _id: id })
+        const productIds = user.cart.map(item => item.productId)
         // console.log(productIds);
-        const products = await Product.find({ _id : {$in : productIds}})
+        const products = await Product.find({ _id: { $in: productIds } })
         // console.log(user.cart[0].quantity); 
-        
-
 
         let quantity = 0
-        for(const i of user.cart){
+
+        for (const i of user.cart) {
             quantity += i.quantity
         }
-        
-            res.render("cart", {
-                user,
-                quantity,
-                product: products,
-                cart : user.cart
-            })
-        
 
-       
+        let total = 0
+    
+        for (const i of products) {
+            total += i.salePrice
+        }
+
+        res.render("cart", {
+            user,
+            quantity,
+            total,
+            product: products,
+            cart: user.cart
+        })
+
+
+
     } catch (error) {
         console.log(error.message);
     }
@@ -64,6 +70,7 @@ const addToCart = async (req, res) => {
                     .then((data) =>
                         res.json({ status: true }))
             } else {
+
                 console.log("hi");
                 const productInCart = findUser.cart[cartIndex]
                 console.log(productInCart);
@@ -89,9 +96,68 @@ const addToCart = async (req, res) => {
 
 const changeQuantity = async (req, res) => {
     try {
+        const id = req.body.productId
+        const user = req.session.user
+        const count = req.body.count
+        
+        // console.log(user);
+        console.log(id,"productId");
+
+        const findUser = await User.findOne({_id : user})
+        console.log(findUser,'(((((((((((((((((((((((((((((((((((((');
+        const findProduct = await Product.findOne({_id : id})
+      
        
+        if(findUser){
+
+            console.log('iam here--');
+            const productExistinCart = findUser.cart.find(item => item.productId === id)
+            console.log(productExistinCart,'this is product in cart');
+            let newQuantity
+            if(productExistinCart){
+               console.log('iam in the carrt----------------------mm');
+               console.log(count);   
+                if(count == 1){
+                    console.log("count + 1");
+                    newQuantity = productExistinCart.quantity + 1
+                }else if(count == -1){
+                    console.log("count - 1");
+                    newQuantity = productExistinCart.quantity - 1
+                }else{
+                    console.log("errrrrrrrr");
+                    return res.status(400).json({ status: false, error: "Invalid count" })
+                }
+            }else{
+                console.log('hhihihihihihi../');
+            }
+            // console.log('thsi is newQuantity in t=after the inncriment',newQuantity);
+            console.log(newQuantity,'this id new Quantity');
+            if (newQuantity > 0 && newQuantity <= findProduct.quantity){
+               let a= await User.updateOne(
+                    { _id: user, "cart.productId": id },
+                    {
+                        $set: {
+                            "cart.$.quantity": newQuantity
+                        }
+                    }
+                )
+                const totalAmount = findProduct.salePrice * newQuantity
+                if(a){
+                    console.log('iam here inside the carttppppppppppppppppppppppppp',a,'kjhgfdfghjkjhgfghjk');
+
+                    res.json({status : true, quantityInput : newQuantity, totalAmount : totalAmount})
+                }else{
+                res.json({ status: false, error: 'cart quantity is less' });
+
+                }
+            } else {
+                res.json({ status: false, error: 'out of stock' });
+            }
+        }
+
     } catch (error) {
         console.log(error.message);
+        return res.status(500).json({ status: false, error: "Server error" });
     }
 }
 
