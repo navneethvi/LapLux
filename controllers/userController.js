@@ -242,7 +242,8 @@ const getProductDetailsPage = async (req, res) => {
         console.log("wrking");
         const id = req.query.id
         console.log(id);
-        const findProduct = await Product.find({ id: id });
+        const findProduct = await Product.findOne({ id: id });
+        console.log(findProduct.id, "Hello world");
         if (user) {
             res.render("product-details", { data: findProduct, user: user })
         } else {

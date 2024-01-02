@@ -1,156 +1,187 @@
 <%- include("../partials/header") %>
 
-    
-<section class="mt-50 mb-50">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="product-detail accordion-detail">
-                    <div class="row mb-50">
-                        <div class="col-md-6 col-sm-12 col-xs-12">
-                            <div class="detail-gallery">
-                                <span class="zoom-icon"><i class="fi-rs-search"></i></span>
-                                <!-- MAIN SLIDES -->
-                                <div class="product-image-slider">
-                                    <% for (let i = 0; i < data.length; i++) { %>
-                                        <% for (let j = 0; j < data[i].productImage.length; j++) { %>
+
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product-detail accordion-detail">
+                        <div class="row mb-50">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="detail-gallery">
+                                    <span class="zoom-icon"><i class="fi-rs-search"></i></span>
+                                    <!-- MAIN SLIDES -->
+                                    <div class="product-image-slider">
+
+                                        <% for (let j=0; j < data.productImage.length; j++) { %>
                                             <figure class="border-radius-10">
-                                                <img src="/uploads/product-images/<%= data[i].productImage[j] %>" alt="product image">
+                                                <img src="/uploads/product-images/<%= data.productImage[j] %>"
+                                                    alt="product image">
                                             </figure>
-                                        <% } %>
-                                    <% } %>
+                                            <% } %>
+
+                                    </div>
+                                    <!-- THUMBNAILS -->
+                                    <div class="slider-nav-thumbnails pl-15 pr-15">
+
+                                        <% for (let j=0; j < data.productImage.length; j++) { %>
+                                            <div><img src="/uploads/product-images/<%= data.productImage[j] %>"
+                                                    alt="product image"></div>
+                                            <% } %>
+
+                                    </div>
                                 </div>
-                                <!-- THUMBNAILS -->
-                                <div class="slider-nav-thumbnails pl-15 pr-15">
-                                    <% for (let i = 0; i < data.length; i++) { %>
-                                        <% for (let j = 0; j < data[i].productImage.length; j++) { %>
-                                            <div><img src="/uploads/product-images/<%= data[i].productImage[j] %>" alt="product image"></div>
-                                        <% } %>
-                                    <% } %>
-                                </div>
+
+
                             </div>
-                            
-                           
-                        </div>
-                        <div class="col-md-6 col-sm-12 col-xs-12">
-                            <div class="detail-info">
-                                <h2 class="title-detail"><%= data[0].productName %></h2>
-                                <div class="product-detail-rating">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="detail-info">
+                                    <h2 class="title-detail">
+                                        <%= data.productName %>
+                                    </h2>
+                                    <div class="product-detail-rating">
+                                        <div class="pro-details-brand">
+                                            <span> Brands: <%= data.brand %></span>
+                                        </div>
+
+                                    </div>
+                                    <div class="clearfix product-price-cover">
+                                        <div class="product-price primary-color float-left">
+                                            <ins><span class="text-brand">₹<%= data.salePrice.toLocaleString('en-IN') %>
+                                                        </span></ins>
+                                            <ins><span class="old-price font-md ml-15">₹<%=
+                                                        data.regularPrice.toLocaleString('en-IN') %></span></ins>
+                                            <span class="save-price  font-md color3 ml-15">25% Off</span>
+                                        </div>
+                                    </div>
+                                    <div class="bt-1 border-color-1 mt-15 mb-15"></div>
+                                    <div class="short-desc mb-30">
+                                        <p>
+                                            <%= data.description %>
+                                        </p>
+                                    </div>
+                                    <div class="product_sort_info font-xs mb-30">
+                                        <ul>
+                                            <li class="mb-10"><i class="fi-rs-crown mr-5"></i> 1 Year <%= data.brand %>
+                                                    Brand Warranty</li>
+                                            <li class="mb-10"><i class="fi-rs-refresh mr-5"></i> 30 Day Return Policy
+                                            </li>
+                                            <li><i class="fi-rs-credit-card mr-5"></i> Cash on Delivery available</li>
+                                        </ul>
+                                    </div>
+
                                     <div class="pro-details-brand">
-                                        <span> Brands: <%= data[0].brand %></span>
+                                        <span> Size : <%= data.size %></span>
                                     </div>
-                                  
-                                </div>
-                                <div class="clearfix product-price-cover">
-                                    <div class="product-price primary-color float-left">
-                                        <ins><span class="text-brand">₹<%= data[0].salePrice.toLocaleString('en-IN') %></span></ins>
-                                        <ins><span class="old-price font-md ml-15">₹<%= data[0].regularPrice.toLocaleString('en-IN') %></span></ins>
-                                        <span class="save-price  font-md color3 ml-15">25% Off</span>
+                                    <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+
+                                    <div class="d-flex justify-content gap-3">
+                                        <button class="btn btn-success" onclick="addToCart('<%=data._id%>')">Add to
+                                            Cart</button>
+                                        <a href="/checkout?id=<%= data.id %>">
+                                            <button class="btn btn-primary" type="submit">Buy Now</button>
+                                        </a>
                                     </div>
-                                </div>
-                                <div class="bt-1 border-color-1 mt-15 mb-15"></div>
-                                <div class="short-desc mb-30">
-                                    <p><%= data[0].description %></p>
-                                </div>
-                                <div class="product_sort_info font-xs mb-30">
-                                    <ul>
-                                        <li class="mb-10"><i class="fi-rs-crown mr-5"></i> 1 Year <%= data[0].brand %> Brand Warranty</li>
-                                        <li class="mb-10"><i class="fi-rs-refresh mr-5"></i> 30 Day Return Policy</li>
-                                        <li><i class="fi-rs-credit-card mr-5"></i> Cash on Delivery available</li>
+
+
+
+                                    <ul class="product-meta font-xs color-grey mt-50">
+                                        <li class="mb-5">ID: <%= data.id %>
+                                        </li>
+                                        <li class="mb-5">Tags: Laptop, <%= data.category %>
+                                        </li>
+                                        <li>Availability:<span class="in-stock text-success ml-5">
+                                                <%= data.quantity %> Items In Stock
+                                            </span></li>
                                     </ul>
                                 </div>
-                           
-                                <div class="pro-details-brand">
-                                    <span> Size : <%= data[0].size %></span>
+                                <!-- Detail Info -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-10 m-auto entry-main-content">
+                                <h2 class="section-title style-1 mb-30">Description</h2>
+                                <div class="description mb-50">
+                                    <p>Unleash the power of technology with our state-of-the-art laptop series, designed
+                                        to elevate your computing experience to new heights. Crafted with precision and
+                                        innovation, these laptops seamlessly blend style and functionality to meet the
+                                        demands of modern computing.</p>
+                                    <p>Equipped with the latest processors and advanced hardware, our laptops deliver
+                                        lightning-fast performance for all your computing needs. Whether you're working
+                                        on complex tasks, streaming content, or multitasking, these laptops ensure
+                                        smooth and efficient operations.
+                                    </p>
+                                    <hr class="wp-block-separator is-style-dots">
+                                    <ul class="product-more-infor mt-30">
+                                        <li><span>Processor</span> Powered by the latest Intel/AMD processors</li>
+                                        <li><span>RAM</span> High-capacity RAM for seamless multitasking</li>
+                                        <li><span>Storage</span> Fast SSD storage for quick data access</li>
+                                        <li><span>Graphics</span> Cutting-edge graphics for immersive visuals</li>
+                                        <li><span>Battery Life</span> Extended battery life for uninterrupted usage</li>
+                                    </ul>
+                                    <hr class="wp-block-separator is-style-dots">
+
                                 </div>
-                                <div class="bt-1 border-color-1 mt-30 mb-30"></div>
 
-                                <div class="d-flex justify-content gap-3">
-                                    <button class="btn btn-success" onclick="addToCart('<%=data[0]._id%>')">Add to Cart</button>
-                                    <a href="/checkout">
-                                      <button class="btn btn-primary">Buy Now</button>
-                                    </a>
-                                  </div>
-                                  
-                                
-                                
-                                <ul class="product-meta font-xs color-grey mt-50">
-                                    <li class="mb-5">ID: <%= data[0].id %></li>
-                                    <li class="mb-5">Tags: Laptop, <%= data[0].category %></li>
-                                    <li>Availability:<span class="in-stock text-success ml-5"> <%= data[0].quantity %> Items In Stock</span></li>
-                                </ul>
-                            </div>
-                            <!-- Detail Info -->
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-10 m-auto entry-main-content">
-                            <h2 class="section-title style-1 mb-30">Description</h2>
-                            <div class="description mb-50">
-                                <p>Unleash the power of technology with our state-of-the-art laptop series, designed to elevate your computing experience to new heights. Crafted with precision and innovation, these laptops seamlessly blend style and functionality to meet the demands of modern computing.</p>
-                                <p>Equipped with the latest processors and advanced hardware, our laptops deliver lightning-fast performance for all your computing needs. Whether you're working on complex tasks, streaming content, or multitasking, these laptops ensure smooth and efficient operations.
-                                </p>
-                                <hr class="wp-block-separator is-style-dots">
-                                <ul class="product-more-infor mt-30">
-                                    <li><span>Processor</span> Powered by the latest Intel/AMD processors</li>
-                                    <li><span>RAM</span> High-capacity RAM for seamless multitasking</li>
-                                    <li><span>Storage</span> Fast SSD storage for quick data access</li>
-                                    <li><span>Graphics</span> Cutting-edge graphics for immersive visuals</li>
-                                    <li><span>Battery Life</span>  Extended battery life for uninterrupted usage</li>
-                                </ul>
-                                <hr class="wp-block-separator is-style-dots">
-                               
-                            </div>
-                           
-                        
 
-                    <div class="row mt-60">
-                        <div class="col-12">
-                            <h3 class="section-title style-1 mb-30">Related products</h3>
-                        </div>
-                        <div class="col-12">
-                            <div class="row related-products">
-                                <div class="col-lg-3 col-md-4 col-12 col-sm-6">
-                                    <div class="product-cart-wrap small hover-up">
-                                        <div class="product-img-action-wrap">
-                                            <div class="product-img product-img-zoom">
-                                                <a href="shop-product-right.html" tabindex="0">
-                                                    <img class="default-img" src="assets/imgs/shop/product-2-1.jpg" alt="">
-                                                    <img class="hover-img" src="assets/imgs/shop/product-2-2.jpg" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="product-action-1">
-                                                <a aria-label="Quick view" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal
+
+                                <div class="row mt-60">
+                                    <div class="col-12">
+                                        <h3 class="section-title style-1 mb-30">Related products</h3>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="row related-products">
+                                            <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                                                <div class="product-cart-wrap small hover-up">
+                                                    <div class="product-img-action-wrap">
+                                                        <div class="product-img product-img-zoom">
+                                                            <a href="shop-product-right.html" tabindex="0">
+                                                                <img class="default-img"
+                                                                    src="assets/imgs/shop/product-2-1.jpg" alt="">
+                                                                <img class="hover-img"
+                                                                    src="assets/imgs/shop/product-2-2.jpg" alt="">
+                                                            </a>
+                                                        </div>
+                                                        <div class="product-action-1">
+                                                            <a aria-label="Quick view" class="action-btn small hover-up"
+                                                                data-bs-toggle="modal" data-bs-target="#quickViewModal
 "><i class="fi-rs-search"></i></a>
-                                                <a aria-label="Add To Wishlist" class="action-btn small hover-up" href="shop-wishlist.html" tabindex="0"><i class="fi-rs-heart"></i></a>
-                                                <a aria-label="Compare" class="action-btn small hover-up" href="shop-compare.html" tabindex="0"><i class="fi-rs-shuffle"></i></a>
+                                                            <a aria-label="Add To Wishlist"
+                                                                class="action-btn small hover-up"
+                                                                href="shop-wishlist.html" tabindex="0"><i
+                                                                    class="fi-rs-heart"></i></a>
+                                                            <a aria-label="Compare" class="action-btn small hover-up"
+                                                                href="shop-compare.html" tabindex="0"><i
+                                                                    class="fi-rs-shuffle"></i></a>
+                                                        </div>
+                                                        <div
+                                                            class="product-badges product-badges-position product-badges-mrg">
+                                                            <span class="hot">Hot</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="product-content-wrap">
+                                                        <h2><a href="shop-product-right.html" tabindex="0">Ulstra Bass
+                                                                Headphone</a></h2>
+                                                        <div class="rating-result" title="90%">
+                                                            <span>
+                                                            </span>
+                                                        </div>
+                                                        <div class="product-price">
+                                                            <span>$238.85 </span>
+                                                            <span class="old-price">$245.8</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="product-badges product-badges-position product-badges-mrg">
-                                                <span class="hot">Hot</span>
-                                            </div>
-                                        </div>
-                                        <div class="product-content-wrap">
-                                            <h2><a href="shop-product-right.html" tabindex="0">Ulstra Bass Headphone</a></h2>
-                                            <div class="rating-result" title="90%">
-                                                <span>
-                                                </span>
-                                            </div>
-                                            <div class="product-price">
-                                                <span>$238.85 </span>
-                                                <span class="old-price">$245.8</span>
-                                            </div>
+
+
+
                                         </div>
                                     </div>
                                 </div>
-                               
-                           
-                              
-                            </div>
-                        </div>
-                    </div>
 
 
-                    <!-- <div class="banner-img banner-big wow fadeIn f-none animated mt-50">
+                                <!-- <div class="banner-img banner-big wow fadeIn f-none animated mt-50">
                         <img class="border-radius-10" src="assets/imgs/banner/banner-4.png" alt="">
                         <div class="banner-text">
                             <h4 class="mb-15 mt-40">Repair Services</h4>
@@ -159,61 +190,61 @@
                     </div> -->
 
 
-                    
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
-</main>
+    </section>
+    </main>
 
 
-<%- include("../partials/footer") %>
+    <%- include("../partials/footer") %>
 
 
 
-<script>
-function addToCart(prodId) {
- 
-    var quantity = 1;
-    $.ajax({
-        url: `/addToCart?id=${prodId}`,
-        method: "post",
-        data: {
-            quantity: quantity
-        },
-        success: (res) => {
-            if (res.status === true) {
-                
-                Swal.fire({
-                    title: 'Added to Cart!',
-                    text: 'Continue Shopping',
-                    icon: 'success',
-                    timer: 2000,
-                    showConfirmButton: false
-                })
-            } else if (res.status === "outOfStock") {
-                Swal.fire({
-                    title: 'Stock!!',
-                    text: "The product is out of stock",
-                    icon: 'error', // Corrected from 'fail' to 'error'
-                    timer: 2000,
-                }).then(()=>location.reload())
-            } else {
-                Swal.fire({
-                    title: 'You need to Login first',
-                    text: 'Continue Shopping',
-                    icon: 'warning',
-                    timer: 2000,
-                    showConfirmButton: false
-                }).then(() => { window.location.href = '/login'});
+        <script>
+            function addToCart(prodId) {
+
+                var quantity = 1;
+                $.ajax({
+                    url: `/addToCart?id=${prodId}`,
+                    method: "post",
+                    data: {
+                        quantity: quantity
+                    },
+                    success: (res) => {
+                        if (res.status === true) {
+
+                            Swal.fire({
+                                title: 'Added to Cart!',
+                                text: 'Continue Shopping',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            })
+                        } else if (res.status === "outOfStock") {
+                            Swal.fire({
+                                title: 'Stock!!',
+                                text: "The product is out of stock",
+                                icon: 'error', // Corrected from 'fail' to 'error'
+                                timer: 2000,
+                            }).then(() => location.reload())
+                        } else {
+                            Swal.fire({
+                                title: 'You need to Login first',
+                                text: 'Continue Shopping',
+                                icon: 'warning',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => { window.location.href = '/login' });
+                        }
+                    },
+                    error: (err) => {
+                        console.error(err);
+                        res.alert("error occured")
+                    }
+                });
             }
-        },
-        error: (err) => {
-            console.error(err);
-            res.alert("error occured")
-        }
-    });
-}
 
-</script>
+        </script>
