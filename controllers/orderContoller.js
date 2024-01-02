@@ -1,17 +1,69 @@
 const User = require("../models/userSchema")
 const Product = require("../models/productSchema")
+const Address = require("../models/addressSchema")
+const Order = require("../models/orderSchema")
 
 const getCheckoutPage = async (req, res) => {
     try {
         const id = req.query.id
-        const findProduct = await Product.findOne({id : id})
+        const findProduct = await Product.find({ id: id })
+        const userId = req.session.user
+        const addressData = await Address.findOne({ userId: userId })
+        // console.log(addressData);
+
+        res.render("checkout", { product: findProduct, user: userId, userAddress: addressData })
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const orderPlaced = async (req, res) => {
+    try {
+        const { totalPrice, createdOn, date, addressId, payment, productId } = req.body
+        console.log(totalPrice, createdOn, date, addressId, payment, productId);
+        const userId = req.session.user
+        const findUser = await User.findOne({ _id: userId })
+        // console.log(findUser);
+        const address = await Address.findOne({ userId: userId })
+        // console.log(address);
+        // const findAddress = address.find(item => item._id.toString() === addressId);
+        const findAddress = address.address.find(item => item._id.toString() === addressId);
+        // console.log(findAddress);
+        const findProduct = await Product.findOne({ _id: productId })
         console.log(findProduct);
-        res.render("checkout")
+
+        const productDetails={
+            ProductId:findProduct._id,
+            price:findProduct.salePrice,
+            title:findProduct.productName,
+            image:findProduct.productImage[0],
+            quantity:1
+          }
+          
+        const newOrder = new Order(({
+            product : productDetails,
+            totalPrice : totalPrice,
+            address : findAddress,
+            payment : payment,
+            userId : userId,
+            status : "Confirmed",
+            createdOn : createdOn,
+            date : date
+        }))
+
+        await newOrder.save()
+
+        productDetails.quantity = productDetails.quantity - 1
+
+        await findProduct.save()
+
     } catch (error) {
         console.log(error.message);
     }
 }
 
 module.exports = {
-    getCheckoutPage
+    getCheckoutPage,
+    orderPlaced
 }

@@ -44,7 +44,9 @@ Router.post("/changeQuantity", isLogged, cartController.changeQuantity)
 Router.get("/deleteItem", isLogged, cartController.deleteProduct)
 
 //Orders
-Router.get("/checkout", orderController.getCheckoutPage)
+Router.get("/checkout",isLogged, orderController.getCheckoutPage)
+Router.post("/orderPlaced", isLogged, orderController.orderPlaced)
+
 
 
 module.exports = Router

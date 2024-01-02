@@ -9,11 +9,13 @@ const brandController = require("../controllers/brandController")
 
 const { isAdmin } = require("../Authentication/auth")
 
+
 //Admin Actions
 Router.get("/login", adminController.getLoginPage)
 Router.post("/login", adminController.verifyLogin)
 Router.get("/logout", isAdmin, adminController.getLogout)
 Router.get("/", isAdmin, adminController.getDashboard)
+
 
 //Category Management
 Router.get("/category", isAdmin, categoryController.getCategoryInfo)
@@ -24,10 +26,12 @@ Router.get("/unListCategory", isAdmin, categoryController.getUnlistCategory)
 Router.get("/editCategory", isAdmin, categoryController.getEditCategory)
 Router.post("/editCategory/:id", isAdmin, categoryController.editCategory)
 
+
 //Customer Management
 Router.get("/users", isAdmin, customerController.getCustomersInfo)
 Router.get("/blockCustomer", isAdmin, customerController.getCustomerBlocked)
 Router.get("/unblockCustomer", isAdmin, customerController.getCustomerUnblocked)
+
 
 // Multer Settings
 const multer = require("multer")

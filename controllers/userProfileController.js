@@ -3,6 +3,7 @@ const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
 const nodemailer = require("nodemailer")
 const bcrypt = require("bcrypt")
+const { checkout } = require("../routes/userRouter")
 
 const getUserProfile = async (req, res) => {
     try {
@@ -132,6 +133,7 @@ const postEditAddress = async (req, res) => {
     try {
         const data = req.body
         const addressId = req.query.id
+        
         console.log(addressId, "address id")
         const user = req.session.user
         const findAddress = await Address.findOne({ "address._id": addressId });
@@ -158,8 +160,8 @@ const postEditAddress = async (req, res) => {
                 }
             }
         ).then((result) => {
-            console.log(result)
-            res.redirect("/profile")
+                
+           res.redirect("/profile")
         })
     } catch (error) {
         console.log(error.message);
