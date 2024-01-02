@@ -134,7 +134,7 @@
                                 </tbody>
                             </table>
                             <div class="ml-65 ml-150">
-                                <button type="button" onclick="placeOrder('<%= user._id %>', '<%= product[i]._id %>')">Place Order </button>
+                                <button type="button" class="btn" onclick="placeOrder('<%= user._id %>', '<%= product[i]._id %>')">Place Order </button>
 
                             </div>
                             
@@ -269,7 +269,15 @@
                         icon: "success",
                         showConfirmButton: false,
                         timer: 2000,
-                    });
+                    })
+                    location.href("/orderHistory")
+                }else{
+                    Swal.fire({
+                            title: 'Error Occured',
+                            text: "Can't process order error occured",
+                            icon: 'fail',
+                            timer: 5000
+                        })
                 }
             },
         });

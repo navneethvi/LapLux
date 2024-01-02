@@ -31,7 +31,7 @@ const orderPlaced = async (req, res) => {
         const findAddress = address.address.find(item => item._id.toString() === addressId);
         // console.log(findAddress);
         const findProduct = await Product.findOne({ _id: productId })
-        console.log(findProduct);
+        // console.log(findProduct);
 
         const productDetails={
             ProductId:findProduct._id,
@@ -52,12 +52,26 @@ const orderPlaced = async (req, res) => {
             date : date
         }))
 
-        await newOrder.save()
+        const orderDone  = await newOrder.save()
 
-        productDetails.quantity = productDetails.quantity - 1
+        findProduct.quantity = findProduct.quantity - 1
 
         await findProduct.save()
 
+
+        if(newOrder.payment=='cod'){
+            console.log('Order Placed with COD');
+             res.json({ payment: true, method: "cod", order: orderDone,quantity : 1, orderId:userId});
+        }
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const getOrderDetailsPage = async (req, res)=>{
+    try {
+        res.render("orderDetails")
     } catch (error) {
         console.log(error.message);
     }
@@ -65,5 +79,6 @@ const orderPlaced = async (req, res) => {
 
 module.exports = {
     getCheckoutPage,
-    orderPlaced
+    orderPlaced,
+    getOrderDetailsPage
 }
