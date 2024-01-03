@@ -19,19 +19,23 @@ const getCartPage = async (req, res) => {
         for (const i of user.cart) {
             quantity += i.quantity
         }
-
-        let total = 0
-
-        for (const i of products) {
-            total += i.salePrice
+        // console.log(user.cart.length,'this is cart lenght')
+        // console.log(products)
+        let grandTotal = 0;
+        for(let i=0;i<user.cart.length;i++){
+            console.log("sale prices ==>" , products[i].salePrice)
+            console.log("Quantity ==>" ,user.cart[i].quantity )
+            grandTotal = grandTotal + products[i].salePrice * user.cart[i].quantity;
+            console.log(grandTotal,'hsihishi ',i)
         }
+        console.log(grandTotal)
 
         res.render("cart", {
             user,
             quantity,
-            total,
             product: products,
-            cart: user.cart
+            cart: user.cart,
+            grandTotal
         })
 
 
@@ -97,6 +101,7 @@ const addToCart = async (req, res) => {
 
 const changeQuantity = async (req, res) => {
     try {
+        console.log('herere--------');
         const id = req.body.productId
         const user = req.session.user
         const count = req.body.count

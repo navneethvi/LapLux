@@ -3,4 +3,223 @@
 
 
 
+
+
+
+
+    <main class="container">
+       
+        <section class="content-main">
+            <div class="content-header">
+                <div class="mt-50">
+                    <h2 class="content-title card-title">Order detail</h2>
+                    <p>Details for Order ID: <%=orders._id%></p>
+                </div>
+            </div>
+            <div class="card mt-60">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+                            <span>
+                                <i class="material-icons md-calendar_today">Ordered Date : </i> <b> <% const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' }; %>
+                                    <%= new Date(orders.createdOn).toLocaleDateString('en-US', dateOptions) %></b>
+                            </span> <br>
+                            <small class="text-muted">Order ID: <%=orders._id%></small>
+                        </div>
+                      
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-50 mt-20 order-info-wrap background-info">
+                        <div class="col-md-4">
+                            <article class="icontext align-items-start ml-130">
+                                <span class="icon icon-sm rounded-circle bg-primary-light">
+                                    <i class="text-primary material-icons md-person"></i>
+                                </span>
+                                <div class="text">
+                                    <h6 class="mb-1">Customer</h6>
+                                    <p class="mb-1">
+                                    
+                                        <%=orders.address[0].name%> <br>   <%=orders.address[0].phone%>
+                                    </p>
+                                    
+                                </div>
+                            </article>
+                        </div> <!-- col// -->
+                        <div class="col-md-4">
+                            <article class="icontext align-items-start ml-130">
+                                <span class="icon icon-sm rounded-circle bg-primary-light">
+                                    <i class="text-primary material-icons md-local_shipping"></i>
+                                </span>
+                                <div class="text">
+                                    <h6 class="mb-1">Order info</h6>
+                                    <p class="mb-1">
+                                        <%if(locals.orders){%>
+                                        Pay method: <%=orders.payment%> <br> Status:
+                                        <%if(orders.status=="Pending"){%> 
+                                            Pending
+                                                <%}else if(orders.status=="Delivered"){%>
+                                                    Delivered
+                                                    <%}else if(orders.status=="Confirmed"){%>
+                                                        Confirmed
+                                                    <%}else if(orders.status=="Returned"){%>
+                                                        Returned
+                                                        <%}else if(orders.status=="Returned"){%>
+                                                            Cancelled
+                                                            <%}else if(orders.status=="Shipped"){%>
+                                                                Shipped
+                                                                <%}%>
+                                                    <%}%>
+
+                                    </p>
+                                    
+                                </div>
+                            </article>
+                        </div> <!-- col// -->
+                        <div class="col-md-4">
+                            <article class="icontext align-items-start ml-130">
+                                <span class="icon icon-sm rounded-circle bg-primary-light">
+                                    <i class="text-primary material-icons md-place"></i>
+                                </span>
+                                <div class="text">
+                                    <h6 class="mb-1">Deliver to</h6>
+                                    <p class="mb-1">
+                                        Address: <%=orders.address[0].landMark%>,<%=orders.address[0].city%> <br><%=orders.address[0].state%>,<%=orders.address[0].addressType%> <br><%=orders.address[0].pincode%>
+                                    </p>
+                                    
+                                </div>
+                            </article>
+                        </div> <!-- col// -->
+                    </div> <!-- row // -->
+                    <div class="row">
+                        <div class="col-lg">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th width="30%">Product</th>
+                                            <th width="20%">Name</th>
+                                            <th width="20%">Unit Price</th>
+                                            <th width="10%">Quantity</th>
+                                            <th class="text-center" width="20%" class="text-end">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%if(locals.orders){%>
+                                            <% for (var i = 0; i < orders.product.length; i++) { %>
+                                                <tr>
+                                                    <td class="text-center"> 
+                                                        <a class="itemside" href="#">
+                                                            <div class="left">
+                                                                <img src="/uploads/product-images/<%= orders.product[i].image %>" style="height: 7rem; width: 7rem;" class="img-xs" alt="Item">
+                                                            </div>
+                                                        </a>
+                                                    </td>
+                                                    <td class="text-center"> 
+                                                        <div class="info">
+                                                            <%= orders.product[i].title %>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center"> 
+                                                        ₹<%= orders.product[i].price.toLocaleString() %>
+                                                    </td>
+                                                    <td class="text-center"> 
+                                                        <%= orders.product[i].quantity %>
+                                                    </td>
+                                                    <td class="text-center"> 
+                                                        <%= parseInt(orders.product[i].saleprice) * parseInt(orders.product[i].quantity) %>
+                                                    </td>
+                                                </tr>
+                                            <% } %>
+                                            
+                                        <%}%>
+                                       
+                                    </tbody>
+                                </table>
+                            </div> <!-- table-responsive// -->
+                        </div> <!-- col// -->
+                        <div class="col-lg-1"></div>
+                         <!-- col// -->
+                    </div>
+                </div> <!-- card-body end// -->
+            </div> <!-- card end// -->
+        </section> <!-- content-main end// -->
+    
+    </main>
+    <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/vendors/select2.min.js"></script>
+    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="assets/js/main.js" type="text/javascript"></script>
+
+
+
+  <!-- SweetAlert2 Modal -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script>
+    function tracking() {
+      Swal.fire({
+        title: '<strong><u>ORDER DETAILS</u></strong>',
+        html: `
+          <div class="modal-body">
+            <div class="progress-track">
+              <ul id="progressbar">
+                <li class="step0 active " id="step1">Order placed</li>
+                <li class="step0 active text-center" id="step2">In Transit</li>
+                <li class="step0 active text-right" id="step3"><span>Out for Delivery</span></li>
+                <li class="step0 text-right" id="step4">Delivered</li>
+              </ul>
+            </div>
+          </div>
+        `,
+      });
+    }
+  </script>
+
+  <!-- Bootstrap Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="progress-track">
+        
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+    /* Center the text */
+    h3 {
+      text-align: center;
+    }
+  
+    /* Set the text color to red */
+    h3 {
+      color: red;
+    }
+  
+    /* Set the font size */
+    h3 {
+      font-size: 24px; /* You can adjust the size as needed */
+    }
+  </style>
+
+  <!-- Bootstrap and jQuery Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    function tracking() {
+      // Show the Bootstrap modal
+      $('#myModal').modal('show');
+    }
+  </script>
+
+
+
+
+
 <%- include("../partials/footer") %>

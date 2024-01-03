@@ -109,7 +109,7 @@
                                                                         <td><%= order[i].totalPrice %> for <%= order[i].product[j].quantity %> item</td>
                                                                     <% } %>
                                                             
-                                                                    <td><a href="#" class="btn-small d-block">View</a></td>
+                                                                    <td><a href="/orderDetails?id=<%= order[i]._id %>" class="btn-small d-block">View</a></td>
                                                                 </tr>
                                                             <% } %>
                                                             

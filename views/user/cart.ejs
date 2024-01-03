@@ -53,7 +53,7 @@
                                                 </td>
                                                 <td class="price" data-title="Price">₹<span> <text
                                                             id="subTotal<%= i %>">
-                                                            <%= product[i].salePrice %>
+                                                            <%= product[i].salePrice * cart[i].quantity %>
                                                         </text><br>
                                                         <small class="text-muted text-nowrap">₹<span id="price">
                                                                 <%= product[i].salePrice %>
@@ -129,14 +129,7 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
-                                        <tr>
-                                            <td class="cart_total_label">Cart Subtotal</td>
-                                            <td class="cart_total_amount"><span class="font-awesome fw-900 text-brand">₹
-                                                    <text id="total">
-                                                        <%= total %>
-                                                    </text>
-                                                </span></td>
-                                        </tr>
+  
                                         <tr>
                                             <td class="cart_total_label">Shipping</td>
                                             <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping
@@ -145,8 +138,8 @@
                                         <tr>
                                             <td class="cart_total_label">Total</td>
                                             <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">₹
-                                                    <text id="grandTotal">
-                                                        <%= total %>
+                                                    <text id="total">
+                                                        <%= grandTotal %>
                                                     </text>
                                                 </span></td>
                                         </tr>
@@ -170,19 +163,36 @@
 
     <script>
         function changeQuantity(productId, cartQuantity, count, productPrice, i, productQuantity) {
-            // alert('hia')
+// alert('hi')
             console.log(productId, cartQuantity, count, productPrice, i, productQuantity);
             const cartProductQuantityElement = document.querySelector(`#cartProductQuantity${i}`)
             const subtotalElement = document.querySelector(`#subTotal${i}`);
             const totalElement = document.querySelector('#total');
+            // alert(parseInt(subtotalElement.innerHTML)+ parseInt(productPrice))
+
+
+            if(count == 1){
+                // alert('1')
+                document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML)+ parseInt(productPrice)
+            }else{
+                // alert('else')
+                document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML)- parseInt(productPrice)
+            }
+
 
             let currentQuantity = parseInt(cartProductQuantityElement.value)
-            const currentSubTotal = parseInt(subtotalElement.value)
-            const currentTotal = parseInt(totalElement.value)
+            // alert(currentQuantity)
+            const currentSubTotal = parseInt(subtotalElement.innerHTML)
+            // alert(currentSubTotal+"sub")
+            const currentTotal = parseInt(totalElement.innerHTML)
+            // alert(currentTotal+"total")
 
             const newQuantity = currentQuantity + count
+// alert(newQuantity)
+
 
             if (count == 1 && newQuantity > productQuantity) {
+              
 
                 Swal.fire({
                     title: 'STOCK!',
@@ -194,10 +204,13 @@
             }
 
             const newSubtotal = newQuantity * productPrice
+            
             const newTotal = currentTotal - currentSubTotal + newSubtotal
             totalElement.innerHTML = `${newSubtotal}`
-            console.log(newQuantity);
-            // alert('in starting ')
+
+
+           
+            // alert('in starting '+newTotal)
             $.ajax({
                 url: '/changeQuantity',
                 method: 'POST',
