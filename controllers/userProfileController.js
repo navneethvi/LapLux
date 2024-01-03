@@ -1,9 +1,10 @@
 const User = require("../models/userSchema")
 const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
+const Order = require("../models/orderSchema")
 const nodemailer = require("nodemailer")
 const bcrypt = require("bcrypt")
-const { checkout } = require("../routes/userRouter")
+
 
 const getUserProfile = async (req, res) => {
     try {
@@ -13,8 +14,9 @@ const getUserProfile = async (req, res) => {
         // console.log(userData);
         const addressData = await Address.findOne({ userId: userId })
         // console.log(addressData);
-
-        res.render("profile", { user: userData, userAddress: addressData })
+        const orderData = await Order.find({userId : userId})
+        // console.log(orderData);
+        res.render("profile", { user: userData, userAddress: addressData, order : orderData })
     } catch (error) {
         console.log(error.message);
     }
