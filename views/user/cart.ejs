@@ -32,90 +32,98 @@
                                 <tbody>
 
                                     <% if (product.length> 0) { %>
+                                        <% var x=0 %>
+                                            <% for (let i=0; i < user.cart.length;i++) { %>
 
-                                        <% for (let i=0; i < user.cart.length;i++) { %>
+                                                <tr>
+                                                    <td class="image product-thumbnail">
+                                                        <img src="/uploads/product-images/<%= product[i].productImage[0] %>"
+                                                            alt="#" />
+                                                    </td>
+                                                    <td class="product-des product-name">
+                                                        <h5 class="product-name">
+                                                            <a href="shop-product-right.html">
+                                                                <%= product[i].productName %>
+                                                            </a>
+                                                        </h5>
+                                                        <p class="font-xs">
+                                                            <%= product[i].category %><br />
+                                                                <%= product[i].brand %>.
+                                                        </p>
+                                                    </td>
+                                                    <td class="price" data-title="Price">₹<span> <text
+                                                                id="subTotal<%= i %>">
+                                                                <%= product[i].salePrice * cart[i].quantity %>
+                                                            </text><br>
+                                                            <small class="text-muted text-nowrap">₹<span id="price">
+                                                                    <%= product[i].salePrice %>
 
-                                            <tr>
-                                                <td class="image product-thumbnail">
-                                                    <img src="/uploads/product-images/<%= product[i].productImage[0] %>"
-                                                        alt="#" />
-                                                </td>
-                                                <td class="product-des product-name">
-                                                    <h5 class="product-name">
-                                                        <a href="shop-product-right.html">
-                                                            <%= product[i].productName %>
-                                                        </a>
-                                                    </h5>
-                                                    <p class="font-xs">
-                                                        <%= product[i].category %><br />
-                                                            <%= product[i].brand %>.
-                                                    </p>
-                                                </td>
-                                                <td class="price" data-title="Price">₹<span> <text
-                                                            id="subTotal<%= i %>">
-                                                            <%= product[i].salePrice * cart[i].quantity %>
-                                                        </text><br>
-                                                        <small class="text-muted text-nowrap">₹<span id="price">
-                                                                <%= product[i].salePrice %>
-                                                            </span>
-                                                            / per item </small>
+                                                                </span>
+                                                                / per item </small>
 
-                                                </td>
+                                                    </td>
+                                                    <% console.log(product[i].salePrice * cart[i].quantity,"qqqq"); %>
 
-
-                                                <td class="text-center" data-title="Stock">
-                                                    <div class="detail-qty border radius m-auto">
-                                                        <div class="quantity-control">
-
-
-                                                            <script>
-
-                                                            </script>
-                                                            <button class="btn btn-sm increment-button"
-                                                                onclick="changeQuantity('<%= cart[i].productId %>', '<%= cart[i].quantity %>', 1, '<%= product[i].salePrice %>',  '<%= i %>', '<%= product[i].quantity %>' )">+</button>
+                                                        <% x +=product[i].salePrice * cart[i].quantity%>
 
 
-                                                            <input class="quantity-input"
-                                                                id="cartProductQuantity<%= i %>"
-                                                                value="<%= cart[i].quantity %>" style="width: 45px;"
-                                                                type="text" readonly value="">
+                                                            <td class="text-center" data-title="Stock">
+                                                                <div class="detail-qty border radius m-auto">
+                                                                    <div class="quantity-control">
 
 
+                                                                        <script>
 
-                                                            <button class="btn btn-sm decrement-button"
-                                                                onclick="changeQuantity('<%= cart[i].productId %>', '<%= cart[i].quantity %>', -1, '<%= product[i].salePrice %>',  '<%= i %>', '<%= product[i].quantity %>')">-</button>
+                                                                        </script>
+                                                                        <button class="btn btn-sm increment-button"
+                                                                            onclick="changeQuantity('<%= cart[i].productId %>', '<%= cart[i].quantity %>', 1, '<%= product[i].salePrice %>',  '<%= i %>', '<%= product[i].quantity %>' )">+</button>
 
 
-
-                                                        </div>
-                                                    </div>
-                                                </td>
+                                                                        <input class="quantity-input"
+                                                                            id="cartProductQuantity<%= i %>"
+                                                                            value="<%= cart[i].quantity %>"
+                                                                            style="width: 45px;" type="text" readonly
+                                                                            value="">
 
 
 
+                                                                        <button class="btn btn-sm decrement-button"
+                                                                            onclick="changeQuantity('<%= cart[i].productId %>', '<%= cart[i].quantity %>', -1, '<%= product[i].salePrice %>',  '<%= i %>', '<%= product[i].quantity %>')">-</button>
 
 
-                                                <td class="action" data-title="Remove">
-                                                    <a class="btn btn-sm" href="/deleteItem?id=<%= product[i]._id %>">
-                                                        <i class="fi-rs-trash"></i>
-                                                    </a>
-                                                </td>
+
+                                                                    </div>
+                                                                </div>
+                                                            </td>
 
 
 
 
+
+                                                            <td class="action" data-title="Remove">
+                                                                <a class="btn btn-sm"
+                                                                    href="/deleteItem?id=<%= product[i]._id %>">
+                                                                    <i class="fi-rs-trash"></i>
+                                                                </a>
+                                                            </td>
+
+
+
+
+                                                            <% } %>
+                                                                <% } else { %>
+                                                <tr>
+
+                                                    <td colspan="2" class="text-center">
+                                                        <p class="lead mb-4">No item found in Cart</p>
+                                                    </td>
+
+
+                                                </tr>
                                                 <% } %>
-                                                    <% } else { %>
-                                            <tr>
+                                                    <% console.log(x,"xxx"); %>
 
-                                                <td colspan="2" class="text-center">
-                                                    <p class="lead mb-4">No item found in Cart</p>
-                                                </td>
-
-
-                                            </tr>
-                                            <% } %>
-
+                                                        <input type="hidden" name="" id="totalabc" value="<%= x  %>">
 
                                 </tbody>
                             </table>
@@ -129,7 +137,7 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
-  
+
                                         <tr>
                                             <td class="cart_total_label">Shipping</td>
                                             <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping
@@ -146,7 +154,8 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <a href="/checkout?userId=<%= user._id %>" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
+                            <a href="/checkout?userId=<%= user._id %>" class="btn "> <i class="fi-rs-box-alt mr-10"></i>
+                                Proceed To CheckOut</a>
                         </div>
                     </div>
 
@@ -163,20 +172,23 @@
 
     <script>
         function changeQuantity(productId, cartQuantity, count, productPrice, i, productQuantity) {
-// alert('hi')
+
+            const abc = document.getElementById("totalabc").value
+            console.log(abc, "hi");
             console.log(productId, cartQuantity, count, productPrice, i, productQuantity);
             const cartProductQuantityElement = document.querySelector(`#cartProductQuantity${i}`)
             const subtotalElement = document.querySelector(`#subTotal${i}`);
-            const totalElement = document.querySelector('#total');
+            // alert(subtotalElement.innerHTML,"subelm")
+            const totalElements = document.getElementById('total').innerHTML;
             // alert(parseInt(subtotalElement.innerHTML)+ parseInt(productPrice))
 
 
-            if(count == 1){
+            if (count == 1) {
                 // alert('1')
-                document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML)+ parseInt(productPrice)
-            }else{
+                document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) + parseInt(productPrice)
+            } else {
                 // alert('else')
-                document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML)- parseInt(productPrice)
+                document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) - parseInt(productPrice)
             }
 
 
@@ -184,15 +196,18 @@
             // alert(currentQuantity)
             const currentSubTotal = parseInt(subtotalElement.innerHTML)
             // alert(currentSubTotal+"sub")
-            const currentTotal = parseInt(totalElement.innerHTML)
+
             // alert(currentTotal+"total")
 
             const newQuantity = currentQuantity + count
-// alert(newQuantity)
+            // alert(newQuantity)
 
+            if (count === -1 && newQuantity < 1) {
+                return; 
+            }
 
             if (count == 1 && newQuantity > productQuantity) {
-              
+
 
                 Swal.fire({
                     title: 'STOCK!',
@@ -204,12 +219,9 @@
             }
 
             const newSubtotal = newQuantity * productPrice
-            
-            const newTotal = currentTotal - currentSubTotal + newSubtotal
-            totalElement.innerHTML = `${newSubtotal}`
 
 
-           
+
             // alert('in starting '+newTotal)
             $.ajax({
                 url: '/changeQuantity',
@@ -226,11 +238,24 @@
 
 
                     let currentQuantity = parseInt(cartProductQuantityElement.value)
+                    // alert(currentQuantity,"currQua")
                     let currentSubTotal = parseInt(subtotalElement.value)
-                    const currentTotal = parseInt(totalElement.value)
+                    // alert(subtotalElement.value,"subttl")
+                    // alert(currentTotal,"ctotal")
                     document.getElementById(`cartProductQuantity${i}`).value = currentQuantity + count
 
                     document.getElementById(`subTotal${i}`).value = currentSubTotal * count
+                    // alert(parseInt(abc) + parseInt(response.totalAmount),"helloooooooooooooooooooo")
+                    console.log(parseInt(totalElements, "------"));
+                    console.log("enter");
+                    console.log(parseInt(response.totalAmount, "========"));
+                    if (response.count == 1) {
+
+                        document.getElementById(`total`).innerHTML = parseInt(totalElements) + parseInt(response.totalAmount)
+                    } else {
+                        document.getElementById(`total`).innerHTML = parseInt(totalElements) - parseInt(response.totalAmount)
+
+                    }
 
 
                 },
@@ -243,7 +268,7 @@
 
 
 
-       
+
 
 
 

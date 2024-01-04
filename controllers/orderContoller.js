@@ -9,9 +9,10 @@ const getCheckoutPage = async (req, res) => {
             const id = req.query.id
             const findProduct = await Product.find({ id: id })
             const userId = req.session.user
+            const findUser = await User.findOne({ _id : userId })
             const addressData = await Address.findOne({ userId: userId })
             // console.log(addressData)
-            res.render("checkout", { product: findProduct, user: userId, userAddress: addressData })
+            res.render("checkout", { product: findProduct, user: userId,findUser : findUser, userAddress: addressData, isSingle : true})
         }else{
             const user = req.query.userId
             const findUser = await User.findOne({ _id : user })
@@ -21,7 +22,7 @@ const getCheckoutPage = async (req, res) => {
             const findProducts = await Product.find({_id : {$in : productIds}})
             console.log(findProducts);
             const addressData = await Address.findOne({ userId: user })
-            res.render("checkout", {product : findProducts, user : user, userAddress : addressData})
+            res.render("checkout", {product : findProducts, user : user, userAddress : addressData, isCart : true})
         }
 
     } catch (error) {
@@ -33,7 +34,7 @@ const getCheckoutPage = async (req, res) => {
 const orderPlaced = async (req, res) => {
     try {
         const { totalPrice, createdOn, date, addressId, payment, productId } = req.body
-        // console.log(totalPrice, createdOn, date, addressId, payment, productId);
+        console.log(totalPrice, createdOn, date, addressId, payment, productId);
         const userId = req.session.user
         const findUser = await User.findOne({ _id: userId })
         // console.log(findUser);
@@ -83,13 +84,6 @@ const orderPlaced = async (req, res) => {
 
 
 
-// const orderPlacedFromCart = async (req, res)=>{
-//     try {
-
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// }
 
 const getOrderDetailsPage = async (req, res) => {
     try {
