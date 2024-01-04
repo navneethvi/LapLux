@@ -110,41 +110,41 @@
 
 
                         <div class="container col-6 mt-3">
-
-                            <table class="table mt-45 ml-150">
-                                <tbody>
-                                    <% for (let i=0; i < product.length; i++) { %>
-                                        <tr>
-                                            <th>SubTotal</th>
-                                            <td class="product-subtotal" colspan="2">₹<%= product[i].salePrice %>
-                                            </td>
-                                        </tr>
+                            <%
+                            let totalAmount = 0; // Initialize totalAmount outside the loop
+                            for (let i = 0; i < product.length; i++) {
+                                totalAmount += product[i].salePrice; // Accumulate totalAmount
+                            
+                                // You can add other calculations or information retrieval here
+                            }
+                            %>
+                            
+                            <!-- Display total and shipping information outside the loop -->
+                            <div class="ml-150">
+                                <table class="table mt-45">
+                                    <tbody>
                                         <tr>
                                             <th>Shipping</th>
                                             <td colspan="2"><em>Free Shipping</em></td>
                                         </tr>
                                         <tr>
-                                            <th>Total</th>
-                                            <td colspan="2" class="product-subtotal" id="totalValue"><span
-                                                    class="font-xl text-brand fw-900">₹<%= product[i].salePrice %>
-                                                </span></td>
+                                            <th>Total for All Products</th>
+                                            <td colspan="2" class="product-subtotal" id="totalValue">
+                                                <span class="font-xl text-brand fw-900">₹<%= totalAmount.toFixed(2) %></span>
+                                            </td>
                                         </tr>
-                                       
-
-                                </tbody>
-                            </table>
-                            <div class="ml-65 ml-150">
-                                <button type="button" class="btn" onclick="placeOrder('<%= user._id %>', '<%= product[i]._id %>')">Place Order </button>
-
-                            </div>
+                                    </tbody>
+                                </table>
                             
-                        </div>
+                                <div class="ml-65">
+                                    <button type="button" class="btn" onclick="placeOrder('<%= user._id %>')">Place Order</button>
+                                </div>
+                            </div>
+                        </div>  
 
-                        <% } %>
 
 
-
-                        <div class="col-6">
+                        <div class="col-8">
                             <div class="row align-items-start mt-30 ml-150">
                                 <!-- Use align-items-start to vertically align content at the top -->
                                 <% if (userAddress) { %>
@@ -216,7 +216,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    
 
 
              

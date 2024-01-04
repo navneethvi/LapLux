@@ -4,7 +4,8 @@ const bcrypt = require("bcrypt");
 const User = require("../models/userSchema");
 const Brand = require("../models/brandSchema")
 const Product = require("../models/productSchema");
-const Category = require("../models/categorySchema")
+const Category = require("../models/categorySchema");
+const { application } = require("express");
 
 
 
@@ -59,6 +60,7 @@ const getLoginPage = async (req, res) => {
         console.log(error.message);
     }
 }
+
 
 //Load signup page
 
