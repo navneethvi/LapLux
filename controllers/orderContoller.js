@@ -82,8 +82,20 @@ const getOrderDetailsPage = async (req, res)=>{
     }
 }
 
+
+const getOrderListPageAdmin = async(Req, res)=>{
+    try {
+        const orders = await Order.find({})
+        res.render("orders-list", {orders})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
 module.exports = {
     getCheckoutPage,
     orderPlaced,
-    getOrderDetailsPage
+    getOrderDetailsPage,
+    getOrderListPageAdmin
 }

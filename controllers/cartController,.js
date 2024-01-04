@@ -25,10 +25,12 @@ const getCartPage = async (req, res) => {
         for(let i=0;i<user.cart.length;i++){
             console.log("sale prices ==>" , products[i].salePrice)
             console.log("Quantity ==>" ,user.cart[i].quantity )
-            grandTotal = grandTotal + products[i].salePrice * user.cart[i].quantity;
+            if (products[i]) {
+                grandTotal += products[i].salePrice * user.cart[i].quantity;
+            }
             console.log(grandTotal,'hsihishi ',i)
         }
-        console.log(grandTotal)
+        // console.log(grandTotal)
 
         res.render("cart", {
             user,

@@ -6,6 +6,7 @@ const customerController = require("../controllers/customerController")
 const categoryController = require("../controllers/categoryController")
 const productController = require("../controllers/productController")
 const brandController = require("../controllers/brandController")
+const orderContoller = require("../controllers/orderContoller")
 
 const { isAdmin } = require("../Authentication/auth")
 
@@ -56,6 +57,8 @@ Router.get("/deleteImage/:id", isAdmin, productController.deleteSingleImage)
 Router.get("/blockProduct", isAdmin, productController.getBlockProduct)
 Router.get("/unBlockProduct", isAdmin, productController.getUnblockProduct)
 
+// Order Management
 
+Router.get("/orderList", isAdmin, orderContoller.getOrderListPageAdmin)
 
 module.exports = Router

@@ -34,17 +34,16 @@
                         <div class="col-md-4">
                             <article class="icontext align-items-start ml-130">
                                 <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="text-primary material-icons md-person"></i>
+                                    <i class="material-icons text-primary person"></i>
                                 </span>
                                 <div class="text">
                                     <h6 class="mb-1">Customer</h6>
                                     <p class="mb-1">
-                                    
-                                        <%=orders.address[0].name%> <br>   <%=orders.address[0].phone%>
+                                        <%= orders.address[0].name %> <br> <%= orders.address[0].phone %>
                                     </p>
-                                    
                                 </div>
                             </article>
+                            
                         </div> <!-- col// -->
                         <div class="col-md-4">
                             <article class="icontext align-items-start ml-130">
@@ -127,7 +126,8 @@
                                                         <%= orders.product[i].quantity %>
                                                     </td>
                                                     <td class="text-center"> 
-                                                        <%= parseInt(orders.product[i].saleprice) * parseInt(orders.product[i].quantity) %>
+                                                        ₹<%= (parseInt(orders.product[i].price) * parseInt(orders.product[i].quantity)).toLocaleString() %>
+
                                                     </td>
                                                 </tr>
                                             <% } %>
