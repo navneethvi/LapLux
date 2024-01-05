@@ -90,7 +90,7 @@ const orderPlaceFromCart = async (req, res) => {
         const findUser = await User.findOne({ _id: userId })
         const productIds = findUser.cart.map(item => item.productId)
         // console.log(productIds);
-        const findAddress = await Address.find({ userId: userId })
+        const findAddress = await Address.find({ _id: addressId })
         const findProducts = await Product.find({ _id: { $in: productIds } })
         const cartItemQuantities = findUser.cart.map((item) => ({
             productId: item.productId,
@@ -173,6 +173,7 @@ const cancelOrder = async(req, res)=>{
         }
 
         const orderId = req.query.orderId
+        console.log(orderId);
         
         await Order.updateOne({_id: orderId}, 
             {status: "Canceled"}

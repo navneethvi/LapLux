@@ -134,7 +134,7 @@ const changeQuantity = async (req, res) => {
         console.log(id, "productId");
 
         const findUser = await User.findOne({ _id: user })
-        console.log(findUser, '(((((((((((((((((((((((((((((((((((((');
+        console.log(findUser);
         const findProduct = await Product.findOne({ _id: id })
 
 

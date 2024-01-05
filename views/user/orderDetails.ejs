@@ -82,7 +82,7 @@
                                                         Confirmed
                                                     <%}else if(orders.status=="Returned"){%>
                                                         Returned
-                                                        <%}else if(orders.status=="Returned"){%>
+                                                        <%}else if(orders.status=="Canceled"){%>
                                                             Cancelled
                                                             <%}else if(orders.status=="Shipped"){%>
                                                                 Shipped
@@ -244,9 +244,10 @@
        
         console.log(orderId.value,"hiiiiiiiiiiiiiiiiiiiii");
         var selectedValue = selectElement.value;
-
+        console.log(selectedValue);
         if(selectedValue == "cancel"){
-            window.location.href = `/cancelOrder?orderId=${id}`;
+            console.log("keri");
+            window.location.href = `http://localhost:3000/cancelOrder?orderId=${orderId.value}`;
         }
 
 
