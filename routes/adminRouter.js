@@ -60,5 +60,7 @@ Router.get("/unBlockProduct", isAdmin, productController.getUnblockProduct)
 // Order Management
 
 Router.get("/orderList", isAdmin, orderContoller.getOrderListPageAdmin)
+Router.get("/orderDetailsAdmin", isAdmin, orderContoller.getOrderDetailsPageAdmin)
+Router.get("/changeStatus", isAdmin, orderContoller.changeOrderStatus)
 
 module.exports = Router

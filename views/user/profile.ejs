@@ -86,7 +86,6 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>Order</th>
-                                                                <th>Date</th>
                                                                 <th>Status</th>
                                                                 <th>Total</th>
                                                                 <th>Actions</th>
@@ -99,15 +98,12 @@
                                                             <% for (let i = 0; i < order.length; i++) { %>
                                                                 <tr>
                                                                     <td><%= order[i]._id %></td>
-                                                                    <td>
-                                                                        <% const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' }; %>
-                                                                        <%= new Date(order[i].date).toLocaleDateString('en-US', dateOptions) %>
-                                                                    </td>
+                                                                    
                                                                     <td><%= order[i].status %></td>
                                                             
-                                                                    <% for (let j = 0; j < order[i].product.length; j++) { %>
-                                                                        <td><%= order[i].totalPrice %> for <%= order[i].product[j].quantity %> item</td>
-                                                                    <% } %>
+                                                                    
+                                                                        <td><%= order[i].totalPrice %></td>
+                                                                    
                                                             
                                                                     <td><a href="/orderDetails?id=<%= order[i]._id %>" class="btn-small d-block">View</a></td>
                                                                 </tr>

@@ -139,11 +139,13 @@
                                     </tr>
                                 </tbody>
                             </table>
-                    
+
                             <div class="ml-65">
-                                <% for (let i = 0; i < product.length; i++) { %>
-                                    <button type="button" class="btn" onclick="placeOrder('<%= user._id %>', '<%= product[i]._id %>')">Place Order</button>
-                                <% } %>
+                                    <%if(isSingle){%>
+                                        <button type="button" class="btn" onclick="placeOrder('<%= user._id %>' , '<%=product[0]._id%>',  true)">Single</button>
+                                    <%}else{%>
+                                        <button type="button" class="btn" onclick="placeOrder('<%= user._id %>','<%=product[0]._id%>' , false)">Place Order</button>
+                                    <%}%>
                             </div>
                         </div>
                     </div>
@@ -233,8 +235,8 @@
 
 
     <script>
-        async function placeOrder(userId, productId) {
-            console.log(userId);
+        async function placeOrder(userId, prodId, isSingle) {
+            // alert(prodId)
             let address = $("input[name='selectedAddress']:checked").val();
             let payment = $("input[name='payment_option']:checked").val();
 
@@ -261,13 +263,12 @@
                     method: 'POST',
                     data: {
                         totalPrice: numericValue,
-                        createdOn: new Date().getTime(),
-                        date: new Date(),
                         addressId: address,
                         payment: payment,
-                        productId: productId
+                        productId : prodId,
+                        isSingle
+                       
                     },
-                    async: true,
                     success: function (response) {
                         if (response.method === "cod") {
                             Swal.fire({

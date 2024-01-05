@@ -36,19 +36,23 @@
                             <td><b><%= orders[i].address[0].name %></b></td>
                             <td><%= orders[i].address[0].phone %></td>
                             <td><%= orders[i].product[0].price.toLocaleString() %></td>
-                            <td><span class="badge rounded-pill alert-warning"><%= orders[i].status %></span></td>
+                            <td>
+                                <% if (orders[i].status == "Canceled") { %>
+                                    <span class="badge rounded-pill alert-danger"><%= orders[i].status %></span>
+                                <% } else if (orders[i].status == "Confirmed") { %>
+                                    <span class="badge rounded-pill alert-warning"><%= orders[i].status %></span>
+                                <% } else if (orders[i].status == "Shipped") { %>
+                                    <span class="badge rounded-pill alert-primary"><%= orders[i].status %></span>
+                                <% }else if (orders[i].status == "Delivered") { %>
+                                    <span class="badge rounded-pill alert-success"><%= orders[i].status %></span>
+                                <% } %> 
+                            </td>
+                            
                             <td> <% const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' }; %>
                                 <%= new Date(orders[0].createdOn).toLocaleDateString('en-US', dateOptions) %></td>
                             <td class="text-end">
-                                <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                <div class="dropdown">
-                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">View detail</a>
-                                        <a class="dropdown-item" href="#">Edit info</a>
-                                        <a class="dropdown-item text-danger" href="#">Delete</a>
-                                    </div>
-                                </div> 
+                                <a href="/admin/orderDetailsAdmin?id=<%= orders[i]._id %>" class="btn btn-md rounded font-sm">Detail</a>
+                               
                             </td>
                         </tr>
                             
@@ -60,18 +64,7 @@
             </div> <!-- table-responsive //end -->
         </div> <!-- card-body end// -->
     </div> <!-- card end// -->
-    <div class="pagination-area mt-15 mb-50">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-start">
-                <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                <li class="page-item"><a class="page-link" href="#">02</a></li>
-                <li class="page-item"><a class="page-link" href="#">03</a></li>
-                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                <li class="page-item"><a class="page-link" href="#">16</a></li>
-                <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
-            </ul>
-        </nav>
-    </div>
+   
 </section>
 
 

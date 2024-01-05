@@ -1,4 +1,4 @@
-<%- include("../partials/header") %>
+<%- include("../partials/adminHeader") %>
 
 
 
@@ -11,7 +11,7 @@
        
         <section class="content-main">
             <div class="content-header">
-                <div class="mt-50">
+                <div class="mt-20">
                     <h2 class="content-title card-title">Order detail</h2>
                     <p>Details for Order ID: <%=orders._id%></p>
                 </div>
@@ -34,18 +34,14 @@
                         </div>
                         <div class="col-lg-3 col-md-4 ms-auto text-md-end">
                             <% if (orders.status !== "Canceled") { %>
-                                <% if (orders.status === "Delivered") { %>
-                                    <h4 class="text-success">Delivered</h4>
-                                <% } else { %>
-                                    <select id="actionDropdown" class="form-select form-select-sm d-inline-block mb-lg-0 mb-15 mw-100" onchange="handleDropdownChange(this)">
-                                        <option value="status">Status</option>
-                                        <option value="cancel">Cancel</option>
-                                    </select>
-                                <% } %>
-                            <% } else { %>
+                                <select id="actionDropdown" class="form-select form-select-sm d-inline-block mb-lg-0 mb-15 mw-100" onchange="handleDropdownChange(this)">
+                                    <option value="status">Status</option>
+                                    <option value="Shipped">Shipped</option>
+                                    <option value="Delivered">Delivered</option>
+                                </select>
+                            <% }else{%>
                                 <h4 class="text-danger">Cancelled</h4>
-                            <% } %>
-                            
+                                <% } %>
                           
                         </div>
                     </div>
@@ -253,8 +249,13 @@
         var selectedValue = selectElement.value;
         console.log(selectedValue);
         if(selectedValue == "cancel"){
-            console.log("keri");
-            window.location.href = `http://localhost:3000/cancelOrder?orderId=${orderId.value}`;
+            window.location.href = `http://localhost:3000/admin/changeStatus?orderId=${orderId.value}&status=${selectedValue}`;
+        }else if(selectedValue == "Shipped"){
+            window.location.href = `http://localhost:3000/admin/changeStatus?orderId=${orderId.value}&status=${selectedValue}`;
+        }else if(selectedValue == "Delivered"){
+            window.location.href = `http://localhost:3000/admin/changeStatus?orderId=${orderId.value}&status=${selectedValue}`;
+        }else{
+            alert("error")
         }
 
 
@@ -271,4 +272,4 @@
 
 
 
-<%- include("../partials/footer") %>
+<%- include("../partials/adminFooter") %>
