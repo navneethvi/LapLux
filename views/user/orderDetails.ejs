@@ -17,15 +17,33 @@
                 </div>
             </div>
             <div class="card mt-60">
-                <div class="card-header">
+           
+
+
+                <header class="card-header">
                     <div class="row align-items-center">
                         <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
                             <span>
-                                <i class="material-icons md-calendar_today">Ordered Date : </i> <b> <% const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' }; %>
-                                    <%= new Date(orders.createdOn).toLocaleDateString('en-US', dateOptions) %></b>
+                                <i class="material-icons md-calendar_today">Ordered Date: </i>
+                                <b>
+                                    <% const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' }; %>
+                                    <%= new Date(orders.createdOn).toLocaleDateString('en-US', dateOptions) %>
+                                </b>
                             </span> <br>
                             <small class="text-muted">Order ID: <%=orders._id%></small>
                         </div>
+                        <div class="col-lg-3 col-md-4 ms-auto text-md-end">
+                            <select id="actionDropdown" class="form-select form-select-sm d-inline-block mb-lg-0 mb-15 mw-100" onchange="handleDropdownChange(this)">
+                                <option value="status">Status</option>
+
+                                <option value="cancel">Cancel</option>
+                               
+                            </select>
+                            <a class="btn btn-primary btn-sm" href="#" onclick="performAction()">Save</a>
+                        </div>
+                    </div>
+                </header>
+                
                       
                     </div>
                 </div>
@@ -42,6 +60,7 @@
                                         <%= orders.address[0].name %> <br> <%= orders.address[0].phone %>
                                     </p>
                                 </div>
+                              
                             </article>
                             
                         </div> <!-- col// -->
@@ -105,7 +124,8 @@
                                     </thead>
                                     <tbody>
                                         <%if(locals.orders){%>
-                                            <% for (var i = 0; i < orders.product.length; i++) { %>
+                                            <% let orderId; %>
+                                            <% for (let i = 0; i < orders.product.length; i++) { %>
                                                 <tr>
                                                     <td class="text-center"> 
                                                         <a class="itemside" href="#">
@@ -130,9 +150,19 @@
 
                                                     </td>
                                                 </tr>
+                                                
+                                               
+                                                   
+                                                
+                                                    
+                                          
+
+
                                             <% } %>
                                             
                                         <%}%>
+
+                                        <input type="hidden" name="" id="orderId" value="<%= orderId %>">
                                        
                                     </tbody>
                                 </table>
@@ -207,16 +237,27 @@
     }
   </style>
 
-  <!-- Bootstrap and jQuery Scripts -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+  
+ 
   <script>
-    function tracking() {
-      // Show the Bootstrap modal
-      $('#myModal').modal('show');
+    function handleDropdownChange(selectElement) {
+       
+        console.log(orderId.value,"hiiiiiiiiiiiiiiiiiiiii");
+        var selectedValue = selectElement.value;
+
+        if(selectedValue == "cancel"){
+            window.location.href = `/cancelOrder?orderId=${id}`;
+        }
+
+
     }
-  </script>
+
+    function performAction() {
+        // This function can be used for additional actions when the "Save" button is clicked
+        // You can add more logic here if needed
+    }
+</script>
+  
 
 
 

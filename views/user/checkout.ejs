@@ -114,41 +114,40 @@
 
 
                     <div class="container col-6 mt-3">
-                        <% let totalAmount=0; // Initialize totalAmount outside the loop 
-                        for (let i=0; i <product.length; i++) { 
-                            totalAmount +=product[i].salePrice; 
-                             } %>
-
-                            <!-- Display total and shipping information outside the loop -->
-                            <div class="ml-150">
-                                <table class="table mt-45">
-                                    <tbody>
-                                        <tr>
-                                            <th>Shipping</th>
-                                            <td colspan="2"><em>Free Shipping</em></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Total for All Products</th>
-                                            <td colspan="2" class="product-subtotal" id="totalValue">
-                                                <span class="font-xl text-brand fw-900">₹<%= totalAmount.toFixed(2) %>
-                                                        </span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <div class="ml-65">
-                                    <% for (let i=0; i < product.length; i++) { %>
-                                         <button type="button" class="btn"
-                                        onclick="placeOrder('<%= user._id %>', '<%= product[i]._id %>')">Place
-                                        Order</button>
-
-
-                                       <% } %>
-                                </div>
+                        <% let totalAmount = 0; %>
+                        <% for (let i = 0; i < product.length; i++) { %>
+                            <% if (locals.isCart==="true") { %>
+                                <% totalAmount += product[i].salePrice * user.cart[i].quantity; %>
+                            <% } else { %>
+                                <% totalAmount += product[i].salePrice; %>
+                            <% } %>
+                        <% } %>
+                    
+                        <!-- Display total and shipping information outside the loop -->
+                        <div class="ml-150">
+                            <table class="table mt-45">
+                                <tbody>
+                                    <tr>
+                                        <th>Shipping</th>
+                                        <td colspan="2"><em>Free Shipping</em></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Total for All Products</th>
+                                        <td colspan="2" class="product-subtotal" id="totalValue">
+                                            <span class="font-xl text-brand fw-900">₹<%= totalAmount.toFixed(2) %></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                    
+                            <div class="ml-65">
+                                <% for (let i = 0; i < product.length; i++) { %>
+                                    <button type="button" class="btn" onclick="placeOrder('<%= user._id %>', '<%= product[i]._id %>')">Place Order</button>
+                                <% } %>
                             </div>
+                        </div>
                     </div>
-
+                    
 
 
                     <div class="col-8">

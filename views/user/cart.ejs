@@ -31,40 +31,40 @@
                                 </thead>
                                 <tbody>
 
-                                    <% if (product.length> 0) { %>
+                                    <% if (data.length> 0) { %>
                                         <% var x=0 %>
-                                            <% for (let i=0; i < user.cart.length;i++) { %>
+                                            <% for (let i=0; i < data.length;i++) { %>
 
                                                 <tr>
                                                     <td class="image product-thumbnail">
-                                                        <img src="/uploads/product-images/<%= product[i].productImage[0] %>"
+                                                        <img src="/uploads/product-images/<%= data[i].productDetails[0].productImage[0] %>"
                                                             alt="#" />
                                                     </td>
                                                     <td class="product-des product-name">
                                                         <h5 class="product-name">
                                                             <a href="shop-product-right.html">
-                                                                <%= product[i].productName %>
+                                                                <%= data[i].productDetails[0].productName %>
                                                             </a>
                                                         </h5>
                                                         <p class="font-xs">
-                                                            <%= product[i].category %><br />
-                                                                <%= product[i].brand %>.
+                                                            <%= data[i].productDetails[0].category %><br />
+                                                                <%= data[i].productDetails[0].brand %>.
                                                         </p>
                                                     </td>
                                                     <td class="price" data-title="Price">₹<span> <text
-                                                                id="subTotal<%= i %>">
-                                                                <%= product[i].salePrice * cart[i].quantity %>
+                                                                id="subTotal<%= data[i].productDetails[0].id %>">
+                                                                <%= data[i].productDetails[0].salePrice * data[i].quantity %>
                                                             </text><br>
                                                             <small class="text-muted text-nowrap">₹<span id="price">
-                                                                    <%= product[i].salePrice %>
+                                                                    <%= data[i].productDetails[0].salePrice %>
 
                                                                 </span>
                                                                 / per item </small>
 
                                                     </td>
-                                                    <% console.log(product[i].salePrice * cart[i].quantity,"qqqq"); %>
+                                                    <% console.log(data[i].productDetails[0].salePrice * data[i].quantity,"qqqq"); %>
 
-                                                        <% x +=product[i].salePrice * cart[i].quantity%>
+                                                        <% x +=data[i].productDetails[0].salePrice * data[i].quantity%>
 
 
                                                             <td class="text-center" data-title="Stock">
@@ -76,19 +76,19 @@
 
                                                                         </script>
                                                                         <button class="btn btn-sm increment-button"
-                                                                            onclick="changeQuantity('<%= cart[i].productId %>', '<%= cart[i].quantity %>', 1, '<%= product[i].salePrice %>',  '<%= i %>', '<%= product[i].quantity %>' )">+</button>
+                                                                            onclick="changeQuantity('<%= data[i].productDetails[0]._id %>', '<%= data[i].quantity %>', 1, '<%= data[i].productDetails[0].salePrice %>',  '<%= data[i].productDetails[0].id %>', '<%= data[i].productDetails[0].quantity%>')">+</button>
 
 
                                                                         <input class="quantity-input"
-                                                                            id="cartProductQuantity<%= i %>"
-                                                                            value="<%= cart[i].quantity %>"
+                                                                            id="cartProductQuantity<%= data[i].productDetails[0].id %>"
+                                                                            value="<%= data[i].quantity %>"
                                                                             style="width: 45px;" type="text" readonly
                                                                             value="">
 
 
 
                                                                         <button class="btn btn-sm decrement-button"
-                                                                            onclick="changeQuantity('<%= cart[i].productId %>', '<%= cart[i].quantity %>', -1, '<%= product[i].salePrice %>',  '<%= i %>', '<%= product[i].quantity %>')">-</button>
+                                                                            onclick="changeQuantity('<%= data[i].productDetails[0]._id %>', '<%= data[i].quantity %>', -1, '<%= data[i].productDetails[0].salePrice %>',  '<%= data[i].productDetails[0].id %>', '<%= data[i].productDetails[0].quantity%>')">-</button>
 
 
 
@@ -102,7 +102,7 @@
 
                                                             <td class="action" data-title="Remove">
                                                                 <a class="btn btn-sm"
-                                                                    href="/deleteItem?id=<%= product[i]._id %>">
+                                                                    href="/deleteItem?id=<%= data[i].productDetails[0]._id %>">
                                                                     <i class="fi-rs-trash"></i>
                                                                 </a>
                                                             </td>
@@ -172,11 +172,17 @@
 
     <script>
         function changeQuantity(productId, cartQuantity, count, productPrice, i, productQuantity) {
+            
+            // alert(productPrice)
+            // alert(cartQuantity)
+            // alert(i)
 
             const abc = document.getElementById("totalabc").value
             console.log(abc, "hi");
             console.log(productId, cartQuantity, count, productPrice, i, productQuantity);
             const cartProductQuantityElement = document.querySelector(`#cartProductQuantity${i}`)
+            // alert('quantity')
+            // alert(cartProductQuantityElement.value,'quantity')
             const subtotalElement = document.querySelector(`#subTotal${i}`);
             // alert(subtotalElement.innerHTML,"subelm")
             const totalElements = document.getElementById('total').innerHTML;
@@ -246,11 +252,8 @@
 
                     document.getElementById(`subTotal${i}`).value = currentSubTotal * count
                     // alert(parseInt(abc) + parseInt(response.totalAmount),"helloooooooooooooooooooo")
-                    console.log(parseInt(totalElements, "------"));
-                    console.log("enter");
-                    console.log(parseInt(response.totalAmount, "========"));
                     if (response.count == 1) {
-
+                        console.log("TOtal Element == >" , totalElements)
                         document.getElementById(`total`).innerHTML = parseInt(totalElements) + parseInt(response.totalAmount)
                     } else {
                         document.getElementById(`total`).innerHTML = parseInt(totalElements) - parseInt(response.totalAmount)

@@ -46,7 +46,9 @@ Router.get("/deleteItem", isLogged, cartController.deleteProduct)
 //Orders
 Router.get("/checkout",isLogged, orderController.getCheckoutPage)
 Router.post("/orderPlaced", isLogged, orderController.orderPlaced)
+Router.post("/orderPlacedCart", isLogged, orderController.orderPlaceFromCart)
 Router.get("/orderDetails", isLogged, orderController.getOrderDetailsPage)
+Router.get("/cancelOrder", isLogged, orderController.cancelOrder)
 
 
 

@@ -13,7 +13,27 @@ const getCartPage = async (req, res) => {
         // console.log(productIds);
         const products = await Product.find({ _id: { $in: productIds } })
         // console.log(user.cart[0].quantity); 
+        
+        const oid = new mongodb.ObjectId(id);
+        let data = await User.aggregate([
+            {$match:{_id:oid}},
+            {$unwind:'$cart'},
+            {$project:{
+                proId:{'$toObjectId':'$cart.productId'},
+                quantity:'$cart.quantity',
+            }},
+            {$lookup:{
+                from:'products',
+                localField:'proId', 
+                foreignField:'_id',
+                as:'productDetails',
+            }},
 
+
+        ])
+        console.log("Data  =>>" , data)
+
+        console.log("productDetails", data[0].productDetails);
         let quantity = 0
 
         for (const i of user.cart) {
@@ -22,21 +42,23 @@ const getCartPage = async (req, res) => {
         // console.log(user.cart.length,'this is cart lenght')
         // console.log(products)
         let grandTotal = 0;
-        for(let i=0;i<user.cart.length;i++){
-            console.log("sale prices ==>" , products[i].salePrice)
-            console.log("Quantity ==>" ,user.cart[i].quantity )
+        for(let i=0;i<data.length;i++){
+            console.log("sale prices ==>" , data[i].productDetails[0].salePrice)
+            console.log("Quantity ==>" ,data[i].quantity )
             if (products[i]) {
-                grandTotal += products[i].salePrice * user.cart[i].quantity;
+                grandTotal += data[i].productDetails[0].salePrice * data[i].quantity;
             }
             console.log(grandTotal,'hsihishi ',i)
         }
         // console.log(grandTotal)
 
+
+
+
         res.render("cart", {
             user,
             quantity,
-            product: products,
-            cart: user.cart,
+            data,
             grandTotal
         })
 
@@ -112,7 +134,7 @@ const changeQuantity = async (req, res) => {
         console.log(id, "productId");
 
         const findUser = await User.findOne({ _id: user })
-        // console.log(findUser, '(((((((((((((((((((((((((((((((((((((');
+        console.log(findUser, '(((((((((((((((((((((((((((((((((((((');
         const findProduct = await Product.findOne({ _id: id })
 
 
@@ -120,7 +142,7 @@ const changeQuantity = async (req, res) => {
 
             // console.log('iam here--');
             const productExistinCart = findUser.cart.find(item => item.productId === id)
-            // console.log(productExistinCart, 'this is product in cart');
+            console.log(productExistinCart, 'this is product in cart');
             let newQuantity
             if (productExistinCart) {
                 // console.log('iam in the carrt----------------------mm');
