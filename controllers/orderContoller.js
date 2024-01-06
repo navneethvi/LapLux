@@ -25,7 +25,8 @@ const getCheckoutPage = async (req, res) => {
             // console.log(findProducts);
             const addressData = await Address.findOne({ userId: user })
             // console.log("THis is find product =>",findProducts);
-            res.render("checkout", { product: findProducts, user: findUser, userAddress: addressData, isCart: true , isSingle : false})
+            const grandTotal = req.session.grandTotal
+            res.render("checkout", { product: findProducts, user: findUser, userAddress: addressData, isCart: true , isSingle : false, grandTotal})
         }
 
     } catch (error) {
@@ -39,16 +40,16 @@ const orderPlaced = async (req, res) => {
         console.log("req.body================>",req.body);
         if(req.body.isSingle === "true"){
             const { totalPrice, addressId, payment, productId } = req.body
+            const userId = req.session.user
             // console.log(req.body)
             //console.log(totalPrice, date, addressId, payment, productId);
-            const userId = req.session.user
             const findUser = await User.findOne({ _id: userId })
             console.log("Find user ===>",findUser);
             const address = await Address.findOne({ userId: userId })
             // console.log(address);
             // const findAddress = address.find(item => item._id.toString() === addressId);
             const findAddress = address.address.find(item => item._id.toString() === addressId);
-            // console.log(findAddress);
+            console.log(findAddress);
             console.log("Before product search")
             const findProduct = await Product.findOne({ _id: productId })
             // console.log(findProduct);
@@ -85,31 +86,40 @@ const orderPlaced = async (req, res) => {
         }else{
             
             console.log("from cart");
-
+           
             const { totalPrice, addressId, payment } = req.body
             // console.log(totalPrice, addressId, payment);
             const userId = req.session.user
             const findUser = await User.findOne({ _id: userId })
             const productIds = findUser.cart.map(item => item.productId)
-            // console.log(productIds);
-            const findAddress = await Address.find({ _id: addressId })
+           
+        //  const addres= await Address.find({userId:userId})
+            
+        const findAddress = await Address.findOne({ 'address._id':addressId })
+        const addressToFind = addressId
+        const findA = findAddress.address.find(address => address._id === addressToFind)
+
+            console.log(findA);
             const findProducts = await Product.find({ _id: { $in: productIds } })
-            console.log("helloooo");
+     
+         
+
             const cartItemQuantities = findUser.cart.map((item) => ({
                 productId: item.productId,
-                quantity: item.quantity
+                quantity: item.quantity                                                                               
             }))
-            console.log("cartItemQuantity",cartItemQuantities);
+           
             const orderedProducts = findProducts.map((item) => ({
                 _id: item._id,
                 price: item.salePrice,
                 name: item.productName,
-                image: item.productImage[0],
-                quantity: cartItemQuantities.find(item => item.productId.toString() === item._id.toString()).quantity
-            }))
-            console.log("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
             
-            console.log(orderedProducts);
+                image: item.productImage[0],
+                quantity: cartItemQuantities.find(cartItem => cartItem.productId.toString() === item._id.toString()).quantity
+            }))
+          
+            
+            
     
             const newOrder = new Order({
                 product: orderedProducts,
@@ -122,19 +132,34 @@ const orderPlaced = async (req, res) => {
                 
             })
             const orderDone = await newOrder.save()
-    
-            for (const orderProduct of orderedProducts) {
-                const product = await Product.find({ _id: orderProduct.productId })
+
+            // console.log('thsi is new order',newOrder);
+
+
+            for (let i = 0; i < orderedProducts.length; i++) {
+               
+                const product = await Product.findOne({ _id: orderedProducts[i]._id });
                 if (product) {
-                    const newQuantity = product.quantity - orderProduct.quantity
-                    product.quantity = Math.max(newQuantity, 0)
-                    await product.save()
+                    const newQuantity = product.quantity - orderedProducts[i].quantity;
+                    product.quantity = Math.max(newQuantity, 0);
+                    await product.save();
                 }
+               
             }
     
-            if (newOrderorder.payment == 'cod') {
+            // for (const orderProduct of orderedProducts) {
+            //     const product = await Product.find({ _id: orderProduct.productId })
+            //     if (product) {
+            //         const newQuantity = product.quantity - orderProduct.quantity
+            //         product.quantity = Math.max(newQuantity, 0)
+            //         await product.save()
+            //     }
+            // }
+
+    
+            if (newOrder.payment == 'cod') {
                 console.log('order placed by cod');
-                res.json({ payment: true, method: "cod", order: orderDone, quantity: cartItemQuantities, orderId: user });
+                res.json({ payment: true, method: "cod", order: orderDone, quantity: cartItemQuantities, orderId: findUser });
     
             }
 

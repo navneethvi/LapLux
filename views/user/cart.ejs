@@ -188,18 +188,11 @@
             const totalElements = document.getElementById('total').innerHTML;
             // alert(parseInt(subtotalElement.innerHTML)+ parseInt(productPrice))
 
-
-            if (count == 1) {
-                // alert('1')
-                document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) + parseInt(productPrice)
-            } else {
-                // alert('else')
-                document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) - parseInt(productPrice)
-            }
-
+         
+          
 
             let currentQuantity = parseInt(cartProductQuantityElement.value)
-            // alert(currentQuantity)
+            
             const currentSubTotal = parseInt(subtotalElement.innerHTML)
             // alert(currentSubTotal+"sub")
 
@@ -229,6 +222,13 @@
             }
 
             const newSubtotal = newQuantity * productPrice
+            if (count == 1) {
+                // alert('1')
+                document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) + parseInt(productPrice)
+            } else {
+                // alert('else')
+                document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) - parseInt(productPrice)
+            }
 
 
 

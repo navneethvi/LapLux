@@ -29,11 +29,10 @@ const getCartPage = async (req, res) => {
                 as:'productDetails',
             }},
 
-
         ])
         console.log("Data  =>>" , data)
 
-        console.log("productDetails", data[0].productDetails);
+       
         let quantity = 0
 
         for (const i of user.cart) {
@@ -49,6 +48,7 @@ const getCartPage = async (req, res) => {
                 grandTotal += data[i].productDetails[0].salePrice * data[i].quantity;
             }
             console.log(grandTotal,'hsihishi ',i)
+            req.session.grandTotal = grandTotal
         }
         // console.log(grandTotal)
 
@@ -207,7 +207,7 @@ const deleteProduct = async (req, res) => {
         console.log("item deleted from cart");
         res.redirect("/cart")
     } catch (error) {
-        console.log(error.message);
+        console.log('thsi is aeroor ',error);
     }
 }
 

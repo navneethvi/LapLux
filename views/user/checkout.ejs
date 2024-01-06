@@ -41,7 +41,11 @@
                                                             </a></h5>
                                                     </td>
                                                        <td>
-                                                    
+                                                       <% if (isSingle === false) { %>
+                                                        <%= user.cart[i].quantity %>
+                                                       <% }else{ %>
+                                                            <p>1</p>
+                                                        <% } %>
                                                     </td> 
                                                     <td>
                                                         <%= product[i].salePrice %>
@@ -116,7 +120,7 @@
                     <div class="container col-6 mt-3">
                         <% let totalAmount = 0; %>
                         <% for (let i = 0; i < product.length; i++) { %>
-                            <% if (locals.isCart==="true") { %>
+                            <% if (locals.isCart===true) { %>
                                 <% totalAmount += product[i].salePrice * user.cart[i].quantity; %>
                             <% } else { %>
                                 <% totalAmount += product[i].salePrice; %>
