@@ -5,7 +5,7 @@ const Order = require("../models/orderSchema")
 
 const getCheckoutPage = async (req, res) => {
     try {
-        console.log("queryyyyyyyy",req.query);
+        console.log("queryyyyyyyy", req.query);
         if (req.query.isSingle == "true") {
             const id = req.query.id
             const findProduct = await Product.find({ id: id }).lean()
@@ -13,7 +13,7 @@ const getCheckoutPage = async (req, res) => {
             const findUser = await User.findOne({ _id: userId })
             const addressData = await Address.findOne({ userId: userId })
             // console.log(addressData)
-            console.log("THis is find product =>",findProduct);
+            console.log("THis is find product =>", findProduct);
             res.render("checkout", { product: findProduct, user: userId, findUser: findUser, userAddress: addressData, isSingle: true })
         } else {
             const user = req.query.userId
@@ -26,7 +26,7 @@ const getCheckoutPage = async (req, res) => {
             const addressData = await Address.findOne({ userId: user })
             // console.log("THis is find product =>",findProducts);
             const grandTotal = req.session.grandTotal
-            res.render("checkout", { product: findProducts, user: findUser, userAddress: addressData, isCart: true , isSingle : false, grandTotal})
+            res.render("checkout", { product: findProducts, user: findUser, userAddress: addressData, isCart: true, isSingle: false, grandTotal })
         }
 
     } catch (error) {
@@ -37,14 +37,14 @@ const getCheckoutPage = async (req, res) => {
 
 const orderPlaced = async (req, res) => {
     try {
-        console.log("req.body================>",req.body);
-        if(req.body.isSingle === "true"){
+        console.log("req.body================>", req.body);
+        if (req.body.isSingle === "true") {
             const { totalPrice, addressId, payment, productId } = req.body
             const userId = req.session.user
             // console.log(req.body)
             //console.log(totalPrice, date, addressId, payment, productId);
             const findUser = await User.findOne({ _id: userId })
-            console.log("Find user ===>",findUser);
+            console.log("Find user ===>", findUser);
             const address = await Address.findOne({ userId: userId })
             // console.log(address);
             // const findAddress = address.find(item => item._id.toString() === addressId);
@@ -53,7 +53,7 @@ const orderPlaced = async (req, res) => {
             console.log("Before product search")
             const findProduct = await Product.findOne({ _id: productId })
             // console.log(findProduct);
-    
+
             const productDetails = {
                 ProductId: findProduct._id,
                 price: findProduct.salePrice,
@@ -68,68 +68,69 @@ const orderPlaced = async (req, res) => {
                 address: findAddress,
                 payment: payment,
                 userId: userId,
-                createdOn:Date.now(),
+                createdOn: Date.now(),
                 status: "Confirmed",
             }))
-    
+
             const orderDone = await newOrder.save()
             console.log("Order placed")
             findProduct.quantity = findProduct.quantity - 1
-            
+
             await findProduct.save()
-    
-    
+
+
             if (newOrder.payment == 'cod') {
                 console.log('Order Placed with COD');
                 res.json({ payment: true, method: "cod", order: orderDone, quantity: 1, orderId: userId });
             }
-        }else{
-            
+        } else {
+
             console.log("from cart");
-           
+
             const { totalPrice, addressId, payment } = req.body
             // console.log(totalPrice, addressId, payment);
             const userId = req.session.user
             const findUser = await User.findOne({ _id: userId })
             const productIds = findUser.cart.map(item => item.productId)
-           
-        //  const addres= await Address.find({userId:userId})
-            
-        const findAddress = await Address.findOne({ 'address._id':addressId })
-        const addressToFind = addressId
-        const findA = findAddress.address.find(address => address._id === addressToFind)
 
-            console.log(findA);
+            //  const addres= await Address.find({userId:userId})
+
+            const findAddress = await Address.findOne({ 'address._id': addressId });
+
+            if (findAddress) {
+                const desiredAddress = findAddress.address.find(item => item._id.toString() === addressId.toString());
+                // console.log(desiredAddress);
+            
+
             const findProducts = await Product.find({ _id: { $in: productIds } })
-     
-         
+
 
             const cartItemQuantities = findUser.cart.map((item) => ({
                 productId: item.productId,
-                quantity: item.quantity                                                                               
+                quantity: item.quantity
             }))
-           
+
             const orderedProducts = findProducts.map((item) => ({
                 _id: item._id,
                 price: item.salePrice,
                 name: item.productName,
-            
+
                 image: item.productImage[0],
                 quantity: cartItemQuantities.find(cartItem => cartItem.productId.toString() === item._id.toString()).quantity
             }))
-          
-            
-            
-    
+
+
+
+
             const newOrder = new Order({
                 product: orderedProducts,
                 totalPrice: totalPrice,
-                address: findAddress,
+                address: desiredAddress,
                 payment: payment,
                 userId: userId,
                 status: "Confirmed",
-                
-                
+
+
             })
             const orderDone = await newOrder.save()
 
@@ -137,35 +138,28 @@ const orderPlaced = async (req, res) => {
 
 
             for (let i = 0; i < orderedProducts.length; i++) {
-               
+
                 const product = await Product.findOne({ _id: orderedProducts[i]._id });
                 if (product) {
                     const newQuantity = product.quantity - orderedProducts[i].quantity;
                     product.quantity = Math.max(newQuantity, 0);
                     await product.save();
                 }
-               
-            }
-    
-            // for (const orderProduct of orderedProducts) {
-            //     const product = await Product.find({ _id: orderProduct.productId })
-            //     if (product) {
-            //         const newQuantity = product.quantity - orderProduct.quantity
-            //         product.quantity = Math.max(newQuantity, 0)
-            //         await product.save()
-            //     }
-            // }
 
-    
+            }
+
+
             if (newOrder.payment == 'cod') {
                 console.log('order placed by cod');
                 res.json({ payment: true, method: "cod", order: orderDone, quantity: cartItemQuantities, orderId: findUser });
-    
-            }
 
+            }
+        } else {
+            console.log('Address not found');
+        }
 
         }
-        
+
 
     } catch (error) {
         console.log(error.message);
@@ -179,7 +173,7 @@ const orderPlaced = async (req, res) => {
 
 // const orderPlaceFromCart = async (req, res) => {
 //     try {
-  
+
 
 //     } catch (error) {
 //         console.log(error.message);
@@ -204,47 +198,47 @@ const getOrderDetailsPage = async (req, res) => {
 const getOrderListPageAdmin = async (Req, res) => {
     try {
         const orders = await Order.find({})
-        res.render("orders-list", { orders : orders })
+        res.render("orders-list", { orders: orders })
     } catch (error) {
         console.log(error.message);
     }
 }
 
 
-const cancelOrder = async(req, res)=>{
+const cancelOrder = async (req, res) => {
     try {
         console.log("im here");
         const userId = req.session.user
-        const findUser = await User.findOne({_id : userId})
+        const findUser = await User.findOne({ _id: userId })
 
-        if(!findUser){
+        if (!findUser) {
             return res.status(404).json({ message: 'User not found' });
         }
 
         const orderId = req.query.orderId
         console.log(orderId);
-        
-        await Order.updateOne({_id: orderId}, 
-            {status: "Canceled"}
-        ).then((data)=>console.log(data))
 
-        const findOrder = await Order.findOne({_id : orderId})
+        await Order.updateOne({ _id: orderId },
+            { status: "Canceled" }
+        ).then((data) => console.log(data))
 
-        
-        
+        const findOrder = await Order.findOne({ _id: orderId })
+
+
+
         for (const productData of findOrder.product) {
             const productId = productData.productId;
             const quantity = productData.quantity;
-      
+
             const product = await Product.findById(productId);
-      
+
             if (product) {
-              product.quantity += quantity;
-              await product.save();
+                product.quantity += quantity;
+                await product.save();
             }
-          }
-      
-          res.redirect('/profile');
+        }
+
+        res.redirect('/profile');
 
     } catch (error) {
         console.log(error.message);
@@ -253,35 +247,35 @@ const cancelOrder = async(req, res)=>{
 
 
 
-const changeOrderStatus = async(req, res)=>{
+const changeOrderStatus = async (req, res) => {
     try {
         console.log(req.query);
-       
+
 
         const orderId = req.query.orderId
         console.log(orderId);
-        
-        await Order.updateOne({_id: orderId}, 
-            {status: req.query.status}
-        ).then((data)=>console.log(data))
 
-        const findOrder = await Order.findOne({_id : orderId})
+        await Order.updateOne({ _id: orderId },
+            { status: req.query.status }
+        ).then((data) => console.log(data))
 
-        
-        
+        const findOrder = await Order.findOne({ _id: orderId })
+
+
+
         for (const productData of findOrder.product) {
             const productId = productData.productId;
             const quantity = productData.quantity;
-      
+
             const product = await Product.findById(productId);
-      
+
             if (product) {
-              product.quantity += quantity;
-              await product.save();
+                product.quantity += quantity;
+                await product.save();
             }
-          }
-      
-          res.redirect('/admin/orderList');
+        }
+
+        res.redirect('/admin/orderList');
 
     } catch (error) {
         console.log(error.message);
@@ -289,7 +283,7 @@ const changeOrderStatus = async(req, res)=>{
 }
 
 
-const getCartCheckoutPage = async (req, res)=>{
+const getCartCheckoutPage = async (req, res) => {
     try {
         res.render("checkoutCart")
     } catch (error) {
@@ -299,15 +293,15 @@ const getCartCheckoutPage = async (req, res)=>{
 
 
 
-const getOrderDetailsPageAdmin = async (req, res)=>{
+const getOrderDetailsPageAdmin = async (req, res) => {
     try {
         const orderId = req.query.id
         // console.log(orderId);
-        const findOrder = await Order.findOne({_id : orderId})
+        const findOrder = await Order.findOne({ _id: orderId })
         // console.log(findOrder);
 
 
-        res.render("order-details-admin", {orders : findOrder, orderId})
+        res.render("order-details-admin", { orders: findOrder, orderId })
     } catch (error) {
         console.log(error.message);
     }
