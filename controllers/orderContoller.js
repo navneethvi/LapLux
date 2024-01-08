@@ -2,6 +2,8 @@ const User = require("../models/userSchema")
 const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
 const Order = require("../models/orderSchema")
+const mongodb = require("mongodb")
+
 
 const getCheckoutPage = async (req, res) => {
     try {
@@ -19,14 +21,38 @@ const getCheckoutPage = async (req, res) => {
             const user = req.query.userId
             const findUser = await User.findOne({ _id: user })
             // console.log(findUser);
-            const productIds = findUser.cart.map(item => item.productId)
+            // const productIds = findUser.cart.map(item => item.productId)
             // console.log(productIds)
-            const findProducts = await Product.find({ _id: { $in: productIds } })
+            // const findProducts = await Product.find({ _id: { $in: productIds } })
             // console.log(findProducts);
             const addressData = await Address.findOne({ userId: user })
             // console.log("THis is find product =>",findProducts);
+            const oid = new mongodb.ObjectId(user);
+            const data = await User.aggregate([
+                { $match: { _id: oid } },
+                { $unwind: "$cart" },
+                {
+                    $project: {
+                        proId: { '$toObjectId': '$cart.productId' },
+                        quantity: "$cart.quantity"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'products',
+                        localField: 'proId',
+                        foreignField: '_id',
+                        as: 'productDetails'
+                    }
+                },
+            ])
+
+
+
+            console.log("Data  =>>", data)
+            // console.log("Data  =>>" , data[0].productDetails)
             const grandTotal = req.session.grandTotal
-            res.render("checkout", { product: findProducts, user: findUser, userAddress: addressData, isCart: true, isSingle: false, grandTotal })
+            res.render("checkout", { data: data, user: findUser, isCart: true, userAddress: addressData, isSingle: false, grandTotal })
         }
 
     } catch (error) {
@@ -100,63 +126,63 @@ const orderPlaced = async (req, res) => {
             if (findAddress) {
                 const desiredAddress = findAddress.address.find(item => item._id.toString() === addressId.toString());
                 // console.log(desiredAddress);
-            
-
-            const findProducts = await Product.find({ _id: { $in: productIds } })
 
 
-            const cartItemQuantities = findUser.cart.map((item) => ({
-                productId: item.productId,
-                quantity: item.quantity
-            }))
-
-            const orderedProducts = findProducts.map((item) => ({
-                _id: item._id,
-                price: item.salePrice,
-                name: item.productName,
-
-                image: item.productImage[0],
-                quantity: cartItemQuantities.find(cartItem => cartItem.productId.toString() === item._id.toString()).quantity
-            }))
+                const findProducts = await Product.find({ _id: { $in: productIds } })
 
 
+                const cartItemQuantities = findUser.cart.map((item) => ({
+                    productId: item.productId,
+                    quantity: item.quantity
+                }))
+
+                const orderedProducts = findProducts.map((item) => ({
+                    _id: item._id,
+                    price: item.salePrice,
+                    name: item.productName,
+
+                    image: item.productImage[0],
+                    quantity: cartItemQuantities.find(cartItem => cartItem.productId.toString() === item._id.toString()).quantity
+                }))
 
 
-            const newOrder = new Order({
-                product: orderedProducts,
-                totalPrice: totalPrice,
-                address: desiredAddress,
-                payment: payment,
-                userId: userId,
-                status: "Confirmed",
 
 
-            })
-            const orderDone = await newOrder.save()
+                const newOrder = new Order({
+                    product: orderedProducts,
+                    totalPrice: totalPrice,
+                    address: desiredAddress,
+                    payment: payment,
+                    userId: userId,
+                    status: "Confirmed",
 
-            // console.log('thsi is new order',newOrder);
+
+                })
+                const orderDone = await newOrder.save()
+
+                // console.log('thsi is new order',newOrder);
 
 
-            for (let i = 0; i < orderedProducts.length; i++) {
+                for (let i = 0; i < orderedProducts.length; i++) {
 
-                const product = await Product.findOne({ _id: orderedProducts[i]._id });
-                if (product) {
-                    const newQuantity = product.quantity - orderedProducts[i].quantity;
-                    product.quantity = Math.max(newQuantity, 0);
-                    await product.save();
+                    const product = await Product.findOne({ _id: orderedProducts[i]._id });
+                    if (product) {
+                        const newQuantity = product.quantity - orderedProducts[i].quantity;
+                        product.quantity = Math.max(newQuantity, 0);
+                        await product.save();
+                    }
+
                 }
 
+
+                if (newOrder.payment == 'cod') {
+                    console.log('order placed by cod');
+                    res.json({ payment: true, method: "cod", order: orderDone, quantity: cartItemQuantities, orderId: findUser });
+
+                }
+            } else {
+                console.log('Address not found');
             }
-
-
-            if (newOrder.payment == 'cod') {
-                console.log('order placed by cod');
-                res.json({ payment: true, method: "cod", order: orderDone, quantity: cartItemQuantities, orderId: findUser });
-
-            }
-        } else {
-            console.log('Address not found');
-        }
 
         }
 

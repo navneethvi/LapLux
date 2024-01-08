@@ -29,35 +29,69 @@
                                     </thead>
                                     <tbody>
 
-                                        <% if (product && Array.isArray(product) && product.length> 0) { %>
-                                            <% for (let i=0; i < product.length; i++) { %>
-                                                <tr>
-                                                    <td class="image product-thumbnail"><img
-                                                            src="/uploads/product-images/<%= product[i].productImage[0] %>"
-                                                            alt="#"></td>
-                                                    <td>
-                                                        <h5><a href="shop-product-full.html">
-                                                                <%= product[i].productName %>
-                                                            </a></h5>
-                                                    </td>
-                                                       <td>
-                                                       <% if (isSingle === false) { %>
-                                                        <%= user.cart[i].quantity %>
-                                                       <% }else{ %>
-                                                            <p>1</p>
-                                                        <% } %>
-                                                    </td> 
-                                                    <td>
-                                                        <%= product[i].salePrice %>
-                                                    </td>
-                                                </tr>
-                                                <% } %>
-                                                    <% } else { %>
-                                                        <tr>
-                                                            <td colspan="4">No products found</td>
-                                                        </tr>
-                                                        <% } %>
+                                        <% if (isSingle===true) { %>
+                                            <% if (product && Array.isArray(product) && product.length> 0) { %>
+                                                <% for (let i=0; i < product.length; i++) { %>
+                                                    <tr>
+                                                        <td class="image product-thumbnail"><img
+                                                                src="/uploads/product-images/<%= product[i].productImage[0] %>"
+                                                                alt="#"></td>
+                                                        <td>
+                                                            <h5><a href="shop-product-full.html">
+                                                                    <%= product[i].productName %>
+                                                                </a></h5>
+                                                        </td>
+                                                        <td>
 
+                                                            <p>1</p>
+
+                                                        </td>
+                                                        <td>
+                                                            <%= product[i].salePrice %>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                                        <% } else { %>
+                                                            <tr>
+                                                                <td colspan="4">No products found</td>
+                                                            </tr>
+                                                            <% } %>
+                                                                <% }else{ %>
+
+
+                                                                    <% if (data.length> 0) { %>
+
+                                                                        <% for (let i=0; i < data.length; i++) { %>
+
+                                                                            <tr>
+                                                                                <td class="image product-thumbnail">
+                                                                                    <img src="/uploads/product-images/<%= data[i].productDetails[0].productImage[0] %>"
+                                                                                        alt="#" />
+                                                                                </td>
+                                                                                <td>
+                                                                                    <h5>
+                                                                                        <%= data[i].productDetails[0].productName
+                                                                                            %>
+                                                                                    </h5>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <%= data[i].quantity %>
+                                                                                </td>
+                                                                                <td>
+                                                                                    ₹<span> <text>
+                                                                                            <%= data[i].productDetails[0].salePrice
+                                                                                                * data[i].quantity %>
+                                                                                        </text>
+                                                                                </td>
+                                                                            </tr>
+
+
+                                                                            <% } %>
+
+                                                                                <% } %>
+
+
+                                                                                    <% } %>
                                     </tbody>
                                 </table>
                             </div>
@@ -118,48 +152,65 @@
 
 
                     <div class="container col-6 mt-3">
-                        <% let totalAmount = 0; %>
-                        <% for (let i = 0; i < product.length; i++) { %>
-                            <% if (locals.isCart===true) { %>
-                                <% totalAmount += product[i].salePrice * user.cart[i].quantity; %>
-                            <% } else { %>
-                                <% totalAmount += product[i].salePrice; %>
-                            <% } %>
-                        <% } %>
-                    
-                        <!-- Display total and shipping information outside the loop -->
-                        <div class="ml-150">
-                            <table class="table mt-45">
-                                <tbody>
-                                    <tr>
-                                        <th>Shipping</th>
-                                        <td colspan="2"><em>Free Shipping</em></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Total for All Products</th>
-                                        <td colspan="2" class="product-subtotal" id="totalValue">
-                                            <span class="font-xl text-brand fw-900">₹<%= totalAmount.toFixed(2) %></span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <% let totalAmount=0; %>
+                            <% if (isSingle===true) { %>
+                                <% totalAmount +=product[0].salePrice; %>
+                                    <% }else{ %>
 
-                            <div class="ml-65">
-                                    <%if(isSingle){%>
-                                        <button type="button" class="btn" onclick="placeOrder('<%= user._id %>' , '<%=product[0]._id%>',  true)">Single</button>
-                                    <%}else{%>
-                                        <button type="button" class="btn" onclick="placeOrder('<%= user._id %>','<%=product[0]._id%>' , false)">Place Order</button>
-                                    <%}%>
-                            </div>
-                        </div>
+                                        <% for (let i=0; i < data.length; i++) { %>
+
+                                            <% totalAmount +=data[i].productDetails[0].salePrice * data[i].quantity %>
+
+
+
+                                                <% } %>
+
+
+                                                    <% } %>
+
+                                                        <!-- Display total and shipping information outside the loop -->
+                                                        <div class="ml-150">
+                                                            <table class="table mt-45">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <th>Shipping</th>
+                                                                        <td colspan="2"><em>Free Shipping</em></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Total for All Products</th>
+                                                                        <td colspan="2" class="product-subtotal"
+                                                                            id="totalValue">
+                                                                            <span class="font-xl text-brand fw-900">₹<%=
+                                                                                    totalAmount %></span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+
+                                                            <div class="ml-65">
+                                                                <%if(isSingle===true){%>
+                                                                    <button type="button" class="btn"
+                                                                        onclick="placeOrder('<%= user._id %>' , '<%=product[0]._id%>',  true)">Single</button>
+                                                                    <%}else{%>
+
+
+                                                                        <button type="button" class="btn"
+                                                                            onclick="placeOrder('<%= user._id %>', [<% for (let i = 0; i < data.length; i++) { %>'<%=data[i].productDetails[0]._id%>',<%}%>] , false)">Place
+                                                                            Order</button>
+
+
+                                                                        <% } %>
+
+                                                            </div>
+                                                        </div>
                     </div>
-                    
+
 
 
                     <div class="col-8">
                         <div class="row align-items-start mt-30 ml-150">
                             <!-- Use align-items-start to vertically align content at the top -->
-                            <% if (userAddress) { %>
+                            <% if (locals.userAddress) { %>
                                 <% userAddress.address.forEach((address)=> { %>
                                     <div class="col-lg-6 mb-3">
                                         <div class="card">
@@ -269,9 +320,9 @@
                         totalPrice: numericValue,
                         addressId: address,
                         payment: payment,
-                        productId : prodId,
+                        productId: prodId,
                         isSingle
-                       
+
                     },
                     success: function (response) {
                         if (response.method === "cod") {
