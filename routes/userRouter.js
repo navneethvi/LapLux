@@ -10,7 +10,7 @@ const { isLogged } = require("../Authentication/auth")
 
 Router.get("/pageNotFound", userController.pageNotFound)
 
-//user actions
+// User actions
 Router.get("/", userController.getHomePage)
 Router.get("/login", userController.getLoginPage)
 Router.post("/login", userController.userLogin)
@@ -24,7 +24,7 @@ Router.post("/verifyPassOtp", userProfileController.verifyForgotPassOtp)
 Router.get("/resetPassword", userProfileController.getResetPassPage)
 Router.post("/changePassword", userProfileController.postNewPassword)
 
-//user profile
+// User profile
 Router.get("/profile", isLogged, userProfileController.getUserProfile)
 Router.get("/addAddress", isLogged, userProfileController.getAddressAddPage)
 Router.post("/addAddress", isLogged, userProfileController.postAddress)
@@ -33,11 +33,11 @@ Router.post("/editAddress", isLogged, userProfileController.postEditAddress)
 Router.get("/deleteAddress", isLogged, userProfileController.getDeleteAddress)
 Router.post("/editUserDetails", isLogged, userProfileController.editUserDetails)
 
-//Products based routes
+// Products based routes
 Router.get("/productDetails", userController.getProductDetailsPage)
 Router.get("/shop", isLogged, userController.getShopPage)
 
-//User cart
+// Cart
 Router.get("/cart", isLogged, cartController.getCartPage)
 Router.post("/addToCart", isLogged, cartController.addToCart)
 Router.post("/changeQuantity", isLogged, cartController.changeQuantity)
@@ -46,7 +46,6 @@ Router.get("/deleteItem", isLogged, cartController.deleteProduct)
 //Orders
 Router.get("/checkout",isLogged, orderController.getCheckoutPage)
 Router.post("/orderPlaced", isLogged, orderController.orderPlaced)
-// Router.post("/orderPlacedCart", isLogged, orderController.orderPlaceFromCart)
 Router.get("/orderDetails", isLogged, orderController.getOrderDetailsPage)
 Router.get("/cancelOrder", isLogged, orderController.cancelOrder)
 Router.get("/checkoutCart", isLogged, orderController.getCartCheckoutPage)

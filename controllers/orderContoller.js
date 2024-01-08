@@ -162,7 +162,6 @@ const orderPlaced = async (req, res) => {
 
                 // console.log('thsi is new order',newOrder);
 
-
                 for (let i = 0; i < orderedProducts.length; i++) {
 
                     const product = await Product.findOne({ _id: orderedProducts[i]._id });
@@ -171,40 +170,21 @@ const orderPlaced = async (req, res) => {
                         product.quantity = Math.max(newQuantity, 0);
                         await product.save();
                     }
-
                 }
-
-
                 if (newOrder.payment == 'cod') {
                     console.log('order placed by cod');
                     res.json({ payment: true, method: "cod", order: orderDone, quantity: cartItemQuantities, orderId: findUser });
-
                 }
             } else {
                 console.log('Address not found');
             }
-
         }
-
-
     } catch (error) {
         console.log(error.message);
     }
 }
 
 
-
-
-
-
-// const orderPlaceFromCart = async (req, res) => {
-//     try {
-
-
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// }
 
 
 const getOrderDetailsPage = async (req, res) => {

@@ -18,7 +18,7 @@ Router.get("/logout", isAdmin, adminController.getLogout)
 Router.get("/", isAdmin, adminController.getDashboard)
 
 
-//Category Management
+// Category Management
 Router.get("/category", isAdmin, categoryController.getCategoryInfo)
 Router.post("/addCategory", isAdmin, categoryController.addCategory)
 Router.get("/allCategory", isAdmin, categoryController.getAllCategories)
@@ -28,7 +28,7 @@ Router.get("/editCategory", isAdmin, categoryController.getEditCategory)
 Router.post("/editCategory/:id", isAdmin, categoryController.editCategory)
 
 
-//Customer Management
+// Customer Management
 Router.get("/users", isAdmin, customerController.getCustomersInfo)
 Router.get("/blockCustomer", isAdmin, customerController.getCustomerBlocked)
 Router.get("/unblockCustomer", isAdmin, customerController.getCustomerUnblocked)
@@ -40,14 +40,14 @@ const storage = require("../helpers/multer")
 const upload = multer({ storage: storage })
 Router.use("/public/uploads", express.static("/public/uploads"))
 
-//Brand Management
+// Brand Management
 Router.get("/brands", isAdmin, brandController.getBrandPage)
 Router.post("/addBrand", isAdmin, upload.single('image'), brandController.addBrand)
 Router.get("/allBrands", isAdmin, brandController.getAllBrands)
 Router.get("/blockBrand", isAdmin, brandController.blockBrand)
 Router.get("/unBlockBrand", isAdmin, brandController.unBlockBrand)
 
-//Product Management
+// Product Management
 Router.get("/addProducts", isAdmin, productController.getProductAddPage)
 Router.post("/addProducts", isAdmin, upload.array("images", 5), productController.addProducts)
 Router.get("/products", isAdmin, productController.getAllProducts)
@@ -58,9 +58,9 @@ Router.get("/blockProduct", isAdmin, productController.getBlockProduct)
 Router.get("/unBlockProduct", isAdmin, productController.getUnblockProduct)
 
 // Order Management
-
 Router.get("/orderList", isAdmin, orderContoller.getOrderListPageAdmin)
 Router.get("/orderDetailsAdmin", isAdmin, orderContoller.getOrderDetailsPageAdmin)
 Router.get("/changeStatus", isAdmin, orderContoller.changeOrderStatus)
+
 
 module.exports = Router

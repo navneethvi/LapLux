@@ -194,9 +194,7 @@
                                                                     <%}else{%>
 
 
-                                                                        <button type="button" class="btn"
-                                                                            onclick="placeOrder('<%= user._id %>', [<% for (let i = 0; i < data.length; i++) { %>'<%=data[i].productDetails[0]._id%>',<%}%>] , false)">Place
-                                                                            Order</button>
+                                                                        <button type="button" class="btn" onclick="placeOrder('<%= user._id %>', [<% for (let i = 0; i < data.length; i++) { %>'<%= data[i].productDetails[0]._id %>'<% if (i < data.length - 1) { %>,<% } %><% } %>], false)">Place Order</button>
 
 
                                                                         <% } %>
