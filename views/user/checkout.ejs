@@ -194,7 +194,9 @@
                                                                     <%}else{%>
 
 
-                                                                        <button type="button" class="btn" onclick="placeOrder('<%= user._id %>', [<% for (let i = 0; i < data.length; i++) { %>'<%= data[i].productDetails[0]._id %>'<% if (i < data.length - 1) { %>,<% } %><% } %>], false)">Place Order</button>
+                                                                        <button type="button" class="btn"
+                                                                            onclick="placeOrder('<%= user._id %>', [<% for (let i = 0; i < data.length; i++) { %>'<%= data[i].productDetails[0]._id %>'<% if (i < data.length - 1) { %>,<% } %><% } %>], false)">Place
+                                                                            Order</button>
 
 
                                                                         <% } %>
@@ -286,7 +288,7 @@
             </div>
     </section>
 
-
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
         async function placeOrder(userId, prodId, isSingle) {
             // alert(prodId)
@@ -320,7 +322,6 @@
                         payment: payment,
                         productId: prodId,
                         isSingle
-
                     },
                     success: function (response) {
                         if (response.method === "cod") {
@@ -332,7 +333,54 @@
                                 timer: 2000,
                             })
                             location.href("/orderHistory")
-                        } else {
+                        } else if (response.method === "online") {
+
+                            let orderAmount = Math.round(numericValue * 100)
+                            console.log(response, "res");
+                            // var options = {
+                            //     "key": "rzp_test_sPwoxcRC0hnSFO",
+                            //     "amount": orderAmount,
+                            //     "currency": "INR",
+                            //     "name": "Nothing",
+                            //     "description": "Order Payment",
+                            //     "order_id": response.orderId,
+                            //     "handler": function () {
+                            //         verifyPayment(response.order, method, response.orderId );
+                            //     }
+
+
+
+
+
+
+
+
+                            var options = {
+                                "key": "rzp_test_sPwoxcRC0hnSFO", // Enter the Key ID generated from the Dashboard
+                                "amount": orderAmount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                                "currency": "INR",
+                                "name": "Future Furniture", //your business name
+                                "description": "Test Transaction",
+                                "image": "https://example.com/your_logo",
+                                "order_id": response.razorpayOrder.id, //This is a sample Order ID. Pass the id obtained in the response of Step 1
+                                "handler": function (status) {
+                                    verifyPayment(response.order,status, response.razorpayOrder.id);
+                                },
+                                "prefill": {
+                                    "name": "Customer Name",
+                                    "email": "customer@example.com",
+                                    "contact": "9000090000"
+                                },
+
+                                "theme": {
+                                    "color": "#3399cc"
+                                }
+                            }
+                            var rzp1 = new Razorpay(options);
+                            rzp1.open();
+                        }
+
+                        else {
                             Swal.fire({
                                 title: 'Error Occured',
                                 text: "Can't process order error occured",
@@ -340,9 +388,42 @@
                                 timer: 5000
                             })
                         }
-                    },
+                    }
                 });
             }
+        }
+
+        function verifyPayment(order, payment, id) {
+            console.log(order, payment, id);
+            $.ajax({
+                url: '/verifyPayment',
+                method: 'post',
+                data: {
+                    order,
+                    payment
+                }, success: (response) => {
+                    if (response.status) {
+                        Swal.fire({
+                            title: "Order success",
+                            text: "order placed successfully",
+                            icon: "success",
+                            showCancelButton: true,
+                            confirmButtonText: "view orders",
+                            cancelButtonText: "continue shopping",
+                            reverseButtons: true
+                        }).then(function (result) {
+                            if (result.value) {
+                                location.href = '/orderDetails';
+                                // result.dismiss can be "cancel", "overlay",
+                                // "close", and "timer"
+                            } else if (result.dismiss === "cancel") {
+                                location.href = '/'
+                            }
+                        });
+                    }
+
+                }
+            })
         }
 
     </script>

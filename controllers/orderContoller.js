@@ -4,10 +4,11 @@ const Address = require("../models/addressSchema")
 const Order = require("../models/orderSchema")
 const mongodb = require("mongodb")
 const razorpay = require("razorpay")
+const crypto = require("crypto");
 
 let instance = new razorpay({
-    key_id : process.env.RAZORPAY_KEY_ID,
-    key_secret : process.env.RAZORPAY_KEY_SECRET
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
 })
 
 
@@ -161,7 +162,7 @@ const orderPlaced = async (req, res) => {
                     payment: payment,
                     userId: userId,
                     status: "Confirmed",
-                    createdOn : Date.now()
+                    createdOn: Date.now()
 
                 })
                 const orderDone = await newOrder.save()
@@ -169,8 +170,8 @@ const orderPlaced = async (req, res) => {
                 await User.updateOne(
                     { _id: userId },
                     { $set: { cart: [] } }
-                  );
-                  
+                );
+
 
                 // console.log('thsi is new order',newOrder);
 
@@ -186,7 +187,13 @@ const orderPlaced = async (req, res) => {
                 if (newOrder.payment == 'cod') {
                     console.log('order placed by cod');
                     res.json({ payment: true, method: "cod", order: orderDone, quantity: cartItemQuantities, orderId: findUser });
-                }
+                } else if (newOrder.payment == 'online') {
+                    console.log('order placed by Razorpay');
+                    const generatedOrder = await generateOrderRazorpay(orderDone._id, orderDone.totalPrice);
+                    console.log(generatedOrder,"order generated");
+                    res.json({ payment: false, method: "online", razorpayOrder: generatedOrder, order: orderDone, orderId: orderDone._id, quantity: cartItemQuantities });
+
+                } 
             } else {
                 console.log('Address not found');
             }
@@ -194,6 +201,28 @@ const orderPlaced = async (req, res) => {
     } catch (error) {
         console.log(error.message);
     }
+}
+
+
+
+const generateOrderRazorpay = (orderId, total) => {
+    return new Promise((resolve, reject) => {
+        const options = {
+            amount: total * 100,  
+            currency: "INR",
+            receipt: String(orderId)
+        };
+        instance.orders.create(options, function (err, order) { 
+            if (err) {
+                console.log("failed");
+                console.log(err);
+                reject(err);
+            } else {
+                console.log("Order Generated RazorPAY: " + JSON.stringify(order));
+                resolve(order);
+            }
+        });
+    })
 }
 
 
@@ -315,7 +344,7 @@ const getOrderDetailsPageAdmin = async (req, res) => {
     try {
         const orderId = req.query.id
         // console.log(orderId);
-        const findOrder = await Order.findOne({ _id: orderId }).sort({createdOn : 1})
+        const findOrder = await Order.findOne({ _id: orderId }).sort({ createdOn: 1 })
         // console.log(findOrder);
 
 
@@ -324,6 +353,23 @@ const getOrderDetailsPageAdmin = async (req, res) => {
         console.log(error.message);
     }
 }
+
+const verify = (req, res) => {
+    console.log(req.body);
+    let hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
+    const orderId = req.body.order._id;
+    const paymentId = req.body.payment.razorpay_payment_id;
+    hmac.update(orderId + "|" + paymentId);
+    hmac = hmac.digest("hex");
+    console.log(hmac,"HMAC");
+    if (hmac === req.body.payment.razorpay_signature) {
+        console.log("true");
+        res.json({ status: true });
+    } else {
+        console.log("false");
+        res.json({ status: false });
+    }
+};
 
 
 module.exports = {
@@ -334,5 +380,6 @@ module.exports = {
     getOrderListPageAdmin,
     cancelOrder,
     getCartCheckoutPage,
-    getOrderDetailsPageAdmin
+    getOrderDetailsPageAdmin,
+    verify
 }
