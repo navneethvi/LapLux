@@ -3,6 +3,12 @@ const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
 const Order = require("../models/orderSchema")
 const mongodb = require("mongodb")
+const razorpay = require("razorpay")
+
+let instance = new razorpay({
+    key_id : process.env.RAZORPAY_KEY_ID,
+    key_secret : process.env.RAZORPAY_KEY_SECRET
+})
 
 
 const getCheckoutPage = async (req, res) => {
@@ -94,7 +100,7 @@ const orderPlaced = async (req, res) => {
                 address: findAddress,
                 payment: payment,
                 userId: userId,
-                createdOn: Date.now(),
+                createdOn: new Date(),
                 status: "Confirmed",
             }))
 
@@ -155,10 +161,16 @@ const orderPlaced = async (req, res) => {
                     payment: payment,
                     userId: userId,
                     status: "Confirmed",
-
+                    createdOn : Date.now()
 
                 })
                 const orderDone = await newOrder.save()
+
+                await User.updateOne(
+                    { _id: userId },
+                    { $set: { cart: [] } }
+                  );
+                  
 
                 // console.log('thsi is new order',newOrder);
 
@@ -303,7 +315,7 @@ const getOrderDetailsPageAdmin = async (req, res) => {
     try {
         const orderId = req.query.id
         // console.log(orderId);
-        const findOrder = await Order.findOne({ _id: orderId })
+        const findOrder = await Order.findOne({ _id: orderId }).sort({createdOn : 1})
         // console.log(findOrder);
 
 

@@ -96,6 +96,7 @@ const signupUser = async (req, res) => {
         if (req.body.password === req.body.cPassword) {
             if (!findUser) {
                 var otp = generateOtp()
+                console.log(otp);
                 const transporter = nodemailer.createTransport({
                     service: "gmail",
                     port: 587,
@@ -116,7 +117,7 @@ const signupUser = async (req, res) => {
                 if (info) {
                     req.session.userOtp = otp
                     req.session.userData = req.body
-                    res.render("verify-otp")
+                    res.render("verify-otp", {email})
                     console.log("Email sented", info.messageId);
                 } else {
                     res.json("email-error")
@@ -146,6 +147,49 @@ const getOtpPage = async (req, res) => {
         console.log(error.message);
     }
 }
+
+
+// Resend Otp
+
+const resendOtp = async (req, res) => {
+    try {
+        const email = req.session.userData.email;
+        var newOtp = generateOtp();
+        console.log(email, newOtp);
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            port: 587,
+            secure: false,
+            requireTLS: true,
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASSWORD
+            }
+        });
+
+        const info = await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "Resend OTP ✔",
+            text: `Your new OTP is ${newOtp}`,
+            html: `<b>  <h4 >Your new OTP is ${newOtp}</h4>    <br>  <a href="">Click here</a></b>`,
+        });
+
+        if (info) {
+            req.session.userOtp = newOtp;
+            res.json({ success: true, message: 'OTP resent successfully' });
+            console.log("Email resent", info.messageId);
+        } else {
+            res.json({ success: false, message: 'Failed to resend OTP' });
+        }
+    } catch (error) {
+        console.log(error.message);
+        res.json({ success: false, message: 'Error in resending OTP' });
+
+    }
+}
+
 
 // Verify otp from email with generated otp and save the user data to db
 
@@ -291,6 +335,7 @@ module.exports = {
     signupUser,
     getOtpPage,
     verifyOtp,
+    resendOtp,
     userLogin,
     getLogoutUser,
     getProductDetailsPage,

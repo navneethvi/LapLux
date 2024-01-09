@@ -28,7 +28,6 @@ const orderSchema = Mongoose.Schema({
     createdOn : {
         type : Date,
         required : true,
-        default : Date.now
     },
     date : {
         type : String,
