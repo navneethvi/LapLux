@@ -1,0 +1,297 @@
+<%- include("../partials/header") %>
+
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+
+
+                <!-- Add your form tag with the appropriate action attribute -->
+
+                <!-- Order Summary and Payment Column (Right Side) -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="order_review">
+                            <div class="mb-20">
+                                <h4>Your Orders</h4>
+                            </div>
+
+
+
+                            <div class="table-responsive order_table text-center">
+                                <table class="table mt-40">
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <% if (product && Array.isArray(product) && product.length> 0) { %>
+                                            <% for (let i=0; i < product.length; i++) { %>
+                                                <tr>
+                                                    <td class="image product-thumbnail"><img
+                                                            src="/uploads/product-images/<%= product[i].productImage[0] %>"
+                                                            alt="#"></td>
+                                                    <td>
+                                                        <h5><a href="shop-product-full.html">
+                                                                <%= product[i].productName %>
+                                                            </a></h5>
+                                                    </td>
+                                                       <td>
+                                                    
+                                                    </td> 
+                                                    <td>
+                                                        <%= product[i].salePrice %>
+                                                    </td>
+                                                </tr>
+                                                <% } %>
+                                                    <% } else { %>
+                                                        <tr>
+                                                            <td colspan="4">No products found</td>
+                                                        </tr>
+                                                        <% } %>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 mt-50 ">
+                        <div class="payment_method">
+                            <div class="mb-25 ml-150">
+                                <h5>Payment</h5>
+                            </div>
+                            <div class="custome-radio ml-150">
+                                <input class="form-check-input payment" type="radio" value="cod" name="payment_option"
+                                    id="CashOnDelivey" checked="">
+                                <label class="form-check-label" for="CashOnDelivey" data-bs-toggle="collapse"
+                                    data-target="#CashOnDelivey" aria-controls="CashOnDelivey">Cash on
+                                    Delivery</label>
+                            </div>
+                            <div class="custome-radio ml-150">
+                                <input class="form-check-input payment" required="" value="wallet" type="radio"
+                                    name="payment_option" id="wallet" checked="">
+                                <label class="form-check-label" for="wallet" data-bs-toggle="collapse"
+                                    data-target="#wallet" aria-controls="paypal">Wallet</label>
+                            </div>
+                            <div class="custome-radio ml-150">
+                                <input class="form-check-input payment" required="" value="online" type="radio"
+                                    name="payment_option" id="Razorpay" checked="">
+                                <label class="form-check-label" for="Razorpay" data-bs-toggle="collapse"
+                                    data-target="#Razorpay" aria-controls="paypal">Razorpay</label>
+                            </div>
+                            <div class="col-6 mt-50 ml-150">
+                                <div class="toggle_info">
+                                    <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a
+                                            coupon?</span> <a href="#coupon" data-bs-toggle="collapse" class="collapsed"
+                                            aria-expanded="false">Click here to enter your
+                                            code</a></span>
+                                </div>
+                                <div class="panel-collapse collapse coupon_form" id="coupon">
+                                    <div class="panel-body">
+                                        <p class="mb-30 font-sm">If you have a coupon code, please apply it below.
+                                        </p>
+                                        <form method="post">
+                                            <div class="form-group">
+                                                <input type="text" placeholder="Enter Coupon Code...">
+                                            </div>
+                                            <div class="form-group">
+                                                <button class="btn btn-md" name="login">Apply Coupon</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+
+                    <div class="container col-6 mt-3">
+                        <% let totalAmount = 0; %>
+                        <% for (let i = 0; i < product.length; i++) { %>
+                            <% if (locals.isCart==="true") { %>
+                                <% totalAmount += product[i].salePrice * user.cart[i].quantity; %>
+                            <% } else { %>
+                                <% totalAmount += product[i].salePrice; %>
+                            <% } %>
+                        <% } %>
+                    
+                        <!-- Display total and shipping information outside the loop -->
+                        <div class="ml-150">
+                            <table class="table mt-45">
+                                <tbody>
+                                    <tr>
+                                        <th>Shipping</th>
+                                        <td colspan="2"><em>Free Shipping</em></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Total for All Products</th>
+                                        <td colspan="2" class="product-subtotal" id="totalValue">
+                                            <span class="font-xl text-brand fw-900">₹<%= totalAmount.toFixed(2) %></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                    
+                            <div class="ml-65">
+                                <% for (let i = 0; i < product.length; i++) { %>
+                                    <button type="button" class="btn" onclick="placeOrder('<%= user._id %>', '<%= product[i]._id %>')">Place Order</button>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+
+                    <div class="col-8">
+                        <div class="row align-items-start mt-30 ml-150">
+                            <!-- Use align-items-start to vertically align content at the top -->
+                            <% if (userAddress) { %>
+                                <% userAddress.address.forEach((address)=> { %>
+                                    <div class="col-lg-6 mb-3">
+                                        <div class="card">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    id="addressRadio<%= address._id %>" name="selectedAddress"
+                                                    value="<%= address._id %>">
+                                                <label class="form-check-label"
+                                                    for="addressRadio<%= address._id %>">Select Address</label>
+                                            </div>
+
+                                            <div class="card-header">
+                                                <h5 class="mb-0">
+                                                    <%= address.addressType %>
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <!-- Add a radio button with a unique id for each address -->
+
+                                                <address>
+                                                    <%= address.name %><br />
+                                                        <%= address.city %>,<br />
+                                                            <%= address.landMark %> <br />
+                                                                <%= address.state %>
+                                                </address>
+                                                <p>
+                                                    <%= address.pincode %>
+                                                </p>
+                                                <p>
+                                                    <%= address.phone %>
+                                                </p>
+                                                <p>
+                                                    <%= address.altPhone %>
+                                                </p>
+                                                <div class="d-flex justify-content-between">
+                                                    <a href="/editAddress?id=<%= address._id %>"
+                                                        class="btn-small">Edit</a>
+                                                    <a href="/deleteAddress?id=<%= address._id %>"
+                                                        class="btn-small">Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <div class="col-lg-6 mb-3">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5 class="mb-0"></h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <address>
+                                                            No address
+                                                        </address>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% } %>
+                                                <div class="col-lg-6 mb-3">
+                                                    <a href="/addAddress">
+                                                        <button class="btn btn-primary w-100">Add address</button>
+                                                    </a>
+                                                </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </div>
+            </div>
+    </section>
+
+
+    <script>
+        async function placeOrder(userId, productId) {
+            console.log(userId);
+            let address = $("input[name='selectedAddress']:checked").val();
+            let payment = $("input[name='payment_option']:checked").val();
+
+            const sum = document.getElementById("totalValue").textContent;
+            const numericValue = parseInt(sum.replace(/[^\d.]/g, ''));
+
+            if (!payment) {
+                Swal.fire({
+                    title: 'NO PAYMENT FOUND!',
+                    text: 'Please select your Payment.',
+                    icon: 'error',
+                    timer: 3000,
+                });
+            } else if (!address) {
+                Swal.fire({
+                    title: 'NO ADDRESS FOUND!',
+                    text: 'Please select your address.',
+                    icon: 'error',
+                    timer: 3000,
+                });
+            } else {
+                $.ajax({
+                    url: '/orderPlaced',
+                    method: 'POST',
+                    data: {
+                        totalPrice: numericValue,
+                        createdOn: new Date().getTime(),
+                        date: new Date(),
+                        addressId: address,
+                        payment: payment,
+                        productId: productId
+                    },
+                    async: true,
+                    success: function (response) {
+                        if (response.method === "cod") {
+                            Swal.fire({
+                                title: "Order success",
+                                text: "Order placed successfully",
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000,
+                            })
+                            location.href("/orderHistory")
+                        } else {
+                            Swal.fire({
+                                title: 'Error Occured',
+                                text: "Can't process order error occured",
+                                icon: 'fail',
+                                timer: 5000
+                            })
+                        }
+                    },
+                });
+            }
+        }
+
+    </script>
+
+
+    <%- include("../partials/footer") %>
