@@ -376,7 +376,30 @@ const searchProducts = async (req, res)=>{
 
 const categoryWiseFilter = async (req, res)=>{
     try {
-        
+        const user = req.session.user
+        const id = req.query.id
+        const brands = await Brand.find({})
+        const findCategory = await Category.findOne({_id : id})
+        const findProducts = await Product.find({category : findCategory.name, isBlocked : false})
+        const categories = await Category.find({isListed : true})
+
+        let itemsPerPage = 6
+        let currentPage = parseInt(req.query.page) || 1
+        let startIndex = (currentPage - 1) * itemsPerPage
+        let endIndex = startIndex + itemsPerPage
+        let totalPages = Math.ceil(findProducts.length/6)
+        const currentProduct = findProducts.slice(startIndex, endIndex)
+
+        res.render("shop",
+        {
+            user: user,
+            product: currentProduct,
+            category: categories,
+            brand: brands,
+            totalPages,
+            currentPage
+        })
+
 
     } catch (error) {
         console.log(error.message);
@@ -399,5 +422,6 @@ module.exports = {
     getProductDetailsPage,
     getShopPage,
     pageNotFound,
-    searchProducts
+    searchProducts,
+    categoryWiseFilter
 }

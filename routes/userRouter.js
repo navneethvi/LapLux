@@ -38,6 +38,7 @@ Router.post("/editUserDetails", isLogged, userProfileController.editUserDetails)
 Router.get("/productDetails", userController.getProductDetailsPage)
 Router.get("/shop", userController.getShopPage)
 Router.get("/search", userController.searchProducts)
+Router.get("/filterCategory", userController.categoryWiseFilter)
 
 // Cart
 Router.get("/cart", isLogged, cartController.getCartPage)
