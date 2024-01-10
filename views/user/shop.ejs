@@ -1,7 +1,35 @@
-<%- include("../partials/header") %>
+<%- include("../partials/shopHeader") %>
 
 
+<style>
+.pagination {
+  display: flex;
+  justify-content: center;
+}
 
+.btn {
+  /* Add your button styling here */
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  color: #333;
+}
+
+.active {
+  /* Add styles for the active page */
+ 
+  color: #fff;
+}
+
+.btn:hover {
+  /* Add styles for button hover state */
+  background-color: #ddd;
+}
+
+
+</style>
 
 <section class="mt-50 mb-50">
     <div class="container">
@@ -9,7 +37,9 @@
             <div class="col-lg-9">
                 <div class="shop-product-fillter">
                     <div class="totall-product">
-                        <p> We found <strong class="text-brand"><%= count %></strong> items for you!</p>
+                       <% if (locals.count) { %>
+                        <p> We found <strong class="text-brand"><%= locals.count %></strong> items for you!</p>
+                       <% } %>
                     </div>
                     <div class="sort-by-product-area">
                         <div class="sort-by-cover mr-10">
@@ -104,18 +134,24 @@
 
 
 
-                <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                            <li class="page-item"><a class="page-link" href="#">02</a></li>
-                            <li class="page-item"><a class="page-link" href="#">03</a></li>
-                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">16</a></li>
-                            <li class="page-item"><a class="page-link" href="#"><i class="fi-rs-angle-double-small-right"></i></a></li>
-                        </ul>
-                    </nav>
-                </div>
+                <% if (totalPages) { %>
+                    <div class="pagination">
+                      <% if (currentPage > 1) { %>
+                        <button class="btn btn-sm"><a href="/shop?page=<%= currentPage - 1 %>">Previous</a></button>
+                      <% } %>
+                  
+                      <% for (let i = 1; i <= totalPages; i++) { %> 
+                        <button class="btn btn-sm <%= i === currentPage ? 'active' : '' %>">
+                          <a href="/shop?page=<%= i %>"><%= i %></a>
+                        </button>
+                      <% } %>
+                  
+                      <% if (currentPage < totalPages) { %>
+                        <button class="btn btn-sm"><a href="/shop?page=<%= currentPage + 1 %>">Next</a></button>
+                      <% } %>
+                    </div>
+                  <% } %>
+                  
             </div>
             <div class="col-lg-3 primary-sidebar sticky-sidebar">
                 <div class="widget-category mb-30">

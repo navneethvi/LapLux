@@ -115,7 +115,13 @@ const orderPlaced = async (req, res) => {
             if (newOrder.payment == 'cod') {
                 console.log('Order Placed with COD');
                 res.json({ payment: true, method: "cod", order: orderDone, quantity: 1, orderId: userId });
-            }
+            }else if (newOrder.payment == 'online') {
+                console.log('order placed by Razorpay');
+                const generatedOrder = await generateOrderRazorpay(orderDone._id, orderDone.totalPrice);
+                console.log(generatedOrder,"order generated");
+                res.json({ payment: false, method: "online", razorpayOrder: generatedOrder, order: orderDone, orderId: orderDone._id,quantity: 1});
+            } 
+
         } else {
 
             console.log("from cart");
@@ -357,11 +363,12 @@ const getOrderDetailsPageAdmin = async (req, res) => {
 const verify = (req, res) => {
     console.log(req.body);
     let hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
-    const orderId = req.body.order._id;
-    const paymentId = req.body.payment.razorpay_payment_id;
-    hmac.update(orderId + "|" + paymentId);
+    hmac.update(
+        `${req.body.payment.razorpay_order_id}|${req.body.payment.razorpay_payment_id}`
+      );
     hmac = hmac.digest("hex");
-    console.log(hmac,"HMAC");
+    // console.log(hmac,"HMAC");
+    // console.log(req.body.payment.razorpay_signature,"signature");
     if (hmac === req.body.payment.razorpay_signature) {
         console.log("true");
         res.json({ status: true });

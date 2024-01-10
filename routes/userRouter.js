@@ -36,7 +36,8 @@ Router.post("/editUserDetails", isLogged, userProfileController.editUserDetails)
 
 // Products based routes
 Router.get("/productDetails", userController.getProductDetailsPage)
-Router.get("/shop", isLogged, userController.getShopPage)
+Router.get("/shop", userController.getShopPage)
+Router.get("/search", userController.searchProducts)
 
 // Cart
 Router.get("/cart", isLogged, cartController.getCartPage)

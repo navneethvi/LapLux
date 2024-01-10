@@ -337,17 +337,7 @@
 
                             let orderAmount = Math.round(numericValue * 100)
                             console.log(response, "res");
-                            // var options = {
-                            //     "key": "rzp_test_sPwoxcRC0hnSFO",
-                            //     "amount": orderAmount,
-                            //     "currency": "INR",
-                            //     "name": "Nothing",
-                            //     "description": "Order Payment",
-                            //     "order_id": response.orderId,
-                            //     "handler": function () {
-                            //         verifyPayment(response.order, method, response.orderId );
-                            //     }
-
+                         
 
 
 
@@ -364,7 +354,7 @@
                                 "image": "https://example.com/your_logo",
                                 "order_id": response.razorpayOrder.id, //This is a sample Order ID. Pass the id obtained in the response of Step 1
                                 "handler": function (status) {
-                                    verifyPayment(response.order,status, response.razorpayOrder.id);
+                                    verifyPayment(response.razorpayOrder,status, response.razorpayOrder.id);
                                 },
                                 "prefill": {
                                     "name": "Customer Name",
@@ -394,7 +384,9 @@
         }
 
         function verifyPayment(order, payment, id) {
-            console.log(order, payment, id);
+            console.log(order)
+            console.log(payment);
+            console.log(id);
             $.ajax({
                 url: '/verifyPayment',
                 method: 'post',

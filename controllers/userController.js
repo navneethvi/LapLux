@@ -308,13 +308,23 @@ const getShopPage = async (req, res) => {
         const count = await Product.find({ isBlocked: false }).count()
         const brands = await Brand.find({})
         const categories = await Category.find({ isListed: true })
+
+        let itemsPerPage = 6
+        let currentPage = parseInt(req.query.page) || 1
+        let startIndex = (currentPage - 1) * itemsPerPage
+        let endIndex = startIndex + itemsPerPage
+        let totalPages = Math.ceil(products.length/6)
+        const currentProduct = products.slice(startIndex, endIndex)
+
         res.render("shop",
             {
                 user: user,
-                product: products,
+                product: currentProduct,
                 category: categories,
                 brand: brands,
-                count: count
+                count: count,
+                totalPages,
+                currentPage,
             })
     } catch (error) {
         console.log(error.message);
@@ -322,8 +332,56 @@ const getShopPage = async (req, res) => {
 }
 
 
+const searchProducts = async (req, res)=>{
+    try {   
+        const user = req.session.user
+        let search = req.query.search
+        const brands = await Brand.find({})
+        const categories = await Category.find({ isListed: true })
+
+        const searchResult = await Product.find({
+            $or : [
+                {
+                    productName : { $regex: ".*" + search + ".*", $options: "i" },
+                }
+            ],
+            isBlocked : false,
+        }).lean()
+
+        let itemsPerPage = 6
+        let currentPage = parseInt(req.query.page) || 1
+        let startIndex = (currentPage - 1) * itemsPerPage
+        let endIndex = startIndex + itemsPerPage
+        let totalPages = Math.ceil(searchResult.length/6)
+        const currentProduct = searchResult.slice(startIndex, endIndex)
 
 
+        res.render("shop",
+            {
+                user: user,
+                product: currentProduct,
+                category: categories,
+                brand: brands,
+                totalPages,
+                currentPage
+            })
+
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
+const categoryWiseFilter = async (req, res)=>{
+    try {
+        
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 
 
@@ -340,5 +398,6 @@ module.exports = {
     getLogoutUser,
     getProductDetailsPage,
     getShopPage,
-    pageNotFound
+    pageNotFound,
+    searchProducts
 }
