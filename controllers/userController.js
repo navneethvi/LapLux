@@ -366,7 +366,6 @@ const searchProducts = async (req, res)=>{
                 currentPage
             })
 
-        
     } catch (error) {
         console.log(error.message);
     }
