@@ -34,7 +34,13 @@
                                             <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab"
                                                 href="#track-orders" role="tab" aria-controls="track-orders"
                                                 aria-selected="false"><i
-                                                    class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
+                                                    class="fi-rs-shopping-cart-check mr-10"></i>Wallet Status</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab"
+                                                href="#wallet-history" role="tab" aria-controls="track-orders"
+                                                aria-selected="false"><i
+                                                    class="fi-rs-shopping-cart-check mr-10"></i>Wallet History</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address"
@@ -44,7 +50,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab"
                                                 href="#account-detail" role="tab" aria-controls="account-detail"
-                                                aria-selected="true"><i class="fi-rs-/user mr-10"></i>Account
+                                                aria-selected="true"><i class="fi-rs-sign-out mr-10"></i>Account
                                                 details</a>
                                         </li>
                                         <li class="nav-item">
@@ -56,7 +62,8 @@
                             </div>
                             <div class="col-md-8">
                                 <div class="tab-content dashboard-content">
-                                    <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                    <div class="tab-pane fade show active" id="dashboard" role="tabpanel"
+                                        aria-labelledby="dashboard-tab">
                                         <div class="card">
                                             <div class="card-header">
                                                 <h5 class="mb-0">User Profile</h5>
@@ -66,15 +73,23 @@
                                                     class="card-img-top rounded-circle mx-auto mt-3" alt="Profile Image"
                                                     style="width: 100px; height: 100px; object-fit: cover;">
                                                 <div class="card-body text-center">
-                                                    <h5 class="card-title"><%= user.name %></h5>
-                                                    <p class="card-text"><strong>Email:</strong><%= user.email %></p>
-                                                    <p class="card-text"><strong>Phone:</strong><%= user.phone %></p>
-                                                    <p class="card-text"><strong>Account Created On:</strong><%= user._id %></p>
+                                                    <h5 class="card-title">
+                                                        <%= user.name %>
+                                                    </h5>
+                                                    <p class="card-text"><strong>Email:</strong>
+                                                        <%= user.email %>
+                                                    </p>
+                                                    <p class="card-text"><strong>Phone:</strong>
+                                                        <%= user.phone %>
+                                                    </p>
+                                                    <p class="card-text"><strong>Account Created On:</strong>
+                                                        <%= user._id %>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
                                         <div class="card">
                                             <div class="card-header">
@@ -92,30 +107,37 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                          
-                                                           <% if (order) { %>
-                                                            
-                                                            <% for (let i = 0; i < order.length; i++) { %>
-                                                                <tr>
-                                                                    <td><%= order[i]._id %></td>
-                                                                    
-                                                                    <td><%= order[i].status %></td>
-                                                            
-                                                                    
-                                                                        <td><%= order[i].totalPrice %></td>
-                                                                    
-                                                            
-                                                                    <td><a href="/orderDetails?id=<%= order[i]._id %>" class="btn-small d-block">View</a></td>
-                                                                </tr>
-                                                            <% } %>
-                                                            
-                                                            
-                                                           <% }else{ %>
 
-                                                            <td>No Orders found</td>
+                                                            <% if (order) { %>
 
-                                                         <%  } %>
-                                                            
+                                                                <% for (let i=0; i < order.length; i++) { %>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <%= order[i]._id %>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <%= order[i].status %>
+                                                                        </td>
+
+
+                                                                        <td>
+                                                                            <%= order[i].totalPrice %>
+                                                                        </td>
+
+
+                                                                        <td><a href="/orderDetails?id=<%= order[i]._id %>"
+                                                                                class="btn-small d-block">View</a></td>
+                                                                    </tr>
+                                                                    <% } %>
+
+
+                                                                        <% }else{ %>
+
+                                                                            <td>No Orders found</td>
+
+                                                                            <% } %>
+
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -126,84 +148,151 @@
                                         aria-labelledby="track-orders-tab">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h5 class="mb-0">Orders tracking</h5>
+                                                <h5 class="mb-0">Wallet</h5>
                                             </div>
                                             <div class="card-body contact-from-area">
-                                                <p>To track your order please enter your OrderID in the box below and
-                                                    press "Track" button. This was given to you on your receipt and in
-                                                    the confirmation email you should have received.</p>
+
                                                 <div class="row">
-                                                    <div class="col-lg-8">
-                                                        <form class="contact-form-style mt-30 mb-50" action="#"
-                                                            method="post">
-                                                            <div class="input-style mb-20">
-                                                                <label>Order ID</label>
-                                                                <input name="order-id"
-                                                                    placeholder="Found in your order confirmation email"
-                                                                    type="text" class="square">
+                                                    <div class="col-lg-8 mx-auto text-center mt-90">
+                                                        <form>
+                                                            <div class="form-group">
+                                                                <label for="walletAmount" class="h4">Amount</label>
+                                                                <div class="h3">₹<%= user.wallet %></div>
                                                             </div>
-                                                            <div class="input-style mb-20">
-                                                                <label>Billing email</label>
-                                                                <input name="billing-email"
-                                                                    placeholder="Email you used during checkout"
-                                                                    type="email" class="square">
-                                                            </div>
-                                                            <button class="submit submit-auto-width"
-                                                                type="submit">Track</button>
+                                                
+                                                            <button type="button" class="btn btn-success" onclick="addMoney()" data-toggle="modal" data-target="#addMoneyModal">Add Money</button>
                                                         </form>
                                                     </div>
-                                                 </div>
+                                                </div>
+                                                
+
+
                                             </div>
                                         </div>
                                     </div>
+
+
+
+
+
+
+
+                                    <div class="tab-pane fade" id="wallet-history" role="tabpanel" aria-labelledby="orders-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Wallet History</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Date</th>
+                                                                <th>Status</th>
+                                                                <th>Amount</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                            <% if (user.history) { %>
+
+                                                                <% for (let i=0; i < user.history.length; i++) { %>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <% 
+                                                                                const dateObject = (user.history[i].date instanceof Date) ? user.history[i].date : new Date(user.history[i].date);
+                                                                            %>
+                                                                            <%= dateObject.toLocaleDateString() %>
+                                                                        </td>
+                                                                        
+                                                                        <td>
+                                                                            <%= user.history[i].status %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= user.history[i].amount %>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <% } %>
+
+                                                                        <% }else{ %>
+
+                                                                            <td>No Orders found</td>
+
+                                                                            <% } %>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+                                    
                                     <div class="tab-pane fade" id="address" role="tabpanel"
                                         aria-labelledby="address-tab">
                                         <div class="row">
-                                         
+
                                             <%if(userAddress){%>
                                                 <%userAddress.address.forEach((address)=>{%>
-                                              <div class="col-lg-6">
-                                                <div class="card  mb-3 mb-lg-0">
-                                                  <div class="card-header">
-                                                    <h5 class="mb-0"><%=address.addressType%></h5>
-                                                  </div>
-                                                    
-                                                  <div class="card-body">
-                                                    <address>
-                                                      <%=address.name%><br />
-                                                      <%=address.city%>,<br />
-                                                      <%=address.landMark%> <br /><%=address.state%>
-                                                    </address>
-                                                    <p><%=address.pincode%></p>
-                                                    <p><%=address.phone%></p>
-                                                    <p><%=address.altPhone%></p>
-                                                    <div class="d-flex justify-content-between">
-                                                      <a href="/editAddress?id=<%=address._id%>" class="btn-small">Edit</a>
-                                                      <a href="/deleteAddress?id=<%=address._id%>" class="btn-small">Delete</a>
+                                                    <div class="col-lg-6">
+                                                        <div class="card  mb-3 mb-lg-0">
+                                                            <div class="card-header">
+                                                                <h5 class="mb-0">
+                                                                    <%=address.addressType%>
+                                                                </h5>
+                                                            </div>
+
+                                                            <div class="card-body">
+                                                                <address>
+                                                                    <%=address.name%><br />
+                                                                        <%=address.city%>,<br />
+                                                                            <%=address.landMark%> <br />
+                                                                                <%=address.state%>
+                                                                </address>
+                                                                <p>
+                                                                    <%=address.pincode%>
+                                                                </p>
+                                                                <p>
+                                                                    <%=address.phone%>
+                                                                </p>
+                                                                <p>
+                                                                    <%=address.altPhone%>
+                                                                </p>
+                                                                <div class="d-flex justify-content-between">
+                                                                    <a href="/editAddress?id=<%=address._id%>"
+                                                                        class="btn-small">Edit</a>
+                                                                    <a href="/deleteAddress?id=<%=address._id%>"
+                                                                        class="btn-small">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                  </div>    
-                                                </div>
-                                              </div>
-                                              <%})%>
-                                              <%}else{%>
-                                                <div class="col-lg-6">
-                                                  <div class="card  mb-3 mb-lg-0">
-                                                    <div class="card-header">
-                                                      <h5 class="mb-0"></h5>
-                                                    </div>
-                                                <div class="card-body">
-                                                  <address>
-                                                    No address
-                                                  </address>
-                                                </div>
-                                                </div>
-                                              </div>
-                                              <%}%>
-                                           <div>
-                                            <a href="/addAddress">
-                                                <button  class="btn btn-primary w-70">Add address</button>
-                                            </a>
-                                           </div>
+                                                    <%})%>
+                                                        <%}else{%>
+                                                            <div class="col-lg-6">
+                                                                <div class="card  mb-3 mb-lg-0">
+                                                                    <div class="card-header">
+                                                                        <h5 class="mb-0"></h5>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <address>
+                                                                            No address
+                                                                        </address>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <%}%>
+                                                                <div>
+                                                                    <a href="/addAddress">
+                                                                        <button class="btn btn-primary w-70">Add
+                                                                            address</button>
+                                                                    </a>
+                                                                </div>
 
 
                                         </div>
@@ -215,45 +304,23 @@
                                                 <h5>Account Details</h5>
                                             </div>
                                             <div class="card-body">
-                                              
+
                                                 <form method="post" action="/editUserDetails?id=<%= user._id %>">
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
                                                             <label> Name <span class="required">*</span></label>
-                                                            <input required="" value="<%= user.name %>" class="form-control square" name="name"
-                                                                type="text">
+                                                            <input required="" value="<%= user.name %>"
+                                                                class="form-control square" name="name" type="text">
                                                         </div>
-                                                        
+
                                                         <div class="form-group col-md-12">
                                                             <label>Mobile Number <span class="required">*</span></label>
-                                                            <input required="" value="<%= user.phone %>" class="form-control square" name="phone"
-                                                            type="text">
+                                                            <input required="" value="<%= user.phone %>"
+                                                                class="form-control square" name="phone" type="text">
                                                         </div>
                                                         <div class="col-md-12 mt-15">
-                                                              <button type="submit" class="btn btn-fill-out submit"
-                                                                  name="submit" value="Submit">Save</button>
-                                                          </div> 
-                                                        <!-- <div class="form-group col-md-12">
-                                                            <label>Email Address <span class="required">*</span></label>
-                                                            <input required="" value="" class="form-control square" name="email"
-                                                                type="email">
-                                                        </div> -->
-                                                        <!-- <div class="form-group col-md-12">
-                                                            <label>Current Password <span
-                                                                    class="required">*</span></label>
-                                                            <input required=""  class="form-control square"
-                                                                name="password" type="password">
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>New Password <span class="required">*</span></label>
-                                                            <input required="" class="form-control square"
-                                                                name="npassword" type="password">
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>Confirm Password <span
-                                                                    class="required">*</span></label>
-                                                            <input required="" class="form-control square"
-                                                                name="cpassword" type="password">
+                                                            <button type="submit" class="btn btn-fill-out submit"
+                                                                name="submit" value="Submit">Save</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -267,8 +334,87 @@
                 </div>
             </div>
         </section>
-    </main>
+
+                                                        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                                                        <script>
+                                                            async function addMoney() {
+                                                                const { value: amount } = await Swal.fire({
+                                                                    title: 'Enter the Amount',
+                                                                    input: 'number',
+                                                                    inputLabel: 'Amount',
+                                                                    inputPlaceholder: '₹'
+                                                                })
+                                                                $.ajax({
+                                                                    url: "/addMoney",
+                                                                    method: "post",
+                                                                    data: {
+                                                                        total: amount
+                                                                    },
+                                                                    success: (data) => {
+                                                                        if (data.razorpay) {
+                                                                            var options = {
+                                                                                "key": "rzp_test_sPwoxcRC0hnSFO",
+                                                                                "amount": data.order.amount,
+                                                                                "currency": "INR",
+                                                                                "name": "LapLux",
+                                                                                "description": "Test Transaction",
+                                                                                "image": "https://example.com/your_logo",
+                                                                                "order_id": data.order.id,
+                                                                                "handler": function (response) {
+                                                                                    verifyPayment(response, data);
+                                                                                },
+                                                                                "prefill": {
+                                                                                    "name": "Customer Name",
+                                                                                    "email": "customer@example.com",
+                                                                                    "contact": "9000090000"
+                                                                                },
+
+                                                                                "theme": {
+                                                                                    "color": "#3399cc"
+                                                                                }
+                                                                            }
+                                                                            console.log(options);
+                                                                            var rzp1 = new Razorpay(options);
+                                                                            rzp1.open();
+                                                                        }
+                                                                    }
+                                                                })
+                                                            }
 
 
 
-    <%- include("../partials/footer") %>
+                                                            function verifyPayment(response, order) {
+                                                              
+                                                                $.ajax({
+                                                                    url: '/verify-payment',
+                                                                    method: 'post',
+                                                                    data: {
+                                                                        order,
+                                                                        response,
+                                                                        from: "wallet"
+                                                                    }, success: (response) => {
+                                                                        if (response) {
+                                                                            Swal.fire({
+                                                                                title: "Success",
+                                                                                text: "Payment has been succeed",
+                                                                                icon: "success",
+
+                                                                            }).then(function () {
+                                                                                location.reload()
+                                                                            });
+                                                                        } else {
+                                                                            Swal.fire("PAYMENT ERROR!", "Something wrong occured while processing the payment.", "error");
+                                                                            location.reload()
+                                                                        }
+
+                                                                    }
+                                                                })
+                                                            }
+
+
+
+                                                        </script>
+
+
+
+<%- include("../partials/footer") %>

@@ -346,13 +346,13 @@
 
 
                             var options = {
-                                "key": "rzp_test_sPwoxcRC0hnSFO", // Enter the Key ID generated from the Dashboard
-                                "amount": orderAmount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                                "key": "rzp_test_sPwoxcRC0hnSFO", 
+                                "amount": orderAmount, 
                                 "currency": "INR",
-                                "name": "Future Furniture", //your business name
+                                "name": "LapLux", 
                                 "description": "Test Transaction",
                                 "image": "https://example.com/your_logo",
-                                "order_id": response.razorpayOrder.id, //This is a sample Order ID. Pass the id obtained in the response of Step 1
+                                "order_id": response.razorpayOrder.id, 
                                 "handler": function (status) {
                                     verifyPayment(response.razorpayOrder,status, response.razorpayOrder.id);
                                 },

@@ -5,6 +5,7 @@ const userController = require("../controllers/userController")
 const cartController = require("../controllers/cartController,")
 const userProfileController = require("../controllers/userProfileController")
 const orderController = require("../controllers/orderContoller")
+const walletController = require("../controllers/walletController")
 
 const { isLogged } = require("../Authentication/auth")
 
@@ -54,6 +55,9 @@ Router.get("/cancelOrder", isLogged, orderController.cancelOrder)
 Router.get("/checkoutCart", isLogged, orderController.getCartCheckoutPage)
 Router.post("/verifyPayment", isLogged, orderController.verify)
 
-
+// Wallet
+Router.post("/addMoney", isLogged, walletController.addMoneyToWallet)
+Router.post("/verify-payment", isLogged, walletController.verify_payment)
+// Router.get("/walletHistory", isLogged, walletController.getWalletHistoryPage)
 
 module.exports = Router

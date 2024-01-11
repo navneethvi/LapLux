@@ -83,9 +83,9 @@ const addToCart = async (req, res) => {
         }
         if (product.quantity > 0) {
             const cartIndex = findUser.cart.findIndex(item => item.productId == id)
-            console.log(cartIndex, "cartIndex");
+            // console.log(cartIndex, "cartIndex");
             if (cartIndex == -1) {
-                console.log("this");
+                // console.log("this");
                 let quantity = parseInt(req.body.quantity)
                 await User.findByIdAndUpdate(userId, {
                     $addToSet: {
@@ -100,11 +100,11 @@ const addToCart = async (req, res) => {
                         res.json({ status: true }))
             } else {
 
-                console.log("hi");
+                // console.log("hi");
                 const productInCart = findUser.cart[cartIndex]
-                console.log(productInCart);
+                // console.log(productInCart);
                 const newQuantity = parseInt(productInCart.quantity) + parseInt(req.body.quantity)
-                console.log(productInCart, "product", newQuantity);
+                // console.log(productInCart, "product", newQuantity);
 
                 await User.updateOne(
                     { _id: userId, "cart.productId": id },
