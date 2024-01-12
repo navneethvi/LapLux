@@ -63,7 +63,8 @@ const getCheckoutPage = async (req, res) => {
             console.log("Data  =>>", data)
             // console.log("Data  =>>" , data[0].productDetails)
             const grandTotal = req.session.grandTotal
-            res.render("checkout", { data: data, user: findUser, isCart: true, userAddress: addressData, isSingle: false, grandTotal })
+            const findCoupons = await Coupon.find({isList : true})
+            res.render("checkout", { data: data, user: findUser, isCart: true, userAddress: addressData, isSingle: false, grandTotal, coupons : findCoupons})
         }
 
     } catch (error) {
@@ -314,7 +315,10 @@ const cancelOrder = async (req, res) => {
 
         const findOrder = await Order.findOne({ _id: orderId })
 
-
+        if(findOrder.payment === "wallet"){
+            findUser.wallet += findOrder.totalPrice
+             await findUser.save();
+        }
 
         for (const productData of findOrder.product) {
             const productId = productData.productId;
