@@ -6,6 +6,7 @@ const path = require("path")
 const bodyParser = require("body-parser")
 const session = require("express-session")
 const nocache = require("nocache")
+const morgan = require("morgan")
 const PORT = process.env.PORT || 3000
 const dotenv = require("dotenv");
 dotenv.config();
@@ -16,6 +17,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(nocache())
+
+app.use(morgan('dev'));
 
 app.use(session({
     secret: process.env.SESSION_SECRET_KEY,

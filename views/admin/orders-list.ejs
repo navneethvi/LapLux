@@ -55,12 +55,44 @@
                                
                             </td>
                         </tr>
+
+
+                       
                             
                       <%  } %>
+
+
+
+
                        
                        
                     </tbody>
                 </table>
+
+               
+                   
+
+                    <% if (totalPages) { %>
+                        <div class="pagination">
+                          <% if (currentPage > 1) { %>
+                            <button class="btn btn-sm"><a href="/admin/orderList?page=<%= currentPage - 1 %>">Previous</a></button>
+                          <% } %>
+                      
+                          <% for (let i = 1; i <= totalPages; i++) { %> 
+                            <button class="btn btn-sm <%= i === currentPage ? 'active' : '' %>">
+                              <a href="/admin/orderList?page=<%= i %>"><%= i %></a>
+                            </button>
+                          <% } %>
+                      
+                          <% if (currentPage < totalPages) { %>
+                            <button class="btn btn-sm"><a href="/admin/orderList?page=<%= currentPage + 1 %>">Next</a></button>
+                          <% } %>
+                        </div>
+                      <% } %>
+                    
+       
+                
+                
             </div> <!-- table-responsive //end -->
         </div> <!-- card-body end// -->
     </div> <!-- card end// -->

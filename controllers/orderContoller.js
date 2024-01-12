@@ -106,7 +106,7 @@ const orderPlaced = async (req, res) => {
                 address: findAddress,
                 payment: payment,
                 userId: userId,
-                createdOn: new Date(),
+                createdOn: Date.now(),
                 status: "Confirmed",
             }))
 
@@ -286,10 +286,20 @@ const getOrderDetailsPage = async (req, res) => {
 }
 
 
-const getOrderListPageAdmin = async (Req, res) => {
+const getOrderListPageAdmin = async (req, res) => {
     try {
-        const orders = await Order.find({})
-        res.render("orders-list", { orders: orders })
+        const orders = await Order.find({}).sort({ createdOn: -1 });
+        
+        // console.log(req.query);
+
+        let itemsPerPage = 3
+        let currentPage = parseInt(req.query.page) || 1
+        let startIndex = (currentPage - 1) * itemsPerPage
+        let endIndex = startIndex + itemsPerPage
+        let totalPages = Math.ceil(orders.length/3  )
+        const currentOrder = orders.slice(startIndex, endIndex)
+
+        res.render("orders-list", { orders: currentOrder , totalPages, currentPage})
     } catch (error) {
         console.log(error.message);
     }
