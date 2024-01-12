@@ -1,5 +1,17 @@
 <%- include("../partials/adminHeader") %>
 
+
+<style>
+    .error-message {
+        color: red;
+        margin-top: 5px;
+        font-size: 14px; /* Adjust font size as needed */
+    }
+</style>
+
+
+
+
     <section class="content-main">
         <div class="row">
             <div class="col-9">
@@ -12,12 +24,13 @@
                 <div class="card mb-4">
 
                     <div class="card-body">
-                        <form method="post" action="/admin/editProduct/<%=product._id%>" enctype="multipart/form-data"
+                        <form method="post" action="/admin/editProduct/<%=product._id%>" enctype="multipart/form-data" onsubmit="return validateAndSubmit()"
                             multiple>
                             <div class="mb-4">
                                 <label for="product_name" class="form-label">Product Name</label>
                                 <input type="text" name="productName" value="<%= product.productName %>"
                                     class="form-control border" id="product_name">
+                                    <div id="productName-error" class="error-message"></div>
                             </div>
                             <div class="col-lg-4 mb-4">
                                 <label class="form-label">Brand</label>
@@ -34,6 +47,8 @@
                                 <label class="form-label">Full description</label>
                                 <textarea name="description" class="form-control border"
                                     rows="4"><%= product.description %></textarea>
+                                    <div id="description" class="error-message"></div>
+
                             </div>
                             <div class="row">
                                 <div class="col-lg-4">
@@ -41,7 +56,8 @@
                                         <label class="form-label">Regular price</label>
                                         <input placeholder="$" name="regularPrice" type="text"
                                             value="<%= product.regularPrice %>" class="form-control border">
-                                            <div class="error-message text-danger"></div>
+                                            <div id="regularPrice-error" class="error-message"></div>
+
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -49,7 +65,7 @@
                                         <label class="form-label">Sale price</label>
                                         <input name="salePrice" type="text" value="<%= product.salePrice %>"
                                             class="form-control border">
-                                            <div class="error-message text-danger"></div>
+                                            <div id="salePrice-error" class="error-message"></div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -57,7 +73,7 @@
                                         <label class="form-label">Quantity</label>
                                         <input name="quantity" type="text" value="<%= product.quantity %>"
                                             class="form-control border">
-                                            <div class="error-message text-danger"></div>
+                                            <div id="quantity-error" class="error-message"></div>
                                     </div>
                                 </div>
                             </div>
@@ -110,19 +126,20 @@
 
                                 <div id="addedImagesContainer" class="col-md-6">
                                     <% for (let i=0; i < product.productImage.length; i++) { %>
-                                      <div class="col-md-12 mb-4">
-                                        <div class="row">
-                                          <div class="col-12">
-                                            <img class="rounded" style="width: 50px; height: 60px;"
-                                                 src="/uploads/product-images/<%= product.productImage[i] %>"
-                                                 alt="image" data-filename="<%= product.productImage[i] %>">
-                                            <span class="delete-icon" onclick="deleteImage('<%= product._id %>', '<%= product.productImage[i] %>')">❌</span>
-                                          </div>
+                                        <div class="col-md-12 mb-4">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <img class="rounded" style="width: 50px; height: 60px;"
+                                                        src="/uploads/product-images/<%= product.productImage[i] %>"
+                                                        alt="image" data-filename="<%= product.productImage[i] %>">
+                                                    <span class="delete-icon"
+                                                        onclick="deleteImage('<%= product._id %>', '<%= product.productImage[i] %>')">❌</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                      </div>
-                                    <% } %>
-                                  </div>
-                                  
+                                        <% } %>
+                                </div>
+
 
                                 <div class="card-body">
                                     <div class="input-upload">
@@ -139,7 +156,7 @@
                             <div>
 
                                 <button class="btn btn-md rounded font-sm hover-up" id="updatebtn"
-                                    type="submit">Update</button>
+                                     type="submit">Update</button>
                             </div>
                         </form>
                     </div>
@@ -153,7 +170,7 @@
         </div>
     </section>
 
-  
+
     <style>
         .thumbnails-container {
             display: flex;
@@ -162,20 +179,20 @@
 
         .thumbnail {
             margin-right: 10px;
-           
+
         }
     </style>
 
     <script>
-       
+
         const selectedImages = [];
 
         document.getElementById("imageInput").addEventListener("change", handleFileSelect);
 
         function handleFileSelect(event) {
-         
+
             const addedImagesContainer = document.getElementById("addedImagesContainer");
-\
+
             addedImagesContainer.innerHTML = "";
 
             const files = event.target.files;
@@ -183,28 +200,28 @@
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
 
-           
+
                 selectedImages.push(file);
 
-           
+
                 const thumbnail = document.createElement("div");
                 thumbnail.classList.add("thumbnail");
 
-     \
+
                 const img = document.createElement("img");
                 img.src = URL.createObjectURL(file);
                 img.alt = "thumbnail";
 
-                img.style.width = "50px"; 
+                img.style.width = "50px";
                 img.style.height = "auto";
 
-               
+
                 const removeIcon = document.createElement("span");
                 removeIcon.classList.add("remove-icon");
-                removeIcon.innerHTML = "&times;"; 
+                removeIcon.innerHTML = "&times;";
 
                 removeIcon.addEventListener("click", function () {
-                
+
                     const index = selectedImages.indexOf(file);
                     if (index !== -1) {
                         selectedImages.splice(index, 1);
@@ -259,6 +276,75 @@
             }
         }
 
+
+   
+
+        function validateAndSubmit() {
+        if (validateForm()) {
+            // If validation passes, submit the form
+            document.forms[0].submit(); // Assuming this is the first (and only) form on your page
+        }
+        return false; // Prevent form submission when validation fails
+    }
+
+        function validateForm() {
+            // Reset previous error messages
+            resetErrorMessages();
+
+            var isValid = true;
+
+            var productName = document.getElementsByName("productName")[0].value;
+            var regularPrice = document.getElementsByName("regularPrice")[0].value;
+            var salePrice = document.getElementsByName("salePrice")[0].value;
+            var quantity = document.getElementsByName("quantity")[0].value;
+
+            // Check if inputs are not empty
+            if (productName === "") {
+                displayErrorMessage("productName-error", "Product Name is required");
+                isValid = false;
+            }
+
+            // Check if prices are positive numbers
+            if (isNaN(regularPrice) || regularPrice <= 0) {
+                displayErrorMessage("regularPrice-error", "Regular price must be a positive number");
+                isValid = false;
+            }
+
+            if (isNaN(salePrice) || salePrice <= 0) {
+                displayErrorMessage("salePrice-error", "Sale price must be a positive number");
+                isValid = false;
+            }
+
+            // Check if sale price is less than regular price
+            if (parseFloat(salePrice) >= parseFloat(regularPrice)) {
+                displayErrorMessage("salePrice-error", "Sale price must be less than Regular price");
+                isValid = false;
+            }
+
+            // Check if quantity is a positive integer
+            if (!/^[1-9]\d*$/.test(quantity)) {
+                displayErrorMessage("quantity-error", "Quantity must be a positive integer");
+                isValid = false;
+            }
+
+            // Additional checks can be added for other fields if needed
+
+            return isValid;
+        }
+
+        function displayErrorMessage(elementId, message) {
+            var errorElement = document.getElementById(elementId);
+            errorElement.innerText = message;
+            errorElement.style.display = "block";
+        }
+
+        function resetErrorMessages() {
+            var errorElements = document.querySelectorAll(".error-message");
+            errorElements.forEach(function (element) {
+                element.innerText = "";
+                element.style.display = "none";
+            });
+        }
 
 
     </script>
