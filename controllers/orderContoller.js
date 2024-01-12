@@ -120,6 +120,23 @@ const orderPlaced = async (req, res) => {
                 const generatedOrder = await generateOrderRazorpay(orderDone._id, orderDone.totalPrice);
                 console.log(generatedOrder,"order generated");
                 res.json({ payment: false, method: "online", razorpayOrder: generatedOrder, order: orderDone, orderId: orderDone._id,quantity: 1});
+            }else if(newOrder.payment == "wallet"){
+               if(orderDone.totalPrice <= findUser.wallet){
+                console.log("order placed with Wallet");
+                const data = findUser.wallet -= newOrder.totalPrice
+                const newHistory = {
+                    amount : data,
+                    status : "debit",
+                    date : Date.now()
+                }
+                 findUser.history.push(newHistory)
+                 await findUser.save()
+
+                 res.json({payment : true, method : "wallet", success : true})
+               }else{
+                console.log("wallet amount is lesser than total amount");
+                res.json({payment : false, method : "wallet", success : false})
+               }
             } 
 
         } else {
@@ -198,8 +215,24 @@ const orderPlaced = async (req, res) => {
                     const generatedOrder = await generateOrderRazorpay(orderDone._id, orderDone.totalPrice);
                     console.log(generatedOrder,"order generated");
                     res.json({ payment: false, method: "online", razorpayOrder: generatedOrder, order: orderDone, orderId: orderDone._id, quantity: cartItemQuantities });
+                } else if(newOrder.payment == "wallet"){
+                    if(orderDone.totalPrice <= findUser.wallet){
+                        console.log("order placed with Wallet");
+                        const data = findUser.wallet -= orderDone.totalPrice
+                        const newHistory = {
+                            amount : data,
+                            status : "debit",
+                            date : Date.now()
+                        }
+                        findUser.history.push(newHistory)
+                        await findUser.save()
 
-                } 
+                        res.json({payment : true, method : "wallet", order : orderDone, orderId : orderDone._id, quantity : cartItemQuantities, success : true})
+                    }else{
+                        console.log("wallet amount is lesser than total amount");
+                        res.json({payment : true, method : "wallet", order : orderDone, orderId : orderDone._id, quantity : cartItemQuantities, success : false})
+                    }
+                }
             } else {
                 console.log('Address not found');
             }

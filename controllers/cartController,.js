@@ -125,16 +125,16 @@ const addToCart = async (req, res) => {
 
 const changeQuantity = async (req, res) => {
     try {
-        console.log('herere--------');
+        // console.log('herere--------');
         const id = req.body.productId
         const user = req.session.user
         const count = req.body.count
 
         // console.log(user);
-        console.log(id, "productId");
+        // console.log(id, "productId");
 
         const findUser = await User.findOne({ _id: user })
-        console.log(findUser);
+        // console.log(findUser);
         const findProduct = await Product.findOne({ _id: id })
 
 
@@ -142,7 +142,7 @@ const changeQuantity = async (req, res) => {
 
             // console.log('iam here--');
             const productExistinCart = findUser.cart.find(item => item.productId === id)
-            console.log(productExistinCart, 'this is product in cart');
+            // console.log(productExistinCart, 'this is product in cart');
             let newQuantity
             if (productExistinCart) {
                 // console.log('iam in the carrt----------------------mm');
@@ -174,7 +174,7 @@ const changeQuantity = async (req, res) => {
                 const totalAmount = findProduct.salePrice
 
 
-                console.log(totalAmount,"totsll");
+                // console.log(totalAmount,"totsll");
                 if (quantityUpdated) {
                     // console.log('iam here inside the cart', quantityUpdated, 'ok');
 

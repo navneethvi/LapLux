@@ -40,6 +40,7 @@ const storage = require("../helpers/multer")
 const upload = multer({ storage: storage })
 Router.use("/public/uploads", express.static("/public/uploads"))
 
+
 // Brand Management
 Router.get("/brands", isAdmin, brandController.getBrandPage)
 Router.post("/addBrand", isAdmin, upload.single('image'), brandController.addBrand)
@@ -53,7 +54,7 @@ Router.post("/addProducts", isAdmin, upload.array("images", 5), productControlle
 Router.get("/products", isAdmin, productController.getAllProducts)
 Router.get("/editProduct", isAdmin, productController.getEditProduct)
 Router.post("/editProduct/:id", isAdmin, upload.array("images", 5), productController.editProduct)
-Router.get("/deleteImage/:id", isAdmin, productController.deleteSingleImage)
+Router.post("/deleteImage", isAdmin, productController.deleteSingleImage)
 Router.get("/blockProduct", isAdmin, productController.getBlockProduct)
 Router.get("/unBlockProduct", isAdmin, productController.getUnblockProduct)
 
@@ -61,6 +62,10 @@ Router.get("/unBlockProduct", isAdmin, productController.getUnblockProduct)
 Router.get("/orderList", isAdmin, orderContoller.getOrderListPageAdmin)
 Router.get("/orderDetailsAdmin", isAdmin, orderContoller.getOrderDetailsPageAdmin)
 Router.get("/changeStatus", isAdmin, orderContoller.changeOrderStatus)
+
+// Coupon Management
+Router.get("/coupon", isAdmin, adminController.getCouponPageAdmin)
+Router.post("/createCoupon", isAdmin, adminController.createCoupon)
 
 
 module.exports = Router

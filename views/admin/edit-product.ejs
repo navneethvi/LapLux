@@ -41,6 +41,7 @@
                                         <label class="form-label">Regular price</label>
                                         <input placeholder="$" name="regularPrice" type="text"
                                             value="<%= product.regularPrice %>" class="form-control border">
+                                            <div class="error-message text-danger"></div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -48,6 +49,7 @@
                                         <label class="form-label">Sale price</label>
                                         <input name="salePrice" type="text" value="<%= product.salePrice %>"
                                             class="form-control border">
+                                            <div class="error-message text-danger"></div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -55,6 +57,7 @@
                                         <label class="form-label">Quantity</label>
                                         <input name="quantity" type="text" value="<%= product.quantity %>"
                                             class="form-control border">
+                                            <div class="error-message text-danger"></div>
                                     </div>
                                 </div>
                             </div>
@@ -107,19 +110,20 @@
 
                                 <div id="addedImagesContainer" class="col-md-6">
                                     <% for (let i=0; i < product.productImage.length; i++) { %>
-                                        <div class="col-md-12">
-                                            <div class="mb-4">
-                                                <div class="col-12">
-                                                    <td> <img class="rounded" style="width: 50px; height: 60px;"
-                                                            src="/uploads/product-images/<%= product.productImage[i] %>"
-                                                            alt="image"></td>
-                                                 
-                                                </div>
-                                            </div>
-                                        </div> <!-- col.// -->
-                                        <% } %>
+                                      <div class="col-md-12 mb-4">
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <img class="rounded" style="width: 50px; height: 60px;"
+                                                 src="/uploads/product-images/<%= product.productImage[i] %>"
+                                                 alt="image" data-filename="<%= product.productImage[i] %>">
+                                            <span class="delete-icon" onclick="deleteImage('<%= product._id %>', '<%= product.productImage[i] %>')">❌</span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    <% } %>
+                                  </div>
+                                  
 
-                                </div>
                                 <div class="card-body">
                                     <div class="input-upload">
                                         <img src="assets/imgs/theme/upload.svg" alt="">
@@ -149,7 +153,7 @@
         </div>
     </section>
 
-    <!-- Add an empty container div for displaying image thumbnails -->
+  
     <style>
         .thumbnails-container {
             display: flex;
@@ -158,32 +162,20 @@
 
         .thumbnail {
             margin-right: 10px;
-            /* Adjust margin as needed for spacing between thumbnails */
+           
         }
     </style>
 
     <script>
-        // Array to store selected images
+       
         const selectedImages = [];
 
-        // Function to handle file input change
         document.getElementById("imageInput").addEventListener("change", handleFileSelect);
 
-        // document.getElementById("updatebtn").addEventListener("click", ()=>{
-        //      Swal.fire({
-        //             title: 'WISHLIST',
-        //             text: 'Product updated.',
-        //             icon: 'success',
-        //             confirmButtonText: "Okey",
-        //             timer: 5000
-        //             })
-        // })
-
         function handleFileSelect(event) {
-            // Target the container for displaying thumbnails
+         
             const addedImagesContainer = document.getElementById("addedImagesContainer");
-
-            // Clear previous content
+\
             addedImagesContainer.innerHTML = "";
 
             const files = event.target.files;
@@ -191,47 +183,84 @@
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
 
-                // Add the file to the selected images array
+           
                 selectedImages.push(file);
 
-                // Create thumbnail element
+           
                 const thumbnail = document.createElement("div");
                 thumbnail.classList.add("thumbnail");
 
-                // Create image element
+     \
                 const img = document.createElement("img");
                 img.src = URL.createObjectURL(file);
                 img.alt = "thumbnail";
 
-                // Set a fixed width for the image
-                img.style.width = "50px"; // Adjust the width as needed
+                img.style.width = "50px"; 
                 img.style.height = "auto";
 
-                // Create remove icon
+               
                 const removeIcon = document.createElement("span");
                 removeIcon.classList.add("remove-icon");
-                removeIcon.innerHTML = "&times;"; // Multiplication symbol as a cross
+                removeIcon.innerHTML = "&times;"; 
 
-                // Event listener to remove the image on icon click
                 removeIcon.addEventListener("click", function () {
-                    // Remove the file from the selected images array
+                
                     const index = selectedImages.indexOf(file);
                     if (index !== -1) {
                         selectedImages.splice(index, 1);
                     }
 
-                    // Remove the thumbnail from the container
                     thumbnail.remove();
                 });
 
-                // Append elements to thumbnail
                 thumbnail.appendChild(img);
                 thumbnail.appendChild(removeIcon);
-
-                // Append thumbnail to the container
                 addedImagesContainer.appendChild(thumbnail);
             }
         }
+
+
+
+
+        function deleteImage(productId, filename) {
+            deleteSingleImage(productId, filename);
+        }
+
+        function deleteSingleImage(productId, filename) {
+            // alert("hi")
+            fetch("/admin/deleteImage", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ productId, filename }),
+            })
+                .then((response) => location.reload())
+                .then((data) => {
+                    // Handle success or error
+                    if (data.success) {
+                        removeImage(filename);
+                        // location.reload()
+                    } else {
+                        console.error("Error deleting image:", data.error);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+        }
+
+        // remove the deleted image
+        function removeImage(filename) {
+            const imageElement = document.querySelector(`[data-filename="${filename}"]`);
+
+            if (imageElement) {
+                imageElement.closest('.col-md-12').remove();
+            }
+        }
+
+
+
     </script>
 
     <%- include("../partials/adminFooter") %>

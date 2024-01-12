@@ -337,24 +337,16 @@
 
                             let orderAmount = Math.round(numericValue * 100)
                             console.log(response, "res");
-                         
-
-
-
-
-
-
-
                             var options = {
-                                "key": "rzp_test_sPwoxcRC0hnSFO", 
-                                "amount": orderAmount, 
+                                "key": "rzp_test_sPwoxcRC0hnSFO",
+                                "amount": orderAmount,
                                 "currency": "INR",
-                                "name": "LapLux", 
+                                "name": "LapLux",
                                 "description": "Test Transaction",
                                 "image": "https://example.com/your_logo",
-                                "order_id": response.razorpayOrder.id, 
+                                "order_id": response.razorpayOrder.id,
                                 "handler": function (status) {
-                                    verifyPayment(response.razorpayOrder,status, response.razorpayOrder.id);
+                                    verifyPayment(response.razorpayOrder, status, response.razorpayOrder.id);
                                 },
                                 "prefill": {
                                     "name": "Customer Name",
@@ -368,20 +360,34 @@
                             }
                             var rzp1 = new Razorpay(options);
                             rzp1.open();
+                        } else if (response.method === "wallet") {
+                            
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: "Order success",
+                                        text: "Order placed successfully",
+                                        icon: "success",
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                    });
+                                  
+                                } else {
+                                    // Handle the case when the response status is not successful
+                                    Swal.fire({
+                                        title: "Order failed",
+                                        text: "Wallet amount is not enough",
+                                        icon: "error",
+                                        showConfirmButton: true,
+                                    });
+                                }
+                            }
                         }
 
-                        else {
-                            Swal.fire({
-                                title: 'Error Occured',
-                                text: "Can't process order error occured",
-                                icon: 'fail',
-                                timer: 5000
-                            })
-                        }
-                    }
-                });
+                    
+                    
+                    })
+                }
             }
-        }
 
         function verifyPayment(order, payment, id) {
             console.log(order)

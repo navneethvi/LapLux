@@ -75,21 +75,24 @@ const getEditProduct = async (req, res) => {
 
 const deleteSingleImage = async (req, res) => {
     try {
-        const id = req.query.id
-        const image = req.params.image
+        console.log("hi");
+        const id = req.body.productId
+        const image = req.body.filename
+        console.log(id, image);
         const product = await Product.findByIdAndUpdate(id, {
             $pull: { productImage: image }
         })
-        console.log(image);
+        // console.log(image);
         const imagePath = path.join('public', 'uploads', 'product-images', image);
         if (fs.existsSync(imagePath)) {
             await fs.unlinkSync(imagePath);
             console.log(`Image ${image} deleted successfully`);
+            res.json({success : true})
         } else {
             console.log(`Image ${image} not found`);
         }
-
-        res.redirect(`/admin/editProduct?id=${product._id}`)
+        
+        // res.redirect(`/admin/editProduct?id=${product._id}`)
 
     } catch (error) {
         console.log(error.message);
