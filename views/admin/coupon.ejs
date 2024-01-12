@@ -8,10 +8,11 @@
             border-radius: 10px;
             margin: 10px;
         }
+
         .error-message {
-        color: red;
-        margin-top: 5px;
-    }
+            color: red;
+            margin-top: 5px;
+        }
 
         .form-label {
             margin-bottom: 8px;
@@ -84,8 +85,7 @@
 
                                 <div>
                                     <label for="offer-price" class="form-label">Offer Price</label>
-                                    <input type="text" name="offerPrice" placeholder="Type here"
-                                        class="form-control" />
+                                    <input type="text" name="offerPrice" placeholder="Type here" class="form-control" />
                                     <div id="error-offer-price" class="error-message"></div>
                                 </div>
 
@@ -97,7 +97,7 @@
                                 </div>
 
                                 <div class="d-grid">
-                                    <button class="btn btn-primary mt-20" onclick="validateForm(event)"
+                                    <button class="btn btn-primary mt-20" onclick=" return validateForm(event)"
                                         type="submit">Add Coupon</button>
                                 </div>
 
@@ -125,6 +125,30 @@
                                     </tr>
                                 </thead>
 
+                                
+                                <% for (let i=0; i < coupons.length; i++) { %>
+                                    <tbody>
+
+                                        <td class="text-start">
+                                            <%= coupons[i].name %>
+                                        </td>
+                                        <td class="text-start"><%= new Date(coupons[i].createdOn).toLocaleDateString('en-US') %></td>
+                                        <td class="text-start"><%= new Date(coupons[i].expireOn).toLocaleDateString('en-US') %></td>
+                                        
+
+                                        <td class="text-start">
+                                            <%= coupons[i].offerPrice %>
+                                        </td>
+                                        <td class="text-start">
+                                            <%= coupons[i].minimumPrice %>
+                                        </td>
+                                        <td class="text-start">
+                                            <%= coupons[i].isList %>
+                                        </td>
+
+                                    </tbody>
+                                        <% } %>
+
 
                             </table>
 
@@ -148,45 +172,64 @@
         }
 
         function validateForm() {
-    // Reset all error messages
-    document.querySelectorAll('.error-message').forEach(element => element.innerHTML = '');
+            // Reset all error messages
+            document.querySelectorAll('.error-message').forEach(element => element.innerHTML = '');
 
-    const sDate = document.getElementsByName('startDate')[0].value;
-    const eDate = document.getElementsByName('endDate')[0].value;
-    const sDateObj = new Date(sDate);
-    const eDateObj = new Date(eDate);
-    const todayDateObj = new Date();
-    todayDateObj.setHours(0, 0, 0, 0);
+            const sDate = document.getElementsByName('startDate')[0].value;
+            const eDate = document.getElementsByName('endDate')[0].value;
+            const sDateObj = new Date(sDate);
+            const eDateObj = new Date(eDate);
+            const todayDateObj = new Date();
+            todayDateObj.setHours(0, 0, 0, 0);
 
-    if (sDateObj > eDateObj) {
-        document.getElementById('error-end-date').innerHTML = 'End date should be after the start date';
-        return false;
-    }
+            if (sDateObj > eDateObj) {
+                document.getElementById('error-end-date').innerHTML = 'End date should be after the start date';
+                return false;
+            }
 
-    if (sDateObj <= todayDateObj) {
-        document.getElementById('error-start-date').innerHTML = 'Starting date should be greater than or equal to today\'s date';
-        return false;
-    }
+            if (sDateObj <= todayDateObj) {
+                document.getElementById('error-start-date').innerHTML = 'Starting date should be greater than or equal to today\'s date';
+                return false;
+            }
 
-    let name = document.getElementsByName('couponName')[0].value;
-    const nameRegex = /^[A-Za-z0-9]{1,50}$/;
+            let name = document.getElementsByName('couponName')[0].value;
+            const nameRegex = /^[A-Za-z0-9]{1,50}$/;
 
-    if (!nameRegex.test(name)) {
-        document.getElementById('error-coupon-name').innerHTML = 'Coupon Name error';
-        return false;
-    }
+            if (!nameRegex.test(name)) {
+                document.getElementById('error-coupon-name').innerHTML = 'Coupon Name error';
+                return false;
+            }
 
-    const offerPrice = parseInt(document.getElementsByName('offerPrice')[0].value);
-    const minimumPrice = parseInt(document.getElementsByName('minimumPrice')[0].value);
+            const offerPriceInput = document.getElementsByName('offerPrice')[0];
+            const minimumPriceInput = document.getElementsByName('minimumPrice')[0];
 
-    if (isNaN(offerPrice) || isNaN(minimumPrice) || offerPrice >= minimumPrice) {
-        document.getElementById('error-offer-price').innerHTML = 'Offer Price must be greater than Minimum Price';
-        return false;
-    }
+            const offerPrice = offerPriceInput.value.trim() !== '' ? parseInt(offerPriceInput.value) : NaN;
+            const minimumPrice = minimumPriceInput.value.trim() !== '' ? parseInt(minimumPriceInput.value) : NaN;
 
-    // If there are no errors, the form will submit naturally
-    return true;
-}
+            if (isNaN(offerPrice) || isNaN(minimumPrice) || offerPrice >= minimumPrice) {
+                document.getElementById('error-offer-price').innerHTML = 'Offer Price must be greater than Minimum Price';
+                return false;
+            }
+
+            if (isNaN(offerPrice) || isNaN(minimumPrice)) {
+                document.getElementById('error-offer-price').innerHTML = 'Please enter numeric values for Offer Price and Minimum Price';
+                return false;
+            }
+
+
+            //     const formData = {
+            //     couponName: name,
+            //     startDate: sDateObj,
+            //     endDate: eDateObj,
+            //     offerPrice: offerPrice,
+            //     minimumPrice: minimumPrice
+            // };
+
+            // console.log(formData);
+
+            // If there are no errors, the form will submit naturally
+            return true;
+        }
 
 
 

@@ -1,5 +1,39 @@
 <%- include("../partials/header") %>
 
+
+<style>
+    .coupon-card {
+        border: 2px solid #eaeaea;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .coupon-name {
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .use-button {
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .use-button:hover {
+        background-color: #45a049;
+    }
+</style>
+
+
+
     <section class="mt-50 mb-50">
         <div class="container">
             <div class="row">
@@ -121,28 +155,34 @@
                                 <label class="form-check-label" for="Razorpay" data-bs-toggle="collapse"
                                     data-target="#Razorpay" aria-controls="paypal">Razorpay</label>
                             </div>
-                            <div class="col-6 mt-50 ml-150">
-                                <div class="toggle_info">
-                                    <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a
-                                            coupon?</span> <a href="#coupon" data-bs-toggle="collapse" class="collapsed"
-                                            aria-expanded="false">Click here to enter your
-                                            code</a></span>
-                                </div>
-                                <div class="panel-collapse collapse coupon_form" id="coupon">
-                                    <div class="panel-body">
-                                        <p class="mb-30 font-sm">If you have a coupon code, please apply it below.
-                                        </p>
-                                        <form method="post">
-                                            <div class="form-group">
-                                                <input type="text" placeholder="Enter Coupon Code...">
-                                            </div>
-                                            <div class="form-group">
-                                                <button class="btn btn-md" name="login">Apply Coupon</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                           
+                            <div class="mb-25 ml-150 pt-40">
+                                <h5>Available Coupons</h5>
                             </div>
+
+                            <ul>
+                               <% if (locals.coupons) { %>
+                                <% for (let i = 0; i < coupons.length; i++) { %>
+                                    <li>
+                                        <div class="coupon-card col-4" style="margin-left: 150px; margin-top: 20px;">
+                                            <div class="coupon-details">
+                                                <span class="coupon-name"><%= coupons[i].name %></span><br>
+                                                <!-- Add other coupon details if needed -->
+                                            </div>
+                                            <button class="use-button">Use</button>
+                                        </div>
+                                    </li>
+                                <% } %>
+                               <% }else{ %>
+                            
+                                <h3>No coupons available</h3>
+
+                                <% } %>
+                            </ul>
+                          
+                           
+
+
                         </div>
 
                     </div>

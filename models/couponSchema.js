@@ -5,10 +5,6 @@ const couponSchema = Mongoose.Schema({
         type : String,
         required : true
     },
-    code : {
-        type : Array,
-        required : true
-    },
     createdOn : {
         type : String,
         required : true
@@ -25,9 +21,9 @@ const couponSchema = Mongoose.Schema({
         type : Number,
         required : true
     },
-    status : {
-        type : String,
-        required : true
+    isList : {
+        type : Boolean,
+        default : true
     },
     userId : {
         type : Array

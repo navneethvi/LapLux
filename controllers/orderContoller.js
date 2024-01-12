@@ -2,6 +2,7 @@ const User = require("../models/userSchema")
 const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
 const Order = require("../models/orderSchema")
+const Coupon = require("../models/couponSchema")
 const mongodb = require("mongodb")
 const razorpay = require("razorpay")
 const crypto = require("crypto");
@@ -23,7 +24,10 @@ const getCheckoutPage = async (req, res) => {
             const addressData = await Address.findOne({ userId: userId })
             // console.log(addressData)
             console.log("THis is find product =>", findProduct);
-            res.render("checkout", { product: findProduct, user: userId, findUser: findUser, userAddress: addressData, isSingle: true })
+
+            const findCoupons = await Coupon.find({isList : true})
+
+            res.render("checkout", { product: findProduct, user: userId, findUser: findUser, userAddress: addressData, isSingle: true , coupons : findCoupons})
         } else {
             const user = req.query.userId
             const findUser = await User.findOne({ _id: user })
