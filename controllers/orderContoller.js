@@ -330,6 +330,11 @@ const cancelOrder = async (req, res) => {
              await findUser.save();
         }
 
+        if(findOrder.payment === "online"){
+            findUser.wallet += findOrder.totalPrice
+             await findUser.save();
+        }
+
         for (const productData of findOrder.product) {
             const productId = productData.productId;
             const quantity = productData.quantity;
