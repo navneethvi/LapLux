@@ -2,7 +2,23 @@
 
 
 
+<style>
+    .custom-btn {
+    /* Add your custom styles here */
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
 
+</style>
 
 
 
@@ -35,7 +51,16 @@
                         <div class="col-lg-3 col-md-4 ms-auto text-md-end">
                             <% if (orders.status !== "Canceled") { %>
                                 <% if (orders.status === "Delivered") { %>
-                                    <h4 class="text-success">Delivered</h4>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <a class="btn custom-btn" href="/invoice?id=<%= orders._id%>">Invoice</a>
+
+                                        </div>
+                                        <div class="col-md-6" style="margin-top: 17px;">
+                                            <h4 class="text-success">Delivered</h4>
+                                        </div>
+                                    </div>
+                                    
                                 <% } else { %>
                                     <select id="actionDropdown" class="form-select form-select-sm d-inline-block mb-lg-0 mb-15 mw-100" onchange="handleDropdownChange(this)">
                                         <option value="status">Status</option>
@@ -143,7 +168,7 @@
                                                     </td>
                                                     <td class="text-center"> 
                                                         <div class="info">
-                                                            <%= orders.product[i].title %>
+                                                            <%= orders.product[i].name || orders.product[i].title %>
                                                         </div>
                                                     </td>
                                                     <td class="text-center"> 
@@ -193,6 +218,7 @@
 
 
 
+    <script src="https://cdn.jsdelivr.net/npm/easyinvoice/dist/easyinvoice.min.js"></script>
   <!-- SweetAlert2 Modal -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script>

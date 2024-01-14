@@ -118,11 +118,11 @@
                                 <table class="table">
                                     <thead>
                                         <tr class="text-center">
-                                            <th width="30%">Product</th>
-                                            <th width="20%">Name</th>
-                                            <th width="20%">Unit Price</th>
-                                            <th width="10%">Quantity</th>
-                                            <th class="text-center" width="20%" class="text-end">Total</th>
+                                            <th>Product</th>
+                                            <th>Name</th>
+                                            <th>Unit Price</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -131,16 +131,16 @@
                                             <% for (let i = 0; i < orders.product.length; i++) { %>
                                                 <tr>
                                                     <td class="text-center"> 
-                                                        <a class="itemside" href="#">
-                                                            <div class="left">
+                                                      
+                                                           
                                                                 <img src="/uploads/product-images/<%= orders.product[i].image %>" style="height: 7rem; width: 7rem;" class="img-xs" alt="Item">
-                                                            </div>
-                                                        </a>
+                                                        
+                                                    
                                                     </td>
                                                     <td class="text-center"> 
-                                                        <div class="info">
-                                                            <%= orders.product[i].title %>
-                                                        </div>
+                                                       
+                                                            <%= orders.product[i].title || orders.product[i].name %>
+                                                   
                                                     </td>
                                                     <td class="text-center"> 
                                                         ₹<%= orders.product[i].price.toLocaleString() %>

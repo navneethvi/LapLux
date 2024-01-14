@@ -1,36 +1,36 @@
 <%- include("../partials/header") %>
 
 
-<style>
-    .coupon-card {
-        border: 2px solid #eaeaea;
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+    <style>
+        .coupon-card {
+            border: 2px solid #eaeaea;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .coupon-name {
-        font-size: 12px;
-        font-weight: bold;
-    }
+        .coupon-name {
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-    .use-button {
-        background-color: #4caf50;
-        color: #fff;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
+        .use-button {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-    .use-button:hover {
-        background-color: #45a049;
-    }
-</style>
+        .use-button:hover {
+            background-color: #45a049;
+        }
+    </style>
 
 
 
@@ -127,6 +127,12 @@
 
                                                                                     <% } %>
                                     </tbody>
+
+
+
+                                    <% let totalAmount=0; %>
+
+
                                 </table>
                             </div>
                         </div>
@@ -155,32 +161,36 @@
                                 <label class="form-check-label" for="Razorpay" data-bs-toggle="collapse"
                                     data-target="#Razorpay" aria-controls="paypal">Razorpay</label>
                             </div>
-                           
+
                             <div class="mb-25 ml-150 pt-40">
                                 <h5>Available Coupons</h5>
                             </div>
 
                             <ul>
-                               <% if (locals.coupons) { %>
-                                <% for (let i = 0; i < coupons.length; i++) { %>
-                                    <li>
-                                        <div class="coupon-card col-4" style="margin-left: 150px; margin-top: 20px;">
-                                            <div class="coupon-details">
-                                                <span class="coupon-name"><%= coupons[i].name %></span><br>
-                                                <!-- Add other coupon details if needed -->
+                                <% if (locals.coupons) { %>
+                                    <% for (let i=0; i < coupons.length; i++) { %>
+                                        <li>
+                                            <div class="coupon-card col-4"
+                                                style="margin-left: 150px; margin-top: 20px;">
+                                                <div class="coupon-details">
+                                                    <span class="coupon-name">
+                                                        <%= coupons[i].name %>
+                                                    </span><br>
+                                                    <!-- Add other coupon details if needed -->
+                                                </div>
+                                                <button onclick="showCouponDetails('<%= coupons[i].name %>')"
+                                                    class="use-button">Use</button>
                                             </div>
-                                            <button class="use-button">Use</button>
-                                        </div>
-                                    </li>
-                                <% } %>
-                               <% }else{ %>
-                            
-                                <h3>No coupons available</h3>
+                                        </li>
+                                        <% } %>
+                                            <% }else{ %>
 
-                                <% } %>
+                                                <h3>No coupons available</h3>
+
+                                                <% } %>
                             </ul>
-                          
-                           
+
+
 
 
                         </div>
@@ -192,7 +202,31 @@
 
 
                     <div class="container col-6 mt-3">
-                        <% let totalAmount=0; %>
+
+
+
+
+
+                        <div class="input-group mb-3 col-2" style="border: 1px solid #ced4da; border-radius: 5px; width: 300px; margin-left: 200px; margin-top: 60px;">
+                            <input type="text" class="form-control" id="couponInput" placeholder="Paste Coupon Name" >
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button" onclick="applyCoupon()">Apply</button>
+                            </div>
+                        </div>
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+                      
                             <% if (isSingle===true) { %>
                                 <% totalAmount +=product[0].salePrice; %>
                                     <% }else{ %>
@@ -230,7 +264,8 @@
                                                             <div class="ml-65">
                                                                 <%if(isSingle===true){%>
                                                                     <button type="button" class="btn"
-                                                                        onclick="placeOrder('<%= user._id %>' , '<%=product[0]._id%>',  true)">Single</button>
+                                                                        onclick="placeOrder('<%= user._id %>' , '<%=product[0]._id%>',  true)">Place
+                                                                        order</button>
                                                                     <%}else{%>
 
 
@@ -401,33 +436,33 @@
                             var rzp1 = new Razorpay(options);
                             rzp1.open();
                         } else if (response.method === "wallet") {
-                            
-                                if (response.success) {
-                                    Swal.fire({
-                                        title: "Order success",
-                                        text: "Order placed successfully",
-                                        icon: "success",
-                                        showConfirmButton: false,
-                                        timer: 2000,
-                                    });
-                                  
-                                } else {
-                                    // Handle the case when the response status is not successful
-                                    Swal.fire({
-                                        title: "Order failed",
-                                        text: "Wallet amount is not enough",
-                                        icon: "error",
-                                        showConfirmButton: true,
-                                    });
-                                }
+
+                            if (response.success) {
+                                Swal.fire({
+                                    title: "Order success",
+                                    text: "Order placed successfully",
+                                    icon: "success",
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                });
+
+                            } else {
+                                // Handle the case when the response status is not successful
+                                Swal.fire({
+                                    title: "Order failed",
+                                    text: "Wallet amount is not enough",
+                                    icon: "error",
+                                    showConfirmButton: true,
+                                });
                             }
                         }
+                    }
 
-                    
-                    
-                    })
-                }
+
+
+                })
             }
+        }
 
         function verifyPayment(order, payment, id) {
             console.log(order)
@@ -462,6 +497,39 @@
 
                 }
             })
+        }
+
+
+
+        function showCouponDetails(couponName) {
+            Swal.fire({
+                title: 'Coupon Details',
+                text: `${couponName}`,
+                icon: 'info',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    copyToClipboard(couponName);
+                }
+            });
+        }
+
+        function copyToClipboard(text) {
+            var tempInput = document.createElement('input');
+            document.body.appendChild(tempInput);
+            tempInput.value = text;
+
+            tempInput.select();
+            document.execCommand('copy');
+
+            document.body.removeChild(tempInput);
+
+            Swal.fire({
+                title: 'Copied!',
+                text: 'Coupon name has been copied to the clipboard.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
         }
 
     </script>

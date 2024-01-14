@@ -25,7 +25,8 @@ const getCheckoutPage = async (req, res) => {
             // console.log(addressData)
             console.log("THis is find product =>", findProduct);
 
-            const findCoupons = await Coupon.find({isList : true})
+            const findCoupons = await Coupon.find({isList : true, 
+                minimumPrice: { $lt: findProduct[0].salePrice } })
 
             res.render("checkout", { product: findProduct, user: userId, findUser: findUser, userAddress: addressData, isSingle: true , coupons : findCoupons})
         } else {
@@ -63,6 +64,7 @@ const getCheckoutPage = async (req, res) => {
             console.log("Data  =>>", data)
             // console.log("Data  =>>" , data[0].productDetails)
             const grandTotal = req.session.grandTotal
+            // console.log(grandTotal);
             const findCoupons = await Coupon.find({isList : true})
             res.render("checkout", { data: data, user: findUser, isCart: true, userAddress: addressData, isSingle: false, grandTotal, coupons : findCoupons})
         }

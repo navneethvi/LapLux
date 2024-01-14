@@ -89,6 +89,9 @@ console.log(data);
 }
 
 
+
+
+
 const getLogout = async (req, res) => {
     try {
         req.session.admin = null

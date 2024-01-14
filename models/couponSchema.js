@@ -3,7 +3,8 @@ const Mongoose = require("mongoose")
 const couponSchema = Mongoose.Schema({
     name : {
         type : String,
-        required : true
+        required : true,
+        unique : true
     },
     createdOn : {
         type : String,
