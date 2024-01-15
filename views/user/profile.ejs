@@ -209,7 +209,11 @@
                                                                             <%= user.history[i].status %>
                                                                         </td>
                                                                         <td>
-                                                                            <%= user.history[i].amount %>
+                                                                            <% if (user.history[i].status === "debit") { %>
+                                                                                -<%= user.history[i].amount %>  
+                                                                            <% }else{ %>
+                                                                                <%= user.history[i].amount %> 
+                                                                                <% } %>
                                                                         </td>
                                                                     </tr>
                                                                     <% } %>

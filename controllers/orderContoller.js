@@ -3,6 +3,7 @@ const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
 const Order = require("../models/orderSchema")
 const Coupon = require("../models/couponSchema")
+const invoice = require("../helpers/invoice")
 const mongodb = require("mongodb")
 const razorpay = require("razorpay")
 const crypto = require("crypto");
@@ -25,10 +26,12 @@ const getCheckoutPage = async (req, res) => {
             // console.log(addressData)
             console.log("THis is find product =>", findProduct);
 
-            const findCoupons = await Coupon.find({isList : true, 
-                minimumPrice: { $lt: findProduct[0].salePrice } })
+            const findCoupons = await Coupon.find({
+                isList: true,
+                minimumPrice: { $lt: findProduct[0].salePrice }
+            })
 
-            res.render("checkout", { product: findProduct, user: userId, findUser: findUser, userAddress: addressData, isSingle: true , coupons : findCoupons})
+            res.render("checkout", { product: findProduct, user: userId, findUser: findUser, userAddress: addressData, isSingle: true, coupons: findCoupons })
         } else {
             const user = req.query.userId
             const findUser = await User.findOne({ _id: user })
@@ -63,8 +66,8 @@ const getCheckoutPage = async (req, res) => {
             // console.log("Data  =>>" , data[0].productDetails)
             const grandTotal = req.session.grandTotal
             // console.log(grandTotal);
-            const findCoupons = await Coupon.find({isList : true})
-            res.render("checkout", { data: data, user: findUser, isCart: true, userAddress: addressData, isSingle: false, grandTotal, coupons : findCoupons})
+            const findCoupons = await Coupon.find({ isList: true })
+            res.render("checkout", { data: data, user: findUser, isCart: true, userAddress: addressData, isSingle: false, grandTotal, coupons: findCoupons })
         }
 
     } catch (error) {
@@ -120,29 +123,29 @@ const orderPlaced = async (req, res) => {
             if (newOrder.payment == 'cod') {
                 console.log('Order Placed with COD');
                 res.json({ payment: true, method: "cod", order: orderDone, quantity: 1, orderId: userId });
-            }else if (newOrder.payment == 'online') {
+            } else if (newOrder.payment == 'online') {
                 console.log('order placed by Razorpay');
                 const generatedOrder = await generateOrderRazorpay(orderDone._id, orderDone.totalPrice);
-                console.log(generatedOrder,"order generated");
-                res.json({ payment: false, method: "online", razorpayOrder: generatedOrder, order: orderDone, orderId: orderDone._id,quantity: 1});
-            }else if(newOrder.payment == "wallet"){
-               if(orderDone.totalPrice <= findUser.wallet){
-                console.log("order placed with Wallet");
-                const data = findUser.wallet -= newOrder.totalPrice
-                const newHistory = {
-                    amount : data,
-                    status : "debit",
-                    date : Date.now()
-                }
-                 findUser.history.push(newHistory)
-                 await findUser.save()
+                console.log(generatedOrder, "order generated");
+                res.json({ payment: false, method: "online", razorpayOrder: generatedOrder, order: orderDone, orderId: orderDone._id, quantity: 1 });
+            } else if (newOrder.payment == "wallet") {
+                if (orderDone.totalPrice <= findUser.wallet) {
+                    console.log("order placed with Wallet");
+                    findUser.wallet -= newOrder.totalPrice
+                    const newHistory = {
+                        amount: newOrder.totalPrice,
+                        status: "debit",
+                        date: Date.now()
+                    }
+                    findUser.history.push(newHistory)
+                    await findUser.save()
 
-                 res.json({payment : true, method : "wallet", success : true})
-               }else{
-                console.log("wallet amount is lesser than total amount");
-                res.json({payment : false, method : "wallet", success : false})
-               }
-            } 
+                    res.json({ payment: true, method: "wallet", success: true })
+                } else {
+                    console.log("wallet amount is lesser than total amount");
+                    res.json({ payment: false, method: "wallet", success: false })
+                }
+            }
 
         } else {
 
@@ -218,24 +221,24 @@ const orderPlaced = async (req, res) => {
                 } else if (newOrder.payment == 'online') {
                     console.log('order placed by Razorpay');
                     const generatedOrder = await generateOrderRazorpay(orderDone._id, orderDone.totalPrice);
-                    console.log(generatedOrder,"order generated");
+                    console.log(generatedOrder, "order generated");
                     res.json({ payment: false, method: "online", razorpayOrder: generatedOrder, order: orderDone, orderId: orderDone._id, quantity: cartItemQuantities });
-                } else if(newOrder.payment == "wallet"){
-                    if(orderDone.totalPrice <= findUser.wallet){
+                } else if (newOrder.payment == "wallet") {
+                    if (orderDone.totalPrice <= findUser.wallet) {
                         console.log("order placed with Wallet");
                         const data = findUser.wallet -= orderDone.totalPrice
                         const newHistory = {
-                            amount : data,
-                            status : "debit",
-                            date : Date.now()
+                            amount: data,
+                            status: "debit",
+                            date: Date.now()
                         }
                         findUser.history.push(newHistory)
                         await findUser.save()
 
-                        res.json({payment : true, method : "wallet", order : orderDone, orderId : orderDone._id, quantity : cartItemQuantities, success : true})
-                    }else{
+                        res.json({ payment: true, method: "wallet", order: orderDone, orderId: orderDone._id, quantity: cartItemQuantities, success: true })
+                    } else {
                         console.log("wallet amount is lesser than total amount");
-                        res.json({payment : true, method : "wallet", order : orderDone, orderId : orderDone._id, quantity : cartItemQuantities, success : false})
+                        res.json({ payment: true, method: "wallet", order: orderDone, orderId: orderDone._id, quantity: cartItemQuantities, success: false })
                     }
                 }
             } else {
@@ -252,11 +255,11 @@ const orderPlaced = async (req, res) => {
 const generateOrderRazorpay = (orderId, total) => {
     return new Promise((resolve, reject) => {
         const options = {
-            amount: total * 100,  
+            amount: total * 100,
             currency: "INR",
             receipt: String(orderId)
         };
-        instance.orders.create(options, function (err, order) { 
+        instance.orders.create(options, function (err, order) {
             if (err) {
                 console.log("failed");
                 console.log(err);
@@ -289,17 +292,17 @@ const getOrderDetailsPage = async (req, res) => {
 const getOrderListPageAdmin = async (req, res) => {
     try {
         const orders = await Order.find({}).sort({ createdOn: -1 });
-        
+
         // console.log(req.query);
 
         let itemsPerPage = 3
         let currentPage = parseInt(req.query.page) || 1
         let startIndex = (currentPage - 1) * itemsPerPage
         let endIndex = startIndex + itemsPerPage
-        let totalPages = Math.ceil(orders.length/3  )
+        let totalPages = Math.ceil(orders.length / 3)
         const currentOrder = orders.slice(startIndex, endIndex)
 
-        res.render("orders-list", { orders: currentOrder , totalPages, currentPage})
+        res.render("orders-list", { orders: currentOrder, totalPages, currentPage })
     } catch (error) {
         console.log(error.message);
     }
@@ -327,6 +330,13 @@ const cancelOrder = async (req, res) => {
 
         if (findOrder.payment === "wallet" || findOrder.payment === "online") {
             findUser.wallet += findOrder.totalPrice;
+
+            const newHistory = {
+                amount: findOrder.totalPrice,
+                status: "credit",
+                date: Date.now()
+            }
+            findUser.history.push(newHistory)
             await findUser.save();
         }
 
@@ -338,7 +348,7 @@ const cancelOrder = async (req, res) => {
 
             const product = await Product.findById(productId);
 
-            console.log(product,"=>>>>>>>>>");
+            console.log(product, "=>>>>>>>>>");
 
             if (product) {
                 product.quantity += quantity;
@@ -355,7 +365,7 @@ const cancelOrder = async (req, res) => {
 
 
 
-const returnOrder = async (req, res)=>{
+const returnOrder = async (req, res) => {
     try {
 
         const userId = req.session.user
@@ -392,7 +402,7 @@ const returnOrder = async (req, res)=>{
         }
 
         res.redirect('/profile');
-        
+
     } catch (error) {
         console.log(error.message);
     }
@@ -453,7 +463,7 @@ const verify = (req, res) => {
     let hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
     hmac.update(
         `${req.body.payment.razorpay_order_id}|${req.body.payment.razorpay_payment_id}`
-      );
+    );
     hmac = hmac.digest("hex");
     // console.log(hmac,"HMAC");
     // console.log(req.body.payment.razorpay_signature,"signature");
@@ -467,6 +477,16 @@ const verify = (req, res) => {
 };
 
 
+const getInvoice = async (req, res)=>{
+    try {
+        console.log("helloooo");
+        await invoice.invoice(req,res);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
 module.exports = {
     getCheckoutPage,
     orderPlaced,
@@ -477,5 +497,6 @@ module.exports = {
     returnOrder,
     getCartCheckoutPage,
     getOrderDetailsPageAdmin,
-    verify
+    verify,
+    getInvoice
 }
