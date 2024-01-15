@@ -103,14 +103,20 @@ const addToCart = async (req, res) => {
                 // console.log("hi");
                 const productInCart = findUser.cart[cartIndex]
                 // console.log(productInCart);
-                const newQuantity = parseInt(productInCart.quantity) + parseInt(req.body.quantity)
+                if(!productInCart.quantity >= product.quantity){
+                    const newQuantity = parseInt(productInCart.quantity) + parseInt(req.body.quantity)
+                    await User.updateOne(
+                        { _id: userId, "cart.productId": id },
+                        { $set: { "cart.$.quantity": newQuantity } }
+                    );
+                    res.json({ status: true })
+                }else{
+                    console.log("Poda vana");
+                    res.json({ status: "Out of stock" })
+                }
                 // console.log(productInCart, "product", newQuantity);
-
-                await User.updateOne(
-                    { _id: userId, "cart.productId": id },
-                    { $set: { "cart.$.quantity": newQuantity } }
-                );
-                res.json({ status: true })
+               
+               
             }
         } else {
             res.json({ status: "Out of stock" })

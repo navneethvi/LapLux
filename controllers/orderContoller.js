@@ -59,8 +59,6 @@ const getCheckoutPage = async (req, res) => {
                 },
             ])
 
-
-
             console.log("Data  =>>", data)
             // console.log("Data  =>>" , data[0].productDetails)
             const grandTotal = req.session.grandTotal
@@ -319,7 +317,7 @@ const cancelOrder = async (req, res) => {
         }
 
         const orderId = req.query.orderId
-        console.log(orderId);
+        // console.log(orderId);
 
         await Order.updateOne({ _id: orderId },
             { status: "Canceled" }
@@ -327,21 +325,20 @@ const cancelOrder = async (req, res) => {
 
         const findOrder = await Order.findOne({ _id: orderId })
 
-        if(findOrder.payment === "wallet"){
-            findUser.wallet += findOrder.totalPrice
-             await findUser.save();
+        if (findOrder.payment === "wallet" || findOrder.payment === "online") {
+            findUser.wallet += findOrder.totalPrice;
+            await findUser.save();
         }
 
-        if(findOrder.payment === "online"){
-            findUser.wallet += findOrder.totalPrice
-             await findUser.save();
-        }
+        // console.log(findOrder);
 
         for (const productData of findOrder.product) {
-            const productId = productData.productId;
+            const productId = productData.ProductId;
             const quantity = productData.quantity;
 
             const product = await Product.findById(productId);
+
+            console.log(product,"=>>>>>>>>>");
 
             if (product) {
                 product.quantity += quantity;
@@ -351,6 +348,51 @@ const cancelOrder = async (req, res) => {
 
         res.redirect('/profile');
 
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
+const returnOrder = async (req, res)=>{
+    try {
+
+        const userId = req.session.user
+        const findUser = await User.findOne({ _id: userId })
+
+        if (!findUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const id = req.query.id
+        await Order.updateOne({ _id: id },
+            { status: "Returned" }
+        ).then((data) => console.log(data))
+
+        const findOrder = await Order.findOne({ _id: id })
+
+        if (findOrder.payment === "wallet" || findOrder.payment === "online") {
+            findUser.wallet += findOrder.totalPrice;
+            await findUser.save();
+        }
+
+        for (const productData of findOrder.product) {
+            const productId = productData.ProductId;
+            const quantity = productData.quantity;
+
+            const product = await Product.findById(productId);
+
+            // console.log(product,"=>>>>>>>>>");
+
+            if (product) {
+                product.quantity += quantity;
+                await product.save();
+            }
+        }
+
+        res.redirect('/profile');
+        
     } catch (error) {
         console.log(error.message);
     }
@@ -370,21 +412,9 @@ const changeOrderStatus = async (req, res) => {
             { status: req.query.status }
         ).then((data) => console.log(data))
 
-        const findOrder = await Order.findOne({ _id: orderId })
+        // const findOrder = await Order.findOne({ _id: orderId })
 
-
-
-        for (const productData of findOrder.product) {
-            const productId = productData.productId;
-            const quantity = productData.quantity;
-
-            const product = await Product.findById(productId);
-
-            if (product) {
-                product.quantity += quantity;
-                await product.save();
-            }
-        }
+        // console.log(findOrder,"order......................");
 
         res.redirect('/admin/orderList');
 
@@ -444,6 +474,7 @@ module.exports = {
     getOrderDetailsPage,
     getOrderListPageAdmin,
     cancelOrder,
+    returnOrder,
     getCartCheckoutPage,
     getOrderDetailsPageAdmin,
     verify

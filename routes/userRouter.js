@@ -52,6 +52,7 @@ Router.get("/checkout",isLogged, orderController.getCheckoutPage)
 Router.post("/orderPlaced", isLogged, orderController.orderPlaced)
 Router.get("/orderDetails", isLogged, orderController.getOrderDetailsPage)
 Router.get("/cancelOrder", isLogged, orderController.cancelOrder)
+Router.get("/return", isLogged, orderController.returnOrder)
 Router.get("/checkoutCart", isLogged, orderController.getCartCheckoutPage)
 Router.post("/verifyPayment", isLogged, orderController.verify)
 

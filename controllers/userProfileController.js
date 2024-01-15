@@ -14,7 +14,7 @@ const getUserProfile = async (req, res) => {
         // console.log(userData);
         const addressData = await Address.findOne({ userId: userId })
         // console.log(addressData);
-        const orderData = await Order.find({userId : userId})
+        const orderData = await Order.find({userId : userId}).sort({createdOn : -1})
         // console.log(orderData);
         res.render("profile", { user: userData, userAddress: addressData, order : orderData })
     } catch (error) {

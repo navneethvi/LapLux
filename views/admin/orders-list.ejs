@@ -73,6 +73,8 @@
                                     <span class="badge rounded-pill alert-primary"><%= orders[i].status %></span>
                                 <% }else if (orders[i].status == "Delivered") { %>
                                     <span class="badge rounded-pill alert-success"><%= orders[i].status %></span>
+                                <% }else if (orders[i].status == "Returned") { %>
+                                    <span class="badge rounded-pill alert-warning"><%= orders[i].status %></span>
                                 <% } %> 
                             </td>
                             

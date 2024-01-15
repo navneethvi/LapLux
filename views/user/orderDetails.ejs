@@ -38,30 +38,27 @@
 
                 <header class="card-header">
                     <div class="row align-items-center">
-                        <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
-                            <span>
-                                <i class="material-icons md-calendar_today">Ordered Date: </i>
-                                <b>
-                                    <% const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' }; %>
-                                    <%= new Date(orders.createdOn).toLocaleDateString('en-US', dateOptions) %>
-                                </b>
-                            </span> <br>
-                            <small class="text-muted">Order ID: <%=orders._id%></small>
-                        </div>
-                        <div class="col-lg-3 col-md-4 ms-auto text-md-end">
+                        <div class="col-lg-4 col-md-4 ms-auto text-md-end">
                             <% if (orders.status !== "Canceled") { %>
                                 <% if (orders.status === "Delivered") { %>
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-2" style="margin-right: 40px; ">
                                             <a class="btn custom-btn" href="/invoice?id=<%= orders._id%>">Invoice</a>
-
                                         </div>
-                                        <div class="col-md-6" style="margin-top: 17px;">
-                                            <h4 class="text-success">Delivered</h4>
+                                        <div class="col-2">
+                                            <a class="btn custom-btn" href="http://localhost:3000/return?id=<%= orders._id%>">Return</a>
+                                        </div>
+                                        <div class="col-5" style="margin-top: 17px; margin-left: 50px;">
+                                          
+                                              
+                                          
+                                                <h4 class="text-success">Delivered</h4>
+                                          
                                         </div>
                                     </div>
-                                    
-                                <% } else { %>
+                                <% }else if(orders.status === "Returned"){ %>
+                                    <h4 class="text-warning">Returned</h4>
+                             <%   } else { %>
                                     <select id="actionDropdown" class="form-select form-select-sm d-inline-block mb-lg-0 mb-15 mw-100" onchange="handleDropdownChange(this)">
                                         <option value="status">Status</option>
                                         <option value="cancel">Cancel</option>
@@ -70,9 +67,9 @@
                             <% } else { %>
                                 <h4 class="text-danger">Cancelled</h4>
                             <% } %>
-                            
-                          
                         </div>
+                        
+                        
                     </div>
                 </header>
                 
@@ -285,6 +282,9 @@
 
 
     }
+
+
+  
 
     function performAction() {
         // This function can be used for additional actions when the "Save" button is clicked

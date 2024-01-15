@@ -223,13 +223,13 @@
                                 timer: 2000,
                                 showConfirmButton: false
                             })
-                        } else if (res.status === "outOfStock") {
+                        } else if (res.status === "Out of stock") {
                             Swal.fire({
                                 title: 'Stock!!',
                                 text: "The product is out of stock",
                                 icon: 'error', // Corrected from 'fail' to 'error'
                                 timer: 2000,
-                            }).then(() => location.reload())
+                            })
                         } else {
                             Swal.fire({
                                 title: 'You need to Login first',
@@ -241,7 +241,7 @@
                         }
                     },
                     error: (err) => {
-                        console.error(err);
+                        console.error(err, "hello");
                         res.alert("error occured")
                     }
                 });
