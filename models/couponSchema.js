@@ -7,11 +7,11 @@ const couponSchema = Mongoose.Schema({
         unique : true
     },
     createdOn : {
-        type : String,
+        type : Date,
         required : true
     },
     expireOn : {
-        type : String,
+        type : Date,
         required : true
     },
     offerPrice : {

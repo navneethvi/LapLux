@@ -26,10 +26,17 @@ const getCheckoutPage = async (req, res) => {
             // console.log(addressData)
             console.log("THis is find product =>", findProduct);
 
+            const today = new Date().toISOString(); // Get today's date in ISO format
+
             const findCoupons = await Coupon.find({
                 isList: true,
-                minimumPrice: { $lt: findProduct[0].salePrice }
-            })
+                createdOn: { $lt: new Date(today) },
+                expireOn: { $gt: new Date(today) },
+                minimumPrice: { $lt: findProduct[0].salePrice },
+            });
+
+
+            console.log(findCoupons, 'this is coupon ');
 
             res.render("checkout", { product: findProduct, user: userId, findUser: findUser, userAddress: addressData, isSingle: true, coupons: findCoupons })
         } else {
@@ -62,11 +69,19 @@ const getCheckoutPage = async (req, res) => {
                 },
             ])
 
-            console.log("Data  =>>", data)
-            // console.log("Data  =>>" , data[0].productDetails)
+            // console.log("Data  =>>", data)
+            // console.log("Data  =>>" , data[0].productDetails[0])
             const grandTotal = req.session.grandTotal
             // console.log(grandTotal);
-            const findCoupons = await Coupon.find({ isList: true })
+            const today = new Date().toISOString(); // Get today's date in ISO format
+
+            const findCoupons = await Coupon.find({
+                isList: true,
+                createdOn: { $lt: new Date(today) },
+                expireOn: { $gt: new Date(today) },
+                minimumPrice: { $lt: grandTotal },
+            });
+
             res.render("checkout", { data: data, user: findUser, isCart: true, userAddress: addressData, isSingle: false, grandTotal, coupons: findCoupons })
         }
 
@@ -382,8 +397,16 @@ const returnOrder = async (req, res) => {
 
         const findOrder = await Order.findOne({ _id: id })
 
+
         if (findOrder.payment === "wallet" || findOrder.payment === "online") {
             findUser.wallet += findOrder.totalPrice;
+
+            const newHistory = {
+                amount: findOrder.totalPrice,
+                status: "credit",
+                date: Date.now()
+            }
+            findUser.history.push(newHistory)
             await findUser.save();
         }
 
@@ -477,10 +500,10 @@ const verify = (req, res) => {
 };
 
 
-const getInvoice = async (req, res)=>{
+const getInvoice = async (req, res) => {
     try {
         console.log("helloooo");
-        await invoice.invoice(req,res);
+        await invoice.invoice(req, res);
     } catch (error) {
         console.log(error.message);
     }

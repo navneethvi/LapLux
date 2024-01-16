@@ -170,18 +170,18 @@
                                 <% if (locals.coupons) { %>
                                     <% for (let i=0; i < coupons.length; i++) { %>
                                         <li>
-                                            <div class="coupon-card col-4"
-                                                style="margin-left: 150px; margin-top: 20px;">
+                                            <div class="coupon-card col-4" style="margin-left: 150px; margin-top: 20px;">
                                                 <div class="coupon-details">
                                                     <span class="coupon-name">
                                                         <%= coupons[i].name %>
                                                     </span><br>
                                                     <!-- Add other coupon details if needed -->
                                                 </div>
-                                                <button onclick="showCouponDetails('<%= coupons[i].name %>')"
-                                                    class="use-button">Use</button>
+                                                <button onclick="useCoupon('<%= coupons[i].name %>')" id="useButton_<%= coupons[i].name %>" class="use-button">Use</button>
+                                                <button onclick="cancelCoupon('<%= coupons[i].name %>')" id="cancelButton_<%= coupons[i].name %>" class="cancel-button btn-danger" style="display: none;">Cancel</button>
                                             </div>
                                         </li>
+                                        
                                         <% } %>
                                             <% }else{ %>
 
@@ -207,25 +207,18 @@
 
 
 
-                        <div class="input-group mb-3 col-2" style="border: 1px solid #ced4da; border-radius: 5px; width: 300px; margin-left: 200px; margin-top: 60px;">
-                            <input type="text" class="form-control" id="couponInput" placeholder="Paste Coupon Name" >
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button" onclick="applyCoupon()">Apply</button>
-                            </div>
-                        </div>
                         
-
-
-
-
-
-
-
-
-
-
-
-
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                       
                             <% if (isSingle===true) { %>
                                 <% totalAmount +=product[0].salePrice; %>
@@ -236,14 +229,14 @@
                                             <% totalAmount +=data[i].productDetails[0].salePrice * data[i].quantity %>
 
 
-
+                                            
                                                 <% } %>
 
-
+                                                
                                                     <% } %>
-
-                                                        <!-- Display total and shipping information outside the loop -->
-                                                        <div class="ml-150">
+                                                    
+                                                    <!-- Display total and shipping information outside the loop -->
+                                                    <div class="ml-150">
                                                             <table class="table mt-45">
                                                                 <tbody>
                                                                     <tr>
@@ -251,10 +244,20 @@
                                                                         <td colspan="2"><em>Free Shipping</em></td>
                                                                     </tr>
                                                                     <tr>
+                                                                        <th>Discount</th>
+                                                                        <td colspan="2" id="discount">
+                                                                            <% if (locals.offerPrice) { %>
+                                                                                <%= locals.offerPrice %>
+                                                                            <% }else{ %>
+                                                                                 0
+                                                                                <% } %>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
                                                                         <th>Total for All Products</th>
                                                                         <td colspan="2" class="product-subtotal"
-                                                                            id="totalValue">
-                                                                            <span class="font-xl text-brand fw-900">₹<%=
+                                                                        >
+                                                                            <span class="font-xl text-brand fw-900" id="totalValue"><%=
                                                                                     totalAmount %></span>
                                                                         </td>
                                                                     </tr>
@@ -267,8 +270,8 @@
                                                                         onclick="placeOrder('<%= user._id %>' , '<%=product[0]._id%>',  true)">Place
                                                                         order</button>
                                                                     <%}else{%>
-
-
+                                                                        
+                                                                        
                                                                         <button type="button" class="btn"
                                                                             onclick="placeOrder('<%= user._id %>', [<% for (let i = 0; i < data.length; i++) { %>'<%= data[i].productDetails[0]._id %>'<% if (i < data.length - 1) { %>,<% } %><% } %>], false)">Place
                                                                             Order</button>
@@ -278,6 +281,13 @@
 
                                                             </div>
                                                         </div>
+                                                        <div class="input-group mb-3 col-2" style="border: 1px solid #ced4da; border-radius: 5px; width: 300px; margin-left: 200px; margin-top: 60px;">
+                                                            <input type="text" class="form-control" id="inputCoupon" placeholder="Paste Coupon Name" >
+                                                            <div class="input-group-append">
+                                                                <button class="btn btn-primary" id="applyButton" type="button" onclick="applyCoupon('<%=totalAmount%>')">Apply</button>
+                                                            </div>
+                                                        </div>
+                                                        
                     </div>
 
 
@@ -486,7 +496,7 @@
                             reverseButtons: true
                         }).then(function (result) {
                             if (result.value) {
-                                location.href = '/orderDetails';
+                                location.href = '/profile';
                                 // result.dismiss can be "cancel", "overlay",
                                 // "close", and "timer"
                             } else if (result.dismiss === "cancel") {
@@ -531,6 +541,82 @@
                 confirmButtonText: 'OK'
             });
         }
+
+
+
+        function applyCoupon(total){
+        const coupon = document.getElementById('inputCoupon').value
+        $.ajax({
+            url:'/applyCoupon',
+            method:'post',
+            data:{
+                coupon,
+                total,
+            },
+            success:(response)=>{
+                if(response.used == true){
+                    Swal.fire("Already used");
+                }else if(response.noCoupon == true){
+                    Swal.fire("No coupon found");
+                }else{
+                    
+                    document.getElementById('inputCoupon').readOnly = true;
+                    document.getElementById('applyButton').disabled  =true;
+                    const gt = parseInt(document.getElementById('totalValue').innerHTML);
+                    // alert(gt)
+                    const discount = parseInt(document.getElementById('discount').innerHTML);
+                    // alert(discount)
+                    document.getElementById('totalValue').innerHTML = gt-parseInt(response.offerPrice);
+                    document.getElementById('discount').innerHTML = discount+parseInt(response.offerPrice);
+                }
+            }
+        })
+    }
+
+
+    var usedCoupon = null;
+
+    function useCoupon(couponName) {
+        // Disable all other coupons
+        disableOtherCoupons(couponName);
+
+        // Show details for the used coupon
+        showCouponDetails(couponName);
+
+        // Show cancel button and hide use button for the used coupon
+        document.getElementById('useButton_' + couponName).style.display = 'none';
+        document.getElementById('cancelButton_' + couponName).style.display = 'block';
+
+        usedCoupon = couponName;
+    }
+
+    function cancelCoupon(couponName) {
+        // Enable all other coupons
+        enableAllCoupons();
+
+        // Hide cancel button and show use button for the canceled coupon
+        document.getElementById('useButton_' + couponName).style.display = 'block';
+        document.getElementById('cancelButton_' + couponName).style.display = 'none';
+
+        usedCoupon = null;
+    }
+
+    function disableOtherCoupons(excludeCoupon) {
+        var couponButtons = document.querySelectorAll('.use-button');
+        couponButtons.forEach(function (button) {
+            var couponName = button.id.replace('useButton_', '');
+            if (couponName !== excludeCoupon) {
+                button.disabled = true;
+            }
+        });
+    }
+
+    function enableAllCoupons() {
+        var couponButtons = document.querySelectorAll('.use-button');
+        couponButtons.forEach(function (button) {
+            button.disabled = false;
+        });
+    }
 
     </script>
 

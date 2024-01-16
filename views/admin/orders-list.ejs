@@ -63,7 +63,7 @@
                             <td><%= orders[i]._id %></td>
                             <td><b><%= orders[i].address[0].name %></b></td>
                             <td><%= orders[i].address[0].phone %></td>
-                            <td><%= orders[i].product[0].price.toLocaleString() %></td>
+                            <td><%= orders[i].totalPrice.toLocaleString() %></td>
                             <td>
                                 <% if (orders[i].status == "Canceled") { %>
                                     <span class="badge rounded-pill alert-danger"><%= orders[i].status %></span>

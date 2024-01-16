@@ -5,6 +5,7 @@ const User = require("../models/userSchema");
 const Brand = require("../models/brandSchema")
 const Product = require("../models/productSchema");
 const Category = require("../models/categorySchema");
+const Coupon = require("../models/couponSchema")
 const { application } = require("express");
 
 
@@ -406,6 +407,38 @@ const categoryWiseFilter = async (req, res)=>{
 }
 
 
+const applyCoupon = async (req, res)=>{
+    try {
+        const userId = req.session.user
+        console.log(req.body);
+        const selectedCoupon = await Coupon.findOne({name : req.body.coupon})
+        // console.log(selectedCoupon);
+        if(!selectedCoupon){
+            console.log("no coupon");
+            res.json({noCoupon : true})
+        }else if(selectedCoupon.userId.includes(userId)){
+            console.log("already used");
+            res.json({used : true})
+        }else{
+            console.log("coupon exists");
+            await Coupon.updateOne(
+                { name: req.body.coupon },
+                {
+                    $addToSet: {
+                        userId: userId
+                    }
+                }
+            );
+            const gt = parseInt(req.body.total)-parseInt(selectedCoupon.offerPrice);
+            console.log(gt,"----");
+            res.json({gt : gt, offerPrice : parseInt(selectedCoupon.offerPrice)})
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
 
 
 module.exports = {
@@ -422,5 +455,6 @@ module.exports = {
     getShopPage,
     pageNotFound,
     searchProducts,
-    categoryWiseFilter
+    categoryWiseFilter,
+    applyCoupon
 }

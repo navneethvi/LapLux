@@ -31,9 +31,8 @@ module.exports = {
             };
         
 
-            // console.log(order, "=========================");
+            // console.log(order);
 
-          
             const products = order.items.map((product) => ({
                 description : product.name,
                 quantity: parseInt(product.quantity),
@@ -50,14 +49,14 @@ module.exports = {
             const formattedDate = isoDate.toLocaleDateString("en-US", options);
             const data = {
                 customize: {
-                    //  "template": fs.readFileSync('template.html', 'base64') // Must be base64 encoded html
+                    
                 },
                 images: {
                     
-                    // The invoice background
+                  
                     background: "https://public.easyinvoice.cloud/img/watermark-draft.jpg",
                 },
-                // Your own data
+               
                 sender: {
                     company: "LapLux eCommerce",
                     address: "Kundannoor PO,Ernakulam",
@@ -71,9 +70,9 @@ module.exports = {
                     zip: order.pincode,
                 },
                 information: {
-                    // Invoice number
+                 
                     number: order.id,
-                    // ordered date
+                    
                     date: formattedDate,
                 },
                 products: products,
@@ -81,15 +80,11 @@ module.exports = {
                 "bottom-notice": "Happy shopping and visit LapLux again",
             };
             const pdfResult = await easyinvoice.createInvoice(data);
-            // console.log("PDF Result:", pdfResult);
-            // console.log("imhere");
+            
+            
             const pdfBuffer = Buffer.from(pdfResult.pdf, "base64");
-
-            // Set HTTP headers for the PDF response
             res.setHeader("Content-Disposition", 'attachment; filename="invoice.pdf"');
             res.setHeader("Content-Type", "application/pdf");
-
-            // Create a readable stream from the PDF buffer and pipe it to the response
             const pdfStream = new Readable();
             pdfStream.push(pdfBuffer);
             pdfStream.push(null);
