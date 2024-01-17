@@ -19,15 +19,16 @@
             <!-- Add Verify Email button -->
             <button type="submit" class="btn btn-primary">Verify Email</button>
 
-            <!-- Add Resend OTP option -->
-            <!-- <div class="text-muted text-center pt-25">
-                <a href="/resend-otp">Resend OTP</a>
-            </div> -->
-            <% if (locals.message&&message.length>0) { %>
-                <div class="alert alert-danger">
+            <div class="text-muted text-center pt-25">
+                <p id="timer">Time left: <span id="countdown">60</span> seconds</p>
+                <a id="resendLink" onclick="resendOtp()" style="display:none;">Resend OTP</a>
+            </div>
+
+            <% if (locals.message && message.length > 0) { %>
+                <div class="alert alert-danger" id="errorMessage">
                     <%= message %>
                 </div>
-                <% } %>
+            <% } %>
         </form>
 
         <div class="text-muted text-center pt-25">
@@ -35,5 +36,73 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    function resendOtp(){
+        
+        fetch("/resendOtp",{
+            method : "POST"
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+               
+                console.log('Resend OTP successful');
+                toggleVisibility(true);
+                startCountdown();
+                
+            } else {
+                
+                console.error('Resend OTP failed:', data.message);
+            }
+        })
+
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    window.onload = function() {
+    var remainingTime = parseInt(document.getElementById('countdown').innerText, 10);
+
+    if (!isNaN(remainingTime) && remainingTime > 0) {
+        startCountdown(remainingTime);
+    }
+};
+    function startCountdown() {
+        var seconds = 60;
+        var countdownElement = document.getElementById('countdown');
+        var resendLink = document.getElementById('resendLink');
+
+        var countdownInterval = setInterval(function () {
+            seconds--;
+            countdownElement.innerText = seconds;
+
+            if (seconds <= 0) {
+                clearInterval(countdownInterval);
+                toggleVisibility(false); // Hide the timer and show the Resend OTP link
+            }
+        }, 1000);
+    }
+
+    function toggleVisibility(showTimer) {
+        var countdownElement = document.getElementById('countdown');
+        var resendLink = document.getElementById('resendLink');
+
+        if (showTimer) {
+            countdownElement.style.display = 'inline'; // Show the timer
+            resendLink.style.display = 'none'; // Hide the Resend OTP link
+        } else {
+            countdownElement.style.display = 'none'; // Hide the timer
+            resendLink.style.display = 'inline'; // Show the Resend OTP link
+        }
+    }
+
+    setTimeout(()=>{
+        document.getElementById("errorMessage").style.display = "none"
+    },3000)
+
+</script>
 
 <%- include("../partials/footer") %>

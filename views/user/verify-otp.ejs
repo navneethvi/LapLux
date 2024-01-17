@@ -25,11 +25,12 @@
                 <a id="resendLink" onclick="resendOtp()" style="display:none;">Resend OTP</a>
             </div>
             
-            <% if (locals.message&&message.length>0) { %>
-                <div class="alert alert-danger">
+            <% if (locals.message && message.length > 0) { %>
+                <div class="alert alert-danger" id="errorMessage">
                     <%= message %>
                 </div>
-                <% } %>
+            <% } %>
+            
         </form>
 
         <div class="text-muted text-center pt-25">
@@ -95,6 +96,10 @@
             resendLink.style.display = 'inline'; // Show the Resend OTP link
         }
     }
+
+    setTimeout(()=>{
+        document.getElementById("errorMessage").style.display = "none"
+    },3000)
 
 </script>
 

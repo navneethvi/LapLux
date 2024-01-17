@@ -447,7 +447,7 @@
                             rzp1.open();
                         } else if (response.method === "wallet") {
 
-                            if (response.success) {
+                            if (response.success===true) {
                                 Swal.fire({
                                     title: "Order success",
                                     text: "Order placed successfully",
