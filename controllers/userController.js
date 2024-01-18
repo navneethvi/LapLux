@@ -215,10 +215,11 @@ const verifyOtp = async (req, res) => {
             req.session.user = saveUserData._id
 
 
-            res.redirect("/")
+            res.json({status : true})
         } else {
-            res.render("verify-otp", { message: "Otp not matching" })
+            
             console.log("otp not matching");
+            res.json({status : false})
         }
 
     } catch (error) {

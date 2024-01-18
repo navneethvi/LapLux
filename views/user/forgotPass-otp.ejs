@@ -1,108 +1,152 @@
 <!-- verify-email.ejs or verify-email.pug -->
 <%- include("../partials/header") %>
 
-<div class="container col-4 login_wrap widget-taber-content p-30 background-white border-radius-5 mt-30">
-    <div class="padding_eight_all bg-white">
-        <div class="heading_s1">
-            <h3 class="mb-30">Email Verification</h3>
-        </div>
+    <style>
+        #errorMessage {
+            display: none;
+        }
+    </style>
 
-        <!-- Add your email verification modal content here -->
+    <div class="container col-4 login_wrap widget-taber-content p-30 background-white border-radius-5 mt-30">
+        <div class="padding_eight_all bg-white">
+            <div class="heading_s1">
+                <h3 class="mb-30">Email Verification</h3>
+            </div>
 
-        <!-- Add OTP input field -->
-        <form action="/verifyPassOtp" method="post">
+            <!-- Add your email verification modal content here -->
+
+            <!-- Add OTP input field -->
+
             <div class="form-group">
                 <label for="otp">Enter OTP:</label>
                 <input type="text" id="otp" name="otp" class="form-control" required>
             </div>
 
             <!-- Add Verify Email button -->
-            <button type="submit" class="btn btn-primary">Verify Email</button>
+            <button onclick="handleOtp()" class="btn btn-primary">Verify Email</button>
 
             <div class="text-muted text-center pt-25">
                 <p id="timer">Time left: <span id="countdown">60</span> seconds</p>
                 <a id="resendLink" onclick="resendOtp()" style="display:none;">Resend OTP</a>
             </div>
 
-            <% if (locals.message && message.length > 0) { %>
-                <div class="alert alert-danger" id="errorMessage">
-                    <%= message %>
-                </div>
-            <% } %>
-        </form>
 
-        <div class="text-muted text-center pt-25">
-            Already verified? <a href="/login">Login now</a>
+
+            <div class="alert alert-danger" id="errorMessage"></div>
+
+
+            <div class="text-muted text-center pt-25">
+                Already verified? <a href="/login">Login now</a>
+            </div>
         </div>
     </div>
-</div>
 
 
-<script>
-    function resendOtp(){
-        
-        fetch("/resendOtp",{
-            method : "POST"
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-               
-                console.log('Resend OTP successful');
-                toggleVisibility(true);
-                startCountdown();
-                
-            } else {
-                
-                console.error('Resend OTP failed:', data.message);
-            }
-        })
+    <script>
+        function resendOtp() {
 
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
+            fetch("/resendOtp", {
+                method: "POST"
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
 
-    window.onload = function() {
-    var remainingTime = parseInt(document.getElementById('countdown').innerText, 10);
+                        console.log('Resend OTP successful');
+                        toggleVisibility(true);
+                        startCountdown();
 
-    if (!isNaN(remainingTime) && remainingTime > 0) {
-        startCountdown(remainingTime);
-    }
-};
-    function startCountdown() {
-        var seconds = 60;
-        var countdownElement = document.getElementById('countdown');
-        var resendLink = document.getElementById('resendLink');
+                    } else {
 
-        var countdownInterval = setInterval(function () {
-            seconds--;
-            countdownElement.innerText = seconds;
+                        console.error('Resend OTP failed:', data.message);
+                    }
+                })
 
-            if (seconds <= 0) {
-                clearInterval(countdownInterval);
-                toggleVisibility(false); // Hide the timer and show the Resend OTP link
-            }
-        }, 1000);
-    }
-
-    function toggleVisibility(showTimer) {
-        var countdownElement = document.getElementById('countdown');
-        var resendLink = document.getElementById('resendLink');
-
-        if (showTimer) {
-            countdownElement.style.display = 'inline'; // Show the timer
-            resendLink.style.display = 'none'; // Hide the Resend OTP link
-        } else {
-            countdownElement.style.display = 'none'; // Hide the timer
-            resendLink.style.display = 'inline'; // Show the Resend OTP link
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         }
-    }
 
-    setTimeout(()=>{
-        document.getElementById("errorMessage").style.display = "none"
-    },3000)
+        window.onload = function () {
+            var remainingTime = parseInt(document.getElementById('countdown').innerText, 10);
 
-</script>
+            if (!isNaN(remainingTime) && remainingTime > 0) {
+                startCountdown(remainingTime);
+            }
+        };
+        function startCountdown() {
+            var seconds = 60;
+            var countdownElement = document.getElementById('countdown');
+            var resendLink = document.getElementById('resendLink');
 
-<%- include("../partials/footer") %>
+            var countdownInterval = setInterval(function () {
+                seconds--;
+                countdownElement.innerText = seconds;
+
+                if (seconds <= 0) {
+                    clearInterval(countdownInterval);
+                    toggleVisibility(false); // Hide the timer and show the Resend OTP link
+                }
+            }, 1000);
+        }
+
+        function toggleVisibility(showTimer) {
+            var countdownElement = document.getElementById('countdown');
+            var resendLink = document.getElementById('resendLink');
+
+            if (showTimer) {
+                countdownElement.style.display = 'inline'; // Show the timer
+                resendLink.style.display = 'none'; // Hide the Resend OTP link
+            } else {
+                countdownElement.style.display = 'none'; // Hide the timer
+                resendLink.style.display = 'inline'; // Show the Resend OTP link
+            }
+        }
+
+   
+
+    </script>
+
+    <script>
+
+        const errorMessageElement = document.getElementById('errorMessage');
+
+
+        function handleOtp() {
+
+            const otp = document.getElementById('otp').value
+
+
+
+            $.ajax({
+                method: "POST",
+                url: "/verifyPassOtp",
+                data: {
+                    otp
+                },
+                success: (response) => {
+                    if (response.status == false) {
+
+                        errorMessageElement.innerHTML = 'Entered OTP is incorrect';
+                        errorMessageElement.style.display = 'block';
+
+                        setTimeout(() => {
+                            errorMessageElement.style.display = 'none';
+                        }, 3000);
+
+
+                        setTimeout(() => {
+                            document.getElementById('errorMessage').innerHTML = '';
+                        }, 3000);
+
+                    } else {
+                        location.href = "/resetPassword"
+                        errorMessageElement.style.display = 'none';
+                    }
+                }
+
+            })
+        }
+    </script>
+
+    <%- include("../partials/footer") %>
