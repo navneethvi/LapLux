@@ -159,7 +159,7 @@
                     <ul class="categories">
                         
                         <% for (let i = 0; i < category.length; i++) { %>
-                            <li><a href="/filterCategory?id=<%= category[i]._id %>"><%= category[i].name %></a></li>
+                            <li><a href="/filter?category=<%= category[i]._id %>"><%= category[i].name %></a></li>
                         <% } %> 
 
 
@@ -171,7 +171,7 @@
                     <ul class="categories">
                       
                         <% for (let i = 0; i < brand.length; i++) { %>
-                            <li><a href="shop-grid-right.html"><%= brand[i].brandName %></a></li>
+                            <li><a href="/filter?brand=<%= brand[i]._id %>"><%= brand[i].brandName %></a></li>
                         <% } %>
                         
                     </ul>

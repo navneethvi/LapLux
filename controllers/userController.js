@@ -375,37 +375,54 @@ const searchProducts = async (req, res)=>{
 
 
 
-const categoryWiseFilter = async (req, res)=>{
+const filterProduct = async (req, res) => {
     try {
-        const user = req.session.user
-        const id = req.query.id
-        const brands = await Brand.find({})
-        const findCategory = await Category.findOne({_id : id})
-        const findProducts = await Product.find({category : findCategory.name, isBlocked : false})
-        const categories = await Category.find({isListed : true})
+        const user = req.session.user;
+        const category = req.query.category;
+        const brand = req.query.brand;
+        const brands = await Brand.find({});
+        const findCategory = category ? await Category.findOne({ _id: category }) : null;
+        const findBrand = brand ? await Brand.findOne({ _id: brand }) : null;
 
-        let itemsPerPage = 6
-        let currentPage = parseInt(req.query.page) || 1
-        let startIndex = (currentPage - 1) * itemsPerPage
-        let endIndex = startIndex + itemsPerPage
-        let totalPages = Math.ceil(findProducts.length/6)
-        const currentProduct = findProducts.slice(startIndex, endIndex)
+        const query = {
+            isBlocked: false,
+        };
 
-        res.render("shop",
-        {
+        if (findCategory) {
+            query.category = findCategory.name;
+        }
+
+        if (findBrand) {
+            query.brand = findBrand.brandName;
+        }
+
+        const findProducts = await Product.find(query);
+        const categories = await Category.find({ isListed: true });
+
+        let itemsPerPage = 6;
+        let currentPage = parseInt(req.query.page) || 1;
+        let startIndex = (currentPage - 1) * itemsPerPage;
+        let endIndex = startIndex + itemsPerPage;
+        let totalPages = Math.ceil(findProducts.length / 6);
+        const currentProduct = findProducts.slice(startIndex, endIndex);
+
+        res.render("shop", {
             user: user,
             product: currentProduct,
             category: categories,
             brand: brands,
             totalPages,
-            currentPage
-        })
-
+            currentPage,
+            selectedCategory: category || null,
+            selectedBrand: brand || null,
+        });
 
     } catch (error) {
         console.log(error.message);
+        res.status(500).send("Internal Server Error");
     }
-}
+};
+
 
 
 const applyCoupon = async (req, res)=>{
@@ -456,6 +473,6 @@ module.exports = {
     getShopPage,
     pageNotFound,
     searchProducts,
-    categoryWiseFilter,
+    filterProduct,
     applyCoupon
 }
