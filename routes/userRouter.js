@@ -6,6 +6,7 @@ const cartController = require("../controllers/cartController,")
 const userProfileController = require("../controllers/userProfileController")
 const orderController = require("../controllers/orderContoller")
 const walletController = require("../controllers/walletController")
+const wishlistController = require("../controllers/wishlistController")
 
 const { isLogged } = require("../Authentication/auth")
 
@@ -61,6 +62,10 @@ Router.post("/applyCoupon", isLogged, userController.applyCoupon)
 // Wallet
 Router.post("/addMoney", isLogged, walletController.addMoneyToWallet)
 Router.post("/verify-payment", isLogged, walletController.verify_payment)
-// Router.get("/walletHistory", isLogged, walletController.getWalletHistoryPage)
+
+
+// Wishlist
+Router.get("/wishlist", isLogged, wishlistController.getWishlistPage)
+Router.post("/addToWishlist", isLogged, wishlistController.addToWishlist)
 
 module.exports = Router

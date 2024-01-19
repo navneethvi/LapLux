@@ -1,0 +1,261 @@
+<%- include("../partials/adminHeader") %>
+
+
+    <style>
+        .error-message {
+            color: red;
+            margin-top: 5px;
+            font-size: 14px;
+            /* Adjust font size as needed */
+        }
+    </style>
+
+
+
+
+
+    <section class="content-main">
+        <div class="row">
+            <div class="col-9">
+                <div class="content-header">
+                    <h2 class="content-title">Add New Banner</h2>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+
+                        <form method="post" action="/admin/addBanner" enctype="multipart/form-data"
+                            onsubmit="return validateForm()">
+                            <div class="mb-4">
+                                <label for="product_name" class="form-label">Banner Title</label>
+                                <input type="text" placeholder="Type here" name="title"
+                                    class="form-control border" id="product_name">
+                                <div id="productName-error" class="error-message"></div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Description</label>
+                                <textarea placeholder="Type here" name="description" class="form-control border"
+                                    rows="4"></textarea>
+                                <div id="description" class="error-message"></div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="startingDate" class="form-label">Start Date</label>
+                                <input type="date" name="startDate" class="form-control" required id="startingDate" />
+                                <div id="error-start-date" class="error-message"></div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="expiringDate" class="form-label">End Date</label>
+                                <input type="date" name="endDate" class="form-control" id="expiringDate" required />
+                                <div id="error-end-date" class="error-message"></div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label">Link</label>
+                                    <input placeholder="" name="link" type="text" class="form-control border">
+                                    <div id="link-error" class="error-message"></div>
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="card mb-2">
+                                <div class="card-header">
+                                    <h4>Choose Banner Image</h4>
+                                </div>
+                                <div class="border row">
+                                    <div id="addedImagesContainer" class="thumbnails-container"></div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="input-upload">
+                                        <img src="assets/imgs/theme/upload.svg" alt="">
+                                        <input class="form-control border" name="images" id="imageInput" type="file"
+                                            accept="image/*">
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-md rounded font-sm hover-up ml-200" type="button"
+                                    onclick="validateAndSubmit()">Publish</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add an empty container div for displaying image thumbnails -->
+    <style>
+        .thumbnails-container {
+            display: flex;
+            overflow-x: auto;
+        }
+
+        .thumbnail {
+            margin-right: 10px;
+            /* Adjust margin as needed for spacing between thumbnails */
+        }
+    </style>
+
+    <script>
+        // Array to store selected images
+        const selectedImages = [];
+
+        // Function to handle file input change
+        document.getElementById("imageInput").addEventListener("change", handleFileSelect);
+
+        function handleFileSelect(event) {
+            // Target the container for displaying thumbnails
+            const addedImagesContainer = document.getElementById("addedImagesContainer");
+
+            // Clear previous content
+            addedImagesContainer.innerHTML = "";
+
+            const files = event.target.files;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                // Add the file to the selected images array
+                selectedImages.push(file);
+
+                // Create thumbnail element
+                const thumbnail = document.createElement("div");
+                thumbnail.classList.add("thumbnail");
+
+                // Create image element
+                const img = document.createElement("img");
+                img.src = URL.createObjectURL(file);
+                img.alt = "thumbnail";
+
+                // Set a fixed width for the image
+                img.style.width = "50px"; // Adjust the width as needed
+                img.style.height = "auto";
+
+                // Create remove icon
+                const removeIcon = document.createElement("span");
+                removeIcon.classList.add("remove-icon");
+                removeIcon.innerHTML = "&times;"; // Multiplication symbol as a cross
+
+                // Event listener to remove the image on icon click
+                removeIcon.addEventListener("click", function () {
+                    // Remove the file from the selected images array
+                    const index = selectedImages.indexOf(file);
+                    if (index !== -1) {
+                        selectedImages.splice(index, 1);
+                    }
+
+                    // Remove the thumbnail from the container
+                    thumbnail.remove();
+                });
+
+                // Append elements to thumbnail
+                thumbnail.appendChild(img);
+                thumbnail.appendChild(removeIcon);
+
+                // Append thumbnail to the container
+                addedImagesContainer.appendChild(thumbnail);
+            }
+        }
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Your code here
+        });
+
+
+        function validateAndSubmit() {
+
+            if (validateForm()) {
+                // If validation passes, submit the form
+                document.forms[0].submit(); // Assuming this is the first (and only) form on your page
+            }
+        }
+
+        function validateForm() {
+            alert("here")
+
+            resetErrorMessages();
+
+            var isValid = true;
+
+
+            var productName = document.getElementById("product_name").value;
+
+            const sDate = document.getElementsByName('startDate')[0].value;
+            const eDate = document.getElementsByName('endDate')[0].value;
+
+            if (!sDate) {
+                displayErrorMessage("error-start-date", 'Starting date is required');
+                isValid = false;
+            }
+
+            if (!eDate) {
+                displayErrorMessage("error-end-date", 'End date is required');
+                isValid = false;
+            }
+
+            const sDateObj = new Date(sDate);
+            const eDateObj = new Date(eDate);
+            const todayDateObj = new Date();
+            todayDateObj.setHours(0, 0, 0, 0);
+
+           
+
+            if (sDateObj > eDateObj) {
+                document.getElementById('error-end-date').innerHTML = 'End date should be after the start date';
+                isValid = false;
+            }
+
+            if (sDateObj <= todayDateObj) {
+                document.getElementById('error-start-date').innerHTML = 'Starting date should be greater than or equal to today\'s date';
+                isValid = false;
+            }
+
+
+            if (productName === "") {
+                displayErrorMessage("productName-error", "Product Name is required");
+                isValid = false;
+            }
+
+            // Additional checks for other fields
+            var description = document.getElementsByName('description')[0].value;
+            if (description === "") {
+                displayErrorMessage("description-error", "Description is required");
+                isValid = false;
+            }
+
+            var link = document.getElementsByName('link')[0].value;
+            if (link === "") {
+                displayErrorMessage("link-error", "Link is required");
+                isValid = false;
+            }
+
+            // Additional checks can be added for other fields if needed
+
+            return isValid;
+        }
+
+        function displayErrorMessage(elementId, message) {
+            var errorElement = document.getElementById(elementId);
+            errorElement.innerText = message;
+            errorElement.style.display = "block";
+        }
+
+        function resetErrorMessages() {
+            var errorElements = document.querySelectorAll(".error-message");
+            errorElements.forEach(function (element) {
+                element.innerText = "";
+                element.style.display = "none";
+            });
+        }
+
+    </script>
+
+    <%- include("../partials/adminFooter") %>

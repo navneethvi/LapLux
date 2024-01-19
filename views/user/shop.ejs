@@ -98,7 +98,8 @@
                                     </div>
                                     <div class="product-action-1">
   
-                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="javascript:void(0);" onclick="addToWishlist('<%= product[i]._id %>')"><i class="fi-rs-heart"></i></a>
+
                                     </div>
                                     <div class="product-badges product-badges-position product-badges-mrg">
                                         <span class="hot">Hot</span>
@@ -199,7 +200,38 @@
             </div>
         </div>
     </div>
+    
 </section>
+
+
+
+
+
+<script>
+
+function addToWishlist(productId){
+    $.ajax({
+        url : "/addToWishlist",
+        method : "post",
+        data : {
+            productId : productId
+        },
+        success : (response)=>{
+            console.log(response);
+            if(response.status == true){
+                alert("Done")
+            }else{
+                alert("Failed")
+            }
+        }
+    })
+    return false;
+}
+
+
+</script>
+
+
 
 
 <%- include("../partials/footer") %>

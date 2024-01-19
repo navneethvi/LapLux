@@ -34,6 +34,9 @@ const userSchema = Mongoose.Schema({
     cart: {
         type: Array
     },
+    wishlist : {
+        type : Array
+    },
     wallet : {
         type : Number,
         default : 0

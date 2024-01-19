@@ -7,6 +7,7 @@ const categoryController = require("../controllers/categoryController")
 const productController = require("../controllers/productController")
 const brandController = require("../controllers/brandController")
 const orderContoller = require("../controllers/orderContoller")
+const bannerController = require("../controllers/bannerController")
 
 const { isAdmin } = require("../Authentication/auth")
 
@@ -67,5 +68,10 @@ Router.get("/changeStatus", isAdmin, orderContoller.changeOrderStatus)
 Router.get("/coupon", isAdmin, adminController.getCouponPageAdmin)
 Router.post("/createCoupon", isAdmin, adminController.createCoupon)
 
+// Banner Management
+Router.get("/banner", isAdmin, bannerController.bannerManagement)
+Router.get("/addBanner", isAdmin, bannerController.getAddBannerPage)
+Router.post("/addBanner", isAdmin,upload.single("images"), bannerController.postAddBanner)
+Router.get("/editBanner", isAdmin, bannerController.getEditBannerPage)
 
 module.exports = Router
