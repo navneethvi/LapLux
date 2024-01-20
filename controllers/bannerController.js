@@ -43,20 +43,54 @@ const postAddBanner = async (req, res) => {
 }
 
 
-const getEditBannerPage = async (req, res)=>{
+const getEditBannerPage = async (req, res) => {
     try {
         const id = req.query.id
-        const findBanner = await Banner.findOne({_id : id})
-        res.render("editBanner", {data : findBanner})
+        const findBanner = await Banner.findOne({ _id: id })
+        console.log(findBanner);
+        res.render("editBanner", { data: findBanner })
     } catch (error) {
         console.log(error.message);
     }
 }
 
-const postEditBanner = async(req, res)=>{
+const postEditBanner = async (req, res) => {
     try {
-        console.log(req.file);
-        console.log(req.body);
+        const image = req.file.filename
+        const data = req.body
+        const id = req.query.id
+
+        await Banner.updateOne(
+            { _id: id },
+            {
+                $set: {
+                    image: image,
+                    title: data.title,
+                    description: data.description,
+                    link: data.link,
+                    startDate: new Date(data.startDate + 'T00:00:00'),
+                    endDate: new Date(data.endDate + 'T00:00:00'),
+                }
+            }
+
+        )
+        .then((data)=>console.log(data))
+        
+        res.redirect("/admin/banner")
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const deleteBanner = async (req, res)=>{
+    try {
+        const id = req.query.id
+        await Banner.deleteOne(
+            {_id : id}
+        )
+        .then((data)=>console.log(data))
+        res.redirect("/admin/banner")
     } catch (error) {
         console.log(error.message);
     }
@@ -68,5 +102,6 @@ module.exports = {
     bannerManagement,
     postAddBanner,
     getEditBannerPage,
-    postEditBanner
+    postEditBanner,
+    deleteBanner
 }

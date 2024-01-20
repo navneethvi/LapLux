@@ -72,6 +72,8 @@ Router.post("/createCoupon", isAdmin, adminController.createCoupon)
 Router.get("/banner", isAdmin, bannerController.bannerManagement)
 Router.get("/addBanner", isAdmin, bannerController.getAddBannerPage)
 Router.post("/addBanner", isAdmin,upload.single("images"), bannerController.postAddBanner)
-Router.get("/editBanner", isAdmin,upload.single("images"), bannerController.getEditBannerPage)
+Router.get("/editBanner", isAdmin, bannerController.getEditBannerPage)
+Router.post("/editBanner", isAdmin,upload.single("images"), bannerController.postEditBanner)
+Router.get("/deleteBanner", isAdmin, bannerController.deleteBanner)
 
 module.exports = Router
