@@ -1,6 +1,10 @@
 <%- include("../partials/adminHeader") %>
 
 
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.css">
+</head>
+
     <style>
         .error-message {
             color: red;
@@ -8,6 +12,94 @@
             font-size: 14px;
             /* Adjust font size as needed */
         }
+        .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid transparent;
+    border-radius: .25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 6px 0 rgb(218 218 253 / 65%), 0 2px 6px 0 rgb(206 206 238 / 54%);
+}
+.me-2 {
+    margin-right: .5rem!important;
+}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+	--blue: #0071FF;
+	--light-blue: #B6DBF6;
+	--dark-blue: #005DD1;
+	--grey: #f2f2f2;
+}
+
+body {
+	background: var(--light-blue);
+}
+.img-area .icon {
+	font-size: 100px;
+}
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Poppins', sans-serif;
+}
+
+
+/*
+.img-area h3 {
+	font-size: 20px;
+	font-weight: 500;
+	margin-bottom: 6px;
+}
+.img-area {
+	position: relative;
+	width: 100%;
+	height: 240px;
+	background: var(--grey);
+	margin-bottom: 30px;
+	border-radius: 15px;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+.img-area p {
+	color: #999;
+}
+.img-area p span {
+	font-weight: 600;
+}
+.img-area img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	z-index: 100;
+}
+ */
+ .select-image {
+	display: block;
+	width: 100%;
+	padding: 16px 0;
+	border-radius: 15px;
+	background: var(--blue);
+	color: #fff;
+	font-weight: 500;
+	font-size: 16px;
+	border: none;
+	cursor: pointer;
+	transition: all .3s ease;
+}
     </style>
 
 
@@ -29,8 +121,8 @@
                             onsubmit="return validateForm()">
                             <div class="mb-4">
                                 <label for="product_name" class="form-label">Banner Title</label>
-                                <input type="text" placeholder="Type here" name="title"
-                                    class="form-control border" id="product_name">
+                                <input type="text" placeholder="Type here" name="title" class="form-control border"
+                                    id="product_name">
                                 <div id="productName-error" class="error-message"></div>
                             </div>
 
@@ -72,13 +164,28 @@
                                     <div id="addedImagesContainer" class="thumbnails-container"></div>
                                 </div>
                                 <div class="card-body">
-                                    <div class="input-upload">
-                                        <img src="assets/imgs/theme/upload.svg" alt="">
-                                        <input class="form-control border" name="images" id="imageInput" type="file"
-                                            accept="image/*">
+                                    
+                                      
+                                        <img src="assets/imgs/theme/upload.svg" alt="" id="imgView1">
+                                        <input class="form-control" type="file" name="images" id="input1"
+                                            accept="image/png, image/jpeg, image/jpg"
+                                            onchange="viewImage1(event),viewImage(event, 1)">
+                                    </div>
+                                    <div class="image-cropper" style="display:none; width: 300px; height: 200px;">
+                                        <img src="" id="croppedImg1" alt="">
+                                        <button type="button" id="saveButton1" class="btn-sm btn-primary">Save</button>
                                     </div>
                                 </div>
                             </div>
+
+
+
+
+
+                           
+
+
+
                             <div>
                                 <button class="btn btn-md rounded font-sm hover-up ml-200" type="button"
                                     onclick="validateAndSubmit()">Publish</button>
@@ -104,8 +211,7 @@
     </style>
 
 
-
-
+<script src="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.js"></script>
 
     <script>
 
@@ -187,7 +293,6 @@
         }
 
         function validateForm() {
-            alert("here")
 
             resetErrorMessages();
 
@@ -214,17 +319,13 @@
             const todayDateObj = new Date();
             todayDateObj.setHours(0, 0, 0, 0);
 
-           
+
 
             if (sDateObj > eDateObj) {
                 document.getElementById('error-end-date').innerHTML = 'End date should be after the start date';
                 isValid = false;
             }
 
-            if (sDateObj <= todayDateObj) {
-                document.getElementById('error-start-date').innerHTML = 'Starting date should be greater than or equal to today\'s date';
-                isValid = false;
-            }
 
 
             if (productName === "") {
@@ -263,6 +364,69 @@
                 element.style.display = "none";
             });
         }
+
+
+
+
+
+
+
+        function viewImage1(event) {
+            document.getElementById('imgView1').src = URL.createObjectURL(event.target.files[0])
+        }
+
+        function viewImage(event, index) {
+            let input = event.target;
+            let reader = new FileReader();
+
+            reader.onload = function () {
+                let dataURL = reader.result;
+                let image = document.getElementById('imgView' + index);
+                image.src = dataURL;
+
+                // Initialize Cropper.js on the image
+                let cropper = new Cropper(image, {
+                    aspectRatio:2560 / 777, // Initial aspect ratio
+                    viewMode: 1,
+                    guides: true,
+                    background: false,
+                    autoCropArea: 1,
+                    zoomable: true
+                });
+
+
+                // Show the image cropper container
+                let cropperContainer = document.querySelector('#croppedImg' + index).parentNode;
+                cropperContainer.style.display = 'block';
+
+                // Update the cropped image when the "Save" button is clicked
+                let saveButton = document.querySelector('#saveButton' + index);
+                saveButton.addEventListener('click', async function () {
+                    let croppedCanvas = cropper.getCroppedCanvas({
+                        width: 487,
+                        height: 203
+                    });
+                    let croppedImage = document.getElementById("croppedImg" + index);
+                    croppedImage.src = croppedCanvas.toDataURL('image/jpeg', 1.0);
+
+                    // Generate a unique name for the cropped image file based on the current timestamp
+                    let timestamp = new Date().getTime();
+                    let fileName = `cropped-img-${timestamp}-${index}.png`;
+
+                    await croppedCanvas.toBlob(blob => {
+                        let input = document.getElementById('input' + index)
+                        let imgFile = new File([blob], fileName, blob)
+                        const fileList = new DataTransfer();
+                        fileList.items.add(imgFile);
+                        input.files = fileList.files
+                    });
+                    // cropperContainer.style.display = 'none';
+                });
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
+
 
     </script>
 

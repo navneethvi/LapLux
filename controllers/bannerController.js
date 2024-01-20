@@ -23,7 +23,7 @@ const postAddBanner = async (req, res) => {
     try {
         const data = req.body
         const image = req.file
-
+        
         const newBanner = new Banner({
             image: image.filename,
             title: data.title,
@@ -56,25 +56,49 @@ const getEditBannerPage = async (req, res) => {
 
 const postEditBanner = async (req, res) => {
     try {
-        const image = req.file.filename
+        // const image = req.file.filename
         const data = req.body
         const id = req.query.id
 
-        await Banner.updateOne(
-            { _id: id },
-            {
-                $set: {
-                    image: image,
-                    title: data.title,
-                    description: data.description,
-                    link: data.link,
-                    startDate: new Date(data.startDate + 'T00:00:00'),
-                    endDate: new Date(data.endDate + 'T00:00:00'),
-                }
-            }
+        if (req.file) {
+            
+                image = req.file.filename
 
-        )
-        .then((data)=>console.log(data))
+                await Banner.updateOne(
+                    { _id: id },
+                    {
+                        $set: {
+                            image: image,
+                            title: data.title,
+                            description: data.description,
+                            link: data.link,
+                            startDate: new Date(data.startDate + 'T00:00:00'),
+                            endDate: new Date(data.endDate + 'T00:00:00'),
+                        }
+                    }
+        
+                )
+                .then((data)=>console.log(data))
+           
+        }else{
+            await Banner.updateOne(
+                { _id: id },
+                {
+                    $set: {
+                     
+                        title: data.title,
+                        description: data.description,
+                        link: data.link,
+                        startDate: new Date(data.startDate + 'T00:00:00'),
+                        endDate: new Date(data.endDate + 'T00:00:00'),
+                    }
+                }
+    
+            )
+            .then((data)=>console.log(data))
+        }
+
+        
         
         res.redirect("/admin/banner")
 

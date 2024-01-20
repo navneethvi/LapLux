@@ -52,13 +52,20 @@
                             <td>
                                 <%= data[i].description %>
                             </td>
+
+
+
+
                             <td>
-                                <% if (data.startDate < Date.now() || data.endDate > Date.now()) { %>
-                                    <p>Active</p>
-                                    <% } else { %>
-                                       <p>No Active</p>
-                                        <% } %>
+                                <% if (data[i].startDate < Date.now() &&  data[i].endDate > Date.now()) { %>
+                                    <p class="badge rounded-pill alert-success">Active</p>
+                                <% } else { %>
+                                    <p class="badge rounded-pill alert-danger">No Active</p>
+                                <% } %>
                             </td>
+                            
+                            
+                            
 
                             <td>
                                 <a href="/admin/editBanner?id=<%= data[i]._id %>">
