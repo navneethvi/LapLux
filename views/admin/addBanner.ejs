@@ -394,10 +394,7 @@ body {
                 // Update the cropped image when the "Save" button is clicked
                 let saveButton = document.querySelector('#saveButton' + index);
                 saveButton.addEventListener('click', async function () {
-                    let croppedCanvas = cropper.getCroppedCanvas({
-                        width: 487,
-                        height: 203
-                    });
+                    let croppedCanvas = cropper.getCroppedCanvas();
                     let croppedImage = document.getElementById("croppedImg" + index);
                     croppedImage.src = croppedCanvas.toDataURL('image/jpeg', 1.0);
 

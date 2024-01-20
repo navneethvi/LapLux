@@ -5,6 +5,7 @@ const User = require("../models/userSchema");
 const Brand = require("../models/brandSchema")
 const Product = require("../models/productSchema");
 const Category = require("../models/categorySchema");
+const Banner = require("../models/bannerSchema")
 const Coupon = require("../models/couponSchema")
 const { application } = require("express");
 
@@ -33,15 +34,21 @@ const securePassword = async (password) => {
 
 const getHomePage = async (req, res) => {
     try {
+        const today = new Date().toISOString();
         const user = req.session.user
+        const findBanner = await Banner.find({
+            startDate: { $lt: new Date(today) },
+            endDate: { $gt: new Date(today) }
+        });
+        console.log(findBanner);
         const userData = await User.findOne({})
         const brandData = await Brand.find({ isBlocked: false })
         const productData = await Product.find({ isBlocked: false }).sort({ id: -1 }).limit(4)
 
         if (user) {
-            res.render("home", { user: userData, data: brandData, products: productData })
+            res.render("home", { user: userData, data: brandData, products: productData, banner : findBanner })
         } else {
-            res.render("home", { data: brandData, products: productData })
+            res.render("home", { data: brandData, products: productData, banner : findBanner })
         }
     } catch (error) {
         console.log(error.message)
