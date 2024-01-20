@@ -1,6 +1,11 @@
 <%- include("../partials/adminHeader") %>
 
 
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.css">
+</head>
+
+
     <style>
         .error-message {
             color: red;
@@ -84,7 +89,9 @@
                                                             onclick="deleteImage('<%= data._id %>', '<%= data.image %>')">❌</span>
                                                     <% } %>
                                                 </div>
+                                               
                                             </div>
+                                            
                                         </div>
                                     <% } %>
                                 </div>
@@ -93,18 +100,18 @@
 
 
 
-
-                                <div class="border row">
-                                    <div id="addedImagesContainer" class="thumbnails-container"></div>
-                                </div>
                                 <div class="card-body">
-                                    <div class="input-upload">
-                                        <img src="assets/imgs/theme/upload.svg" alt="">
-                                        <input class="form-control border" name="images" id="imageInput" type="file"
-                                            accept="image/*">
-                                    </div>
+                                    
+                                      
+                                    <img src="assets/imgs/theme/upload.svg" alt="" id="imgView1">
+                                    <input class="form-control" type="file" name="images" id="input1"
+                                        accept="image/png, image/jpeg, image/jpg"
+                                        onchange="viewImage1(event),viewImage(event, 1)">
                                 </div>
-                            </div>
+                                <div class="image-cropper" style="display:none; width: 300px; height: 200px;">
+                                    <img src="" id="croppedImg1" alt="">
+                                    <button type="button" id="saveButton1" class="btn-sm btn-primary">Save</button>
+                                </div>
                             <div>
                                 <button class="btn btn-md rounded font-sm hover-up ml-200" type="button"
                                     onclick="validateAndSubmit()">Publish</button>
@@ -128,6 +135,11 @@
             /* Adjust margin as needed for spacing between thumbnails */
         }
     </style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.js"></script>
+
+
 
     <script>
         // Array to store selected images
@@ -321,6 +333,61 @@ function removeImage(filename) {
     }
 }
 
+
+function viewImage1(event) {
+            document.getElementById('imgView1').src = URL.createObjectURL(event.target.files[0])
+        }
+
+        function viewImage(event, index) {
+            let input = event.target;
+            let reader = new FileReader();
+
+            reader.onload = function () {
+                let dataURL = reader.result;
+                let image = document.getElementById('imgView' + index);
+                image.src = dataURL;
+
+                // Initialize Cropper.js on the image
+                let cropper = new Cropper(image, {
+                    aspectRatio:2560 / 777, // Initial aspect ratio
+                    viewMode: 1,
+                    guides: true,
+                    background: false,
+                    autoCropArea: 1,
+                    zoomable: true
+                });
+
+
+                // Show the image cropper container
+                let cropperContainer = document.querySelector('#croppedImg' + index).parentNode;
+                cropperContainer.style.display = 'block';
+
+                // Update the cropped image when the "Save" button is clicked
+                let saveButton = document.querySelector('#saveButton' + index);
+                saveButton.addEventListener('click', async function () {
+                    let croppedCanvas = cropper.getCroppedCanvas({
+                        width: 487,
+                        height: 203
+                    });
+                    let croppedImage = document.getElementById("croppedImg" + index);
+                    croppedImage.src = croppedCanvas.toDataURL('image/jpeg', 1.0);
+
+                    // Generate a unique name for the cropped image file based on the current timestamp
+                    let timestamp = new Date().getTime();
+                    let fileName = `cropped-img-${timestamp}-${index}.png`;
+
+                    await croppedCanvas.toBlob(blob => {
+                        let input = document.getElementById('input' + index)
+                        let imgFile = new File([blob], fileName, blob)
+                        const fileList = new DataTransfer();
+                        fileList.items.add(imgFile);
+                        input.files = fileList.files
+                    });
+                    // cropperContainer.style.display = 'none';
+                });
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
 
 
     </script>
