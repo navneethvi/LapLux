@@ -1,4 +1,101 @@
-<%- include("../partials/shopHeader") %>
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:04:24 GMT -->
+<head>
+    <meta charset="utf-8">
+    <title>LapLux eCommerce</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/user-assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="/user-assets/css/maind134.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" >
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> <!-- Add jQuery library -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+
+
+</head>
+
+<body>
+
+     
+    
+      
+            <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+                <div class="container">
+                    <div class="header-wrap">
+                        <div class="logo logo-width-1">
+                            <a href="/"><img src="/user-assets/imgs/theme/Logo.png" alt="logo"></a>
+                        </div>
+                        <div class="header-right ">
+                            <div class="search-style-2 pl-80">
+                                <form action="/search">
+                                    <input type="text" id="filterItem" name="search" class="form-control" placeholder="Search for items...">
+                                </form>
+                            </div>
+                            <div class="header-action-right">
+                                <div class="header-action-2">
+                                    <div class="header-action-icon-2">
+                                        <a href="/wishlist">
+                                            <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/icon-heart.svg">
+                                            <!-- <span class="pro-count blue">4</span> -->
+                                        </a>
+                                    </div>
+                                    <div class="header-action-icon-2">
+                                        <a class="mini-cart-icon" href="/cart">
+                                            <img alt="Evara" src="/user-assets/imgs/theme/icons/icon-cart.svg">
+                                            <!-- <span class="pro-count blue">2</span> -->
+                                        </a>
+                                        <% if (locals.user) { %>
+                                            <!-- Displayed when the user is logged in -->
+                                            <li class="dropdown nav-item">
+                                              <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false">
+                                                <!-- Uncomment the following line if you want to use an icon -->
+                                                <!-- <i class="fas fa-/user-circle"></i> -->
+                                                <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/user-profile.svg" style="height: 25px; width: 25px; margin-top: 2px;">
+                                              </a>
+                                              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                                <a class="dropdown-item" href="/profile"><i class="material-icons md-perm_identity"></i> Profile</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i> Logout</a>
+                                              </div>
+                                            </li>
+                                          <% } else { %>
+                                            <!-- Displayed when the user is not logged in -->
+                                            <div class="single-mobile-header-info ml-25 pr-5">
+                                              <a href="/login">Sign Up</a>
+                                            </div>
+                                          <% } %>
+                                          
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+ 
+      
+
+
+
+
+
+
+
 
 
 <style>
@@ -217,21 +314,151 @@ function addToWishlist(productId){
             productId : productId
         },
         success : (response)=>{
-            console.log(response);
             if(response.status == true){
-                alert("Done")
-            }else{
-                alert("Failed")
+                Swal.fire({
+                                title: 'Added to Wishlist!',
+                                text: 'Continue Shopping',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            })
+            }else if(response.status == false){
+                Swal.fire({
+                                title: 'You need to Login first',
+                                text: 'Continue Shopping',
+                                icon: 'warning',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => { window.location.href = '/login' });
             }
         }
     })
     return false;
 }
 
-
+    
 </script>
 
 
 
 
-<%- include("../partials/footer") %>
+<section class="section-padding footer-mid">
+    <div class="container pt-15 pb-20">
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="widget-about font-md mb-md-5 mb-lg-0">
+                    <div class="logo logo-width-1 wow fadeIn animated">
+                        <a href="index.html"><img src="/user-assets/imgs/theme/Logo.png" alt="logo"></a>
+                    </div>
+                    <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
+                    <p class="wow fadeIn animated">
+                        <strong>Address: </strong>562 Wellington Road, Street 32, San Francisco
+                    </p>
+                    <p class="wow fadeIn animated">
+                        <strong>Phone: </strong>+01 2222 365 /(+91) 01 2345 6789
+                    </p>
+                    <p class="wow fadeIn animated">
+                        <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
+                    </p>
+                    <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
+                    <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
+                        <a href="#"><img src="/user-assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                        <a href="#"><img src="/user-assets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                        <a href="#"><img src="/user-assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                        <a href="#"><img src="/user-assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                        <a href="#"><img src="/user-assets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3">
+                <h5 class="widget-title wow fadeIn animated">About</h5>
+                <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Delivery Information</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms &amp; Conditions</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Support Center</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-6  col-md-3">
+                <h5 class="widget-title wow fadeIn animated">My Account</h5>
+                <ul class="footer-list wow fadeIn animated">
+                    <li><a href="#">Sign In</a></li>
+                    <li><a href="#">View Cart</a></li>
+                    <li><a href="#">My Wishlist</a></li>
+                    <li><a href="#">Track My Order</a></li>
+                    <li><a href="#">Help</a></li>
+                    <li><a href="#">Order</a></li>
+                </ul>
+            
+        </div>
+    </div>
+</section>
+<div class="container pb-20 wow fadeIn animated">
+    <div class="row">
+        <div class="col-12 mb-20">
+            <div class="footer-bottom"></div>
+        </div>
+        <div class="col-lg-6">
+            <p class="float-md-left font-sm text-muted mb-0">&copy; 2022, <strong class="text-brand">Evara</strong> - HTML Ecommerce Template </p>
+        </div>
+        <div class="col-lg-6">
+            <p class="text-lg-end text-start font-sm text-muted mb-0">
+                Designed by <a href="http://alithemes.com/" target="_blank">Alithemes.com</a>. All rights reserved
+            </p>
+        </div>
+    </div>
+</div>
+</footer>
+<!-- Preloader Start -->
+<div id="preloader-active">
+<div class="preloader d-flex align-items-center justify-content-center">
+    <div class="preloader-inner position-relative">
+        <div class="text-center">
+            <h5 class="mb-10">Now Loading</h5>
+            <div class="loader">
+                <div class="bar bar1"></div>
+                <div class="bar bar2"></div>
+                <div class="bar bar3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- Vendor JS-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
+<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> -->
+<script src="/user-assets/js/vendor/modernizr-3.6.0.min.js"></script>
+<script src="/user-assets/js/vendor/jquery-3.6.0.min.js"></script>
+<script src="/user-assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+<script src="/user-assets/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/user-assets/js/plugins/slick.js"></script>
+<script src="/user-assets/js/plugins/jquery.syotimer.min.js"></script>
+<script src="/user-assets/js/plugins/wow.js"></script>
+<script src="/user-assets/js/plugins/jquery-ui.js"></script>
+<script src="/user-assets/js/plugins/perfect-scrollbar.js"></script>
+<script src="/user-assets/js/plugins/magnific-popup.js"></script>
+<script src="/user-assets/js/plugins/select2.min.js"></script>
+<script src="/user-assets/js/plugins/waypoints.js"></script>
+<script src="/user-assets/js/plugins/counterup.js"></script>
+<script src="/user-assets/js/plugins/jquery.countdown.min.js"></script>
+<script src="/user-assets/js/plugins/images-loaded.js"></script>
+<script src="/user-assets/js/plugins/isotope.js"></script>
+<script src="/user-assets/js/plugins/scrollup.js"></script>
+<script src="/user-assets/js/plugins/jquery.vticker-min.js"></script>
+<script src="/user-assets/js/plugins/jquery.theia.sticky.js"></script>
+<script src="/user-assets/js/plugins/jquery.elevatezoom.js"></script>
+<!-- Template  JS -->
+<script src="/user-assets/js/maind134.js?v=3.4"></script>
+<script src="/user-assets/js/shopd134.js?v=3.4"></script>
+
+
+
+
+
+</body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:09:48 GMT -->
+</html>

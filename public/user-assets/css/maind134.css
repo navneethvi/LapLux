@@ -5836,7 +5836,8 @@ h6.post-title {
   transition: all .3s ease 0s;
   -moz-appearance: none;
   -webkit-appearance: none;
-  position: relative;
+  appearance: none; /* Standard property for compatibility */
+  position: relative;  
 }
 
 .search-style-2 form select:focus {

@@ -103,7 +103,7 @@ const addToCart = async (req, res) => {
                 // console.log("hi");
                 const productInCart = findUser.cart[cartIndex]
                 // console.log(productInCart);
-                if(!productInCart.quantity >= product.quantity){
+                if(productInCart.quantity < product.quantity){
                     const newQuantity = parseInt(productInCart.quantity) + parseInt(req.body.quantity)
                     await User.updateOne(
                         { _id: userId, "cart.productId": id },

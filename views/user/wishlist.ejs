@@ -3,61 +3,126 @@
 
 
 
-<main class="main">
-    <div class="page-header breadcrumb-wrap">
-        <div class="container">
-            <div class="breadcrumb">
-                <a href="index.html" rel="nofollow">Home</a>
-                <span></span> Shop
-                <span></span> Wishlist
-            </div>
-        </div>
-    </div>
-    <section class="mt-50 mb-50">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="table-responsive">
-                        <table class="table shopping-summery text-center">
-                            <thead>
-                                <tr class="main-heading">
-                                    <th scope="col" colspan="2">Product</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Stock Status</th>
-                                    <th scope="col">Action</th>
-                                    <th scope="col">Remove</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="image product-thumbnail"><img src="assets/imgs/shop/product-1-1.jpg" alt="#"></td>
-                                    <td class="product-des product-name">
-                                        <h5 class="product-name"><a href="shop-product-right.html">J.Crew Mercantile Women's Short-Sleeve</a></h5>
-                                        <p class="font-xs">Maboriosam in a tonto nesciung eget<br> distingy magndapibus.
-                                        </p>
-                                    </td>
-                                    <td class="price" data-title="Price"><span>$65.00 </span></td>
-                                    <td class="text-center" data-title="Stock">
-                                        <span class="color3 font-weight-bold">In Stock</span>
-                                    </td>
-                                    <td class="text-right" data-title="Cart">
-                                        <button class="btn btn-sm"><i class="fi-rs-shopping-bag mr-5"></i>Add to cart</button>
-                                    </td>
-                                    <td class="action" data-title="Remove"><a href="#"><i class="fi-rs-trash"></i></a></td>
-                                </tr>
-                             
-                             
-                            </tbody>
-                        </table>
-                    </div>
+    <main class="main">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html" rel="nofollow">Home</a>
+                    <span></span> Shop
+                    <span></span> Wishlist
                 </div>
             </div>
         </div>
-    </section>
-</main>
+        <section class="mt-50 mb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table shopping-summery text-center">
+                                <thead>
+                                    <tr class="main-heading">
+                                        <th scope="col" colspan="2">Product</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Stock Status</th>
+                                        <th scope="col">Action</th>
+                                        <th scope="col">Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
 
-   
+                                    <% for (let i=0; i < data.length; i++) { %>
+
+                                        <tr>
+                                            <td class="image product-thumbnail"><img
+                                                    src="/uploads/product-images/<%= data[i].image %>" alt="#"></td>
+                                            <td class="product-des product-name">
+                                                <h5 class="product-name"><a href="shop-product-right.html">
+                                                        <%= data[i].productName %>
+                                                    </a></h5>
+                                                <p class="font-xs">
+                                                    <%= data[i].category %><br>
+                                                        <%= data[i].brand %>
+                                                </p>
+                                            </td>
+                                            <td class="price" data-title="Price"><span>₹<%= data[i].salePrice %></span>
+                                            </td>
+                                            <td class="text-center" data-title="Stock">
+                                                <span class="color3 font-weight-bold">
+                                                    <% if (data[i].units> 0) { %>
+                                                        <p>In Stock</p>
+                                                        <% }else{ %>
+                                                            Out Of Stock
+                                                            <% } %>
+
+                                                </span>
+                                            </td>
+                                            <td class="text-right" data-title="Cart">
+                                                <button class="btn btn-success" onclick="addToCart('<%=data[i].productId%>')">Add to
+                                                    Cart</button>
+                                            </td>
+                                            <td class="action" data-title="Remove"><a href="/deleteWishlist?id=<%= data[i].productId %>"><i
+                                                        class="fi-rs-trash"></i></a></td>
+                                        </tr>
+
+                                        <% } %>
 
 
-<%- include("../partials/footer") %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <script>
+        function addToCart(prodId) {
+            
+            var quantity = 1;
+            $.ajax({
+                url: `/addToCart?id=${prodId}`,
+                method: "post",
+                data: {
+                    quantity: quantity
+                },
+                success: (res) => {
+                    if (res.status === true) {
+
+                        Swal.fire({
+                            title: 'Added to Cart!',
+                            text: 'Continue Shopping',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false
+                        })
+                    } else if (res.status === "Out of stock") {
+                        Swal.fire({
+                            title: 'Stock!!',
+                            text: "The product is out of stock",
+                            icon: 'error', // Corrected from 'fail' to 'error'
+                            timer: 2000,
+                        })
+                    } else {
+                        Swal.fire({
+                            title: 'You need to Login first',
+                            text: 'Continue Shopping',
+                            icon: 'warning',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => { window.location.href = '/login' });
+                    }
+                },
+                error: (err) => {
+                    console.error(err, "hello");
+                    alert("error occured")
+                }
+            });
+        }
+    </script>
+
+
+
+    <%- include("../partials/footer") %>

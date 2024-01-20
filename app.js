@@ -6,9 +6,10 @@ const path = require("path")
 const bodyParser = require("body-parser")
 const session = require("express-session")
 const nocache = require("nocache")
-const morgan = require("morgan")
+// const morgan = require("morgan")
 const PORT = process.env.PORT || 3000
 const dotenv = require("dotenv");
+// const cors = require('cors');
 dotenv.config();
 
 require("./DB/dataBase")
@@ -17,6 +18,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(nocache())
+
+// app.use(cors());
 
 // app.use(morgan('dev'));
 

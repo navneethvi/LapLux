@@ -66,6 +66,7 @@ Router.post("/verify-payment", isLogged, walletController.verify_payment)
 
 // Wishlist
 Router.get("/wishlist", isLogged, wishlistController.getWishlistPage)
-Router.post("/addToWishlist", isLogged, wishlistController.addToWishlist)
+Router.post("/addToWishlist",isLogged, wishlistController.addToWishlist)
+Router.get("/deleteWishlist", isLogged, wishlistController.deleteItemWishlist)
 
 module.exports = Router

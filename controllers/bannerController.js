@@ -53,10 +53,20 @@ const getEditBannerPage = async (req, res)=>{
     }
 }
 
+const postEditBanner = async(req, res)=>{
+    try {
+        console.log(req.file);
+        console.log(req.body);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 module.exports = {
     getAddBannerPage,
     bannerManagement,
     postAddBanner,
-    getEditBannerPage
+    getEditBannerPage,
+    postEditBanner
 }

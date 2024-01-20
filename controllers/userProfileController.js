@@ -133,6 +133,7 @@ const getEditAddress = async (req, res) => {
 
 const postEditAddress = async (req, res) => {
     try {
+        console.log(req.body);
         const data = req.body
         const addressId = req.query.id
         
