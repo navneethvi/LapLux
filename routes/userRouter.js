@@ -41,6 +41,7 @@ Router.get("/productDetails", userController.getProductDetailsPage)
 Router.get("/shop", userController.getShopPage)
 Router.get("/search", userController.searchProducts)
 Router.get("/filter", userController.filterProduct)
+Router.post("/sortProducts", userController.getSortProducts)
 
 // Cart
 Router.get("/cart", isLogged, cartController.getCartPage)

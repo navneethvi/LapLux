@@ -118,7 +118,7 @@ const signupUser = async (req, res) => {
                 if (info) {
                     req.session.userOtp = otp
                     req.session.userData = req.body
-                    res.render("verify-otp", {email})
+                    res.render("verify-otp", { email })
                     console.log("Email sented", info.messageId);
                 } else {
                     res.json("email-error")
@@ -215,11 +215,11 @@ const verifyOtp = async (req, res) => {
             req.session.user = saveUserData._id
 
 
-            res.json({status : true})
+            res.json({ status: true })
         } else {
-            
+
             console.log("otp not matching");
-            res.json({status : false})
+            res.json({ status: false })
         }
 
     } catch (error) {
@@ -228,7 +228,7 @@ const verifyOtp = async (req, res) => {
 }
 
 
-    
+
 const userLogin = async (req, res) => {
     try {
         const { email, password } = req.body
@@ -315,7 +315,7 @@ const getShopPage = async (req, res) => {
         let currentPage = parseInt(req.query.page) || 1
         let startIndex = (currentPage - 1) * itemsPerPage
         let endIndex = startIndex + itemsPerPage
-        let totalPages = Math.ceil(products.length/6)
+        let totalPages = Math.ceil(products.length / 6)
         const currentProduct = products.slice(startIndex, endIndex)
 
         res.render("shop",
@@ -334,27 +334,27 @@ const getShopPage = async (req, res) => {
 }
 
 
-const searchProducts = async (req, res)=>{
-    try {   
+const searchProducts = async (req, res) => {
+    try {
         const user = req.session.user
         let search = req.query.search
         const brands = await Brand.find({})
         const categories = await Category.find({ isListed: true })
 
         const searchResult = await Product.find({
-            $or : [
+            $or: [
                 {
-                    productName : { $regex: ".*" + search + ".*", $options: "i" },
+                    productName: { $regex: ".*" + search + ".*", $options: "i" },
                 }
             ],
-            isBlocked : false,
+            isBlocked: false,
         }).lean()
 
         let itemsPerPage = 6
         let currentPage = parseInt(req.query.page) || 1
         let startIndex = (currentPage - 1) * itemsPerPage
         let endIndex = startIndex + itemsPerPage
-        let totalPages = Math.ceil(searchResult.length/6)
+        let totalPages = Math.ceil(searchResult.length / 6)
         const currentProduct = searchResult.slice(startIndex, endIndex)
 
 
@@ -425,19 +425,19 @@ const filterProduct = async (req, res) => {
 
 
 
-const applyCoupon = async (req, res)=>{
+const applyCoupon = async (req, res) => {
     try {
         const userId = req.session.user
         console.log(req.body);
-        const selectedCoupon = await Coupon.findOne({name : req.body.coupon})
+        const selectedCoupon = await Coupon.findOne({ name: req.body.coupon })
         // console.log(selectedCoupon);
-        if(!selectedCoupon){
+        if (!selectedCoupon) {
             console.log("no coupon");
-            res.json({noCoupon : true})
-        }else if(selectedCoupon.userId.includes(userId)){
+            res.json({ noCoupon: true })
+        } else if (selectedCoupon.userId.includes(userId)) {
             console.log("already used");
-            res.json({used : true})
-        }else{
+            res.json({ used: true })
+        } else {
             console.log("coupon exists");
             await Coupon.updateOne(
                 { name: req.body.coupon },
@@ -447,14 +447,48 @@ const applyCoupon = async (req, res)=>{
                     }
                 }
             );
-            const gt = parseInt(req.body.total)-parseInt(selectedCoupon.offerPrice);
-            console.log(gt,"----");
-            res.json({gt : gt, offerPrice : parseInt(selectedCoupon.offerPrice)})
+            const gt = parseInt(req.body.total) - parseInt(selectedCoupon.offerPrice);
+            console.log(gt, "----");
+            res.json({ gt: gt, offerPrice: parseInt(selectedCoupon.offerPrice) })
         }
     } catch (error) {
         console.log(error.message);
     }
 }
+
+
+const getSortProducts = async (req, res) => {
+    try {
+        let option = req.body.option;
+        let itemsPerPage = 6;
+        let currentPage = parseInt(req.body.page) || 1;
+        let startIndex = (currentPage - 1) * itemsPerPage;
+        let endIndex = startIndex + itemsPerPage;
+        let data;
+
+        if (option == "highToLow") {
+            data = await Product.find({ isBlocked: false }).sort({ salePrice: -1 });
+        } else if (option == "lowToHigh") {
+            data = await Product.find({ isBlocked: false }).sort({ salePrice: 1 });
+        } else if (option == "releaseDate") {
+            data = await Product.find({ isBlocked: false }).sort({ createdOn: 1 });
+        }
+
+        res.json({
+            status: true,
+            data: {
+                currentProduct: data,
+                count: data.length,
+                totalPages: Math.ceil(data.length / itemsPerPage),
+                currentPage
+            }
+        });
+
+    } catch (error) {
+        console.log(error.message);
+        res.json({ status: false, error: error.message });
+    }
+};
 
 
 
@@ -474,5 +508,6 @@ module.exports = {
     pageNotFound,
     searchProducts,
     filterProduct,
-    applyCoupon
+    applyCoupon,
+    getSortProducts
 }
