@@ -313,7 +313,7 @@ const getOrderDetailsPage = async (req, res) => {
         const orderId = req.query.id
         const findOrder = await Order.findOne({ _id: orderId })
         const findUser = await User.findOne({ _id: userId })
-        // console.log(findOrder, findUser);
+        console.log(findOrder, findUser);
         res.render("orderDetails", { orders: findOrder, user: findUser, orderId })
     } catch (error) {
         console.log(error.message);

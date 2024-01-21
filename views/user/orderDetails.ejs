@@ -2,208 +2,236 @@
 
 
 
-<style>
-    .custom-btn {
-    /* Add your custom styles here */
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-</style>
+    <style>
+        .custom-btn {
+            /* Add your custom styles here */
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
 
 
 
 
     <main class="container">
-       
+
         <section class="content-main">
             <div class="content-header">
                 <div class="mt-50">
                     <h2 class="content-title card-title">Order detail</h2>
-                    <p>Details for Order ID: <%=orders._id%></p>
+                    <p>Details for Order ID: <%=orders._id%>
+                    </p>
                 </div>
             </div>
             <div class="card mt-60">
-           
+
 
 
                 <header class="card-header">
                     <div class="row align-items-center">
                         <div class="col-lg-4 col-md-4 ms-auto text-md-end">
-                            <% if (orders.status !== "Canceled") { %>
-                                <% if (orders.status === "Delivered") { %>
+                            <% if (orders.status !=="Canceled" ) { %>
+                                <% if (orders.status==="Delivered" ) { %>
                                     <div class="row">
                                         <div class="col-2" style="margin-right: 40px; ">
                                             <a class="btn custom-btn" href="/invoice?id=<%= orders._id%>">Invoice</a>
                                         </div>
                                         <div class="col-2">
-                                            <a class="btn custom-btn" href="http://localhost:3000/return?id=<%= orders._id%>">Return</a>
+                                            <a class="btn custom-btn"
+                                                href="http://localhost:3000/return?id=<%= orders._id%>">Return</a>
                                         </div>
                                         <div class="col-5" style="margin-top: 17px; margin-left: 50px;">
-                                          
-                                              
-                                          
-                                                <h4 class="text-success">Delivered</h4>
-                                          
+
+
+
+                                            <h4 class="text-success">Delivered</h4>
+
                                         </div>
                                     </div>
-                                <% }else if(orders.status === "Returned"){ %>
-                                    <h4 class="text-warning">Returned</h4>
-                             <%   } else { %>
-                                    <select id="actionDropdown" class="form-select form-select-sm d-inline-block mb-lg-0 mb-15 mw-100" onchange="handleDropdownChange(this)">
-                                        <option value="status">Status</option>
-                                        <option value="cancel">Cancel</option>
-                                    </select>
-                                <% } %>
-                            <% } else { %>
-                                <h4 class="text-danger">Cancelled</h4>
-                            <% } %>
+                                    <% }else if(orders.status==="Returned" ){ %>
+                                        <h4 class="text-warning">Returned</h4>
+                                        <% } else { %>
+                                            <select id="actionDropdown"
+                                                class="form-select form-select-sm d-inline-block mb-lg-0 mb-15 mw-100"
+                                                onchange="handleDropdownChange(this)">
+                                                <option value="status">Status</option>
+                                                <option value="cancel">Cancel</option>
+                                            </select>
+                                            <% } %>
+                                                <% } else { %>
+                                                    <h4 class="text-danger">Cancelled</h4>
+                                                    <% } %>
                         </div>
-                        
-                        
+
+
                     </div>
                 </header>
-                
-                      
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-50 mt-20 order-info-wrap background-info">
-                        <div class="col-md-4">
-                            <article class="icontext align-items-start ml-130">
-                                <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="material-icons text-primary person"></i>
-                                </span>
-                                <div class="text">
-                                    <h6 class="mb-1">Customer</h6>
-                                    <p class="mb-1">
-                                        <%= orders.address[0].name %> <br> <%= orders.address[0].phone %>
-                                    </p>
-                                </div>
-                              
-                            </article>
-                            
-                        </div> <!-- col// -->
-                        <div class="col-md-4">
-                            <article class="icontext align-items-start ml-130">
-                                <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="text-primary material-icons md-local_shipping"></i>
-                                </span>
-                                <div class="text">
-                                    <h6 class="mb-1">Order info</h6>
-                                    <p class="mb-1">
-                                        <%if(locals.orders){%>
-                                        Pay method: <%=orders.payment%> <br> Status:
-                                        <%if(orders.status=="Pending"){%> 
-                                            Pending
-                                                <%}else if(orders.status=="Delivered"){%>
-                                                    Delivered
-                                                    <%}else if(orders.status=="Confirmed"){%>
-                                                        Confirmed
-                                                    <%}else if(orders.status=="Returned"){%>
-                                                        Returned
-                                                        <%}else if(orders.status=="Canceled"){%>
-                                                            Cancelled
-                                                            <%}else if(orders.status=="Shipped"){%>
-                                                                Shipped
-                                                                <%}%>
-                                                    <%}%>
 
-                                    </p>
-                                    
-                                </div>
-                            </article>
-                        </div> <!-- col// -->
-                        <div class="col-md-4">
-                            <article class="icontext align-items-start ml-130">
-                                <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="text-primary material-icons md-place"></i>
-                                </span>
-                                <div class="text">
-                                    <h6 class="mb-1">Deliver to</h6>
-                                    <p class="mb-1">
-                                        Address: <%=orders.address[0].landMark%>,<%=orders.address[0].city%> <br><%=orders.address[0].state%>,<%=orders.address[0].addressType%> <br><%=orders.address[0].pincode%>
-                                    </p>
-                                    
-                                </div>
-                            </article>
-                        </div> <!-- col// -->
-                    </div> <!-- row // -->
-                    <div class="row">
-                        <div class="col-lg">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th width="30%">Product</th>
-                                            <th width="20%">Name</th>
-                                            <th width="20%">Unit Price</th>
-                                            <th width="10%">Quantity</th>
-                                            <th class="text-center" width="20%" class="text-end">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <%if(locals.orders){%>
-                                            <% let orderId; %>
-                                            <% for (let i = 0; i < orders.product.length; i++) { %>
+
+            </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-50 mt-20 order-info-wrap background-info">
+                    <div class="col-md-4">
+                        <article class="icontext align-items-start ml-130">
+                            <span class="icon icon-sm rounded-circle bg-primary-light">
+                                <i class="material-icons text-primary person"></i>
+                            </span>
+                            <div class="text">
+                                <h6 class="mb-1">Customer</h6>
+                                <p class="mb-1">
+                                    <%= orders.address[0].name %> <br>
+                                        <%= orders.address[0].phone %>
+                                </p>
+                            </div>
+
+                        </article>
+
+                    </div> <!-- col// -->
+                    <div class="col-md-4">
+                        <article class="icontext align-items-start ml-130">
+                            <span class="icon icon-sm rounded-circle bg-primary-light">
+                                <i class="text-primary material-icons md-local_shipping"></i>
+                            </span>
+                            <div class="text">
+                                <h6 class="mb-1">Order info</h6>
+                                <p class="mb-1">
+                                    <%if(locals.orders){%>
+                                        Pay method: <%=orders.payment%> <br> Status:
+                                            <%if(orders.status=="Pending"){%>
+                                                Pending
+                                                <%}else if(orders.status=="Delivered" ){%>
+                                                    Delivered
+                                                    <%}else if(orders.status=="Confirmed" ){%>
+                                                        Confirmed
+                                                        <%}else if(orders.status=="Returned" ){%>
+                                                            Returned
+                                                            <%}else if(orders.status=="Canceled" ){%>
+                                                                Cancelled
+                                                                <%}else if(orders.status=="Shipped" ){%>
+                                                                    Shipped
+                                                                    <%}%>
+                                                                        <%}%>
+
+                                </p>
+
+                            </div>
+                        </article>
+                    </div> <!-- col// -->
+                    <div class="col-md-4">
+                        <article class="icontext align-items-start ml-130">
+                            <span class="icon icon-sm rounded-circle bg-primary-light">
+                                <i class="text-primary material-icons md-place"></i>
+                            </span>
+                            <div class="text">
+                                <h6 class="mb-1">Deliver to</h6>
+                                <p class="mb-1">
+                                    Address: <%=orders.address[0].landMark%>,<%=orders.address[0].city%> <br>
+                                            <%=orders.address[0].state%>,<%=orders.address[0].addressType%> <br>
+                                                    <%=orders.address[0].pincode%>
+                                </p>
+
+                            </div>
+                        </article>
+                    </div> <!-- col// -->
+                </div> <!-- row // -->
+                <div class="row">
+                    <div class="col-lg">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th width="30%">Product</th>
+                                        <th width="20%">Name</th>
+                                        <th width="20%">Unit Price</th>
+                                        <th width="10%">Quantity</th>
+                                        <th class="text-center" width="10%">Amount</th>
+                                        <th width="20%">Discount</th>
+                                        <th class="text-center" width="20%" class="text-end">Total</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%if(locals.orders){%>
+                                        <% let orderId; %>
+                                            <% for (let i=0; i < orders.product.length; i++) { %>
                                                 <tr>
-                                                    <td class="text-center"> 
+                                                    <td class="text-center">
                                                         <a class="itemside" href="#">
                                                             <div class="left">
-                                                                <img src="/uploads/product-images/<%= orders.product[i].image %>" style="height: 7rem; width: 7rem;" class="img-xs" alt="Item">
+                                                                <img src="/uploads/product-images/<%= orders.product[i].image %>"
+                                                                    style="height: 7rem; width: 7rem;" class="img-xs"
+                                                                    alt="Item">
                                                             </div>
                                                         </a>
                                                     </td>
-                                                    <td class="text-center"> 
+                                                    <td class="text-center">
                                                         <div class="info">
                                                             <%= orders.product[i].name || orders.product[i].title %>
                                                         </div>
                                                     </td>
-                                                    <td class="text-center"> 
+                                                    <td class="text-center">
                                                         ₹<%= orders.product[i].price.toLocaleString() %>
                                                     </td>
-                                                    <td class="text-center"> 
+                                                    <td class="text-center">
                                                         <%= orders.product[i].quantity %>
                                                     </td>
-                                                    <td class="text-center"> 
-                                                        ₹<%= (parseInt(orders.product[i].price) * parseInt(orders.product[i].quantity)).toLocaleString() %>
+                                                    <td class="text-center">
+                                                        ₹<%= (parseInt(orders.product[i].price) *
+                                                            parseInt(orders.product[i].quantity)).toLocaleString() %>
 
                                                     </td>
+
+
+                                                    <% } %>
+
+                                                        <% let totalProductPrice=0; %>
+                                                            <% for (let i=0; i < orders.product.length; i++) { %>
+                                                                <% totalProductPrice +=parseInt(orders.product[i].price)
+                                                                    * parseInt(orders.product[i].quantity); %>
+                                                                    <% } %>
+
+
+                                                                        <% let discount=totalProductPrice -
+                                                                            orders.totalPrice; %>
+
+                                                                            <!-- Display discount and total price for the order -->
+                                                                            <td class="text-center">
+                                                                                <%= discount.toLocaleString() %>
+                                                                            </td>
+
+                                                                            <td class="text-center">
+                                                                                ₹<%= orders.totalPrice.toLocaleString()
+                                                                                    %>
+                                                                            </td>
                                                 </tr>
-                                                
-                                               
-                                                   
-                                                
-                                                    
-                                          
 
 
-                                            <% } %>
-                                            
-                                        <%}%>
+                                                <%}%>
 
-                                        <input type="hidden" name="" id="orderId" value="<%= orderId %>">
-                                       
-                                    </tbody>
-                                </table>
-                            </div> <!-- table-responsive// -->
-                        </div> <!-- col// -->
-                        <div class="col-lg-1"></div>
-                         <!-- col// -->
-                    </div>
-                </div> <!-- card-body end// -->
+                                                    <input type="hidden" name="" id="orderId" value="<%= orderId %>">
+
+                                </tbody>
+                            </table>
+                        </div> <!-- table-responsive// -->
+                    </div> <!-- col// -->
+                    <div class="col-lg-1"></div>
+                    <!-- col// -->
+                </div>
+            </div> <!-- card-body end// -->
             </div> <!-- card end// -->
         </section> <!-- content-main end// -->
-    
+
     </main>
     <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
@@ -216,13 +244,13 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/easyinvoice/dist/easyinvoice.min.js"></script>
-  <!-- SweetAlert2 Modal -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-  <script>
-    function tracking() {
-      Swal.fire({
-        title: '<strong><u>ORDER DETAILS</u></strong>',
-        html: `
+    <!-- SweetAlert2 Modal -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        function tracking() {
+            Swal.fire({
+                title: '<strong><u>ORDER DETAILS</u></strong>',
+                html: `
           <div class="modal-body">
             <div class="progress-track">
               <ul id="progressbar">
@@ -234,67 +262,68 @@
             </div>
           </div>
         `,
-      });
-    }
-  </script>
+            });
+        }
+    </script>
 
-  <!-- Bootstrap Modal -->
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-body">
-          <div class="progress-track">
-        
-          </div>
+    <!-- Bootstrap Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="progress-track">
+
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <style>
-    /* Center the text */
-    h3 {
-      text-align: center;
-    }
-  
-    /* Set the text color to red */
-    h3 {
-      color: red;
-    }
-  
-    /* Set the font size */
-    h3 {
-      font-size: 24px; /* You can adjust the size as needed */
-    }
-  </style>
+    <style>
+        /* Center the text */
+        h3 {
+            text-align: center;
+        }
 
-  
- 
-  <script>
-    function handleDropdownChange(selectElement) {
-       
-        console.log(orderId.value,"hiiiiiiiiiiiiiiiiiiiii");
-        var selectedValue = selectElement.value;
-        console.log(selectedValue);
-        if(selectedValue == "cancel"){
-            console.log("keri");
-            window.location.href = `http://localhost:3000/cancelOrder?orderId=${orderId.value}`;
+        /* Set the text color to red */
+        h3 {
+            color: red;
+        }
+
+        /* Set the font size */
+        h3 {
+            font-size: 24px;
+            /* You can adjust the size as needed */
+        }
+    </style>
+
+
+
+    <script>
+        function handleDropdownChange(selectElement) {
+
+            console.log(orderId.value, "hiiiiiiiiiiiiiiiiiiiii");
+            var selectedValue = selectElement.value;
+            console.log(selectedValue);
+            if (selectedValue == "cancel") {
+                console.log("keri");
+                window.location.href = `http://localhost:3000/cancelOrder?orderId=${orderId.value}`;
+            }
+
+
         }
 
 
-    }
 
 
-  
-
-    function performAction() {
-        // This function can be used for additional actions when the "Save" button is clicked
-        // You can add more logic here if needed
-    }
-</script>
-  
+        function performAction() {
+            // This function can be used for additional actions when the "Save" button is clicked
+            // You can add more logic here if needed
+        }
+    </script>
 
 
 
 
 
-<%- include("../partials/footer") %>
+
+    <%- include("../partials/footer") %>
