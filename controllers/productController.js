@@ -169,7 +169,7 @@ const getAllProducts = async (req, res) => {
                 { brand: { $regex: new RegExp(".*" + search + ".*", "i") } }
             ],
         })
-            .sort({createdOn : 1})
+            .sort({createdOn : -1})
             .limit(limit * 1)
             .skip((page - 1) * limit)
             .exec()
