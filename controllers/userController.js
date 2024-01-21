@@ -46,9 +46,9 @@ const getHomePage = async (req, res) => {
         const productData = await Product.find({ isBlocked: false }).sort({ id: -1 }).limit(4)
 
         if (user) {
-            res.render("home", { user: userData, data: brandData, products: productData, banner : findBanner })
+            res.render("home", { user: userData, data: brandData, products: productData, banner: findBanner })
         } else {
-            res.render("home", { data: brandData, products: productData, banner : findBanner })
+            res.render("home", { data: brandData, products: productData, banner: findBanner })
         }
     } catch (error) {
         console.log(error.message)
@@ -432,6 +432,45 @@ const filterProduct = async (req, res) => {
 
 
 
+const filterByPrice = async (req, res) => {
+    try {
+        const user = req.session.user
+        const brands = await Brand.find({});
+        const categories = await Category.find({ isListed: true });
+        console.log(req.query);
+        const findProducts = await Product.find({
+            $and: [
+                { salePrice: { $gt: req.query.gt } },
+                { salePrice: { $lt: req.query.lt } },
+                { isBlocked: false }
+            ]
+        })
+
+        let itemsPerPage = 6;
+        let currentPage = parseInt(req.query.page) || 1;
+        let startIndex = (currentPage - 1) * itemsPerPage;
+        let endIndex = startIndex + itemsPerPage;
+        let totalPages = Math.ceil(findProducts.length / 6);
+        const currentProduct = findProducts.slice(startIndex, endIndex);
+
+
+        res.render("shop", {
+            user: user,
+            product: currentProduct,
+            category: categories,
+            brand: brands,
+            totalPages,
+            currentPage,
+        });
+
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
 const applyCoupon = async (req, res) => {
     try {
         const userId = req.session.user
@@ -515,6 +554,7 @@ module.exports = {
     pageNotFound,
     searchProducts,
     filterProduct,
+    filterByPrice,
     applyCoupon,
     getSortProducts
 }

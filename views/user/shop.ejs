@@ -126,6 +126,19 @@
 }
 
 
+.price-filter-inner {
+        display: flex;
+        justify-content: space-between; /* Adjust as needed */
+    }
+
+    .price-button {
+        flex: 1;
+        height: 40px; /* Adjust the height as needed */
+        width: 100%; /* Fill the container width */
+        margin-right: 5px; /* Adjust the margin between buttons as needed */
+        border: 1px solid #ddd;
+    }
+
 </style>
 
 <section class="mt-50 mb-50">
@@ -262,17 +275,21 @@
                     </div>
                     <div class="price-filter">
                         <div class="price-filter-inner">
-                            <div id="slider-range"></div>
-                            <div class="price_slider_amount">
-                                <div class="label-input">
-                                    <span>Range:</span><input type="text" id="amount" name="price" placeholder="Add Your Price" />
+                            <form id="price-filter-form">
+                                <div class="price-options">
+                                    <a href="/filterPrice?gt=0&lt=50000"><button type="button" class="price-button" data-value="under-50000">Under $50,000</button></a>
+                                    <a href="/filterPrice?gt=50000&lt=100000"><button type="button" class="price-button" data-value="50k-to-100k">$50,000 - $100,000</button></a>
+                                    <a href="/filterPrice?gt=100000&lt=150000"><button type="button" class="price-button" data-value="100k-to-150k">$100,000 - $150,000</button></a>
+                                    <a href="/filterPrice?gt=150000&lt=1000000"><button type="button" class="price-button" data-value="above-150k">Above $150,000</button></a>
+                                    <input type="hidden" id="selected-price" name="selected-price" value="">
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
-          
-                    <a href="shop-grid-right.html" class="btn btn-sm btn-default"><i class="fi-rs-filter mr-5"></i> Fillter</a>
                 </div>
+                
+                
+                
          
             </div>
         </div>
@@ -318,7 +335,7 @@ function addToWishlist(productId){
 
 
 function getCurrentPageFromURL(element) {
-    // Assuming the URL is in the format "/shop?page=3"
+    
     const url = window.location.href;
     const match = url.match(/page=(\d+)/);
 
@@ -326,7 +343,6 @@ function getCurrentPageFromURL(element) {
         return parseInt(match[1], 10);
     }
 
-    // Default to 1 if no page parameter is found
     return 1;
 }
 
@@ -348,7 +364,7 @@ function handleSortChange(selectedOption){
                 console.log(sortedProducts);
                 // Clear existing product grid content
                 $(".product-grid-3").empty();
-                $(".pagination").empty();
+                // $(".pagination").empty();
 
                 // Render each product in the container
                 sortedProducts.currentProduct.forEach((product) => {
