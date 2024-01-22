@@ -35,6 +35,7 @@ Router.get("/editAddress", isLogged, userProfileController.getEditAddress),
 Router.post("/editAddress", isLogged, userProfileController.postEditAddress)
 Router.get("/deleteAddress", isLogged, userProfileController.getDeleteAddress)
 Router.post("/editUserDetails", isLogged, userProfileController.editUserDetails)
+Router.post("/verifyReferalCode", isLogged, userProfileController.verifyReferalCode)
 
 // Products based routes
 Router.get("/productDetails", userController.getProductDetailsPage)

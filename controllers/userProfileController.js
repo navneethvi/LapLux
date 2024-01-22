@@ -14,9 +14,9 @@ const getUserProfile = async (req, res) => {
         // console.log(userData);
         const addressData = await Address.findOne({ userId: userId })
         // console.log(addressData);
-        const orderData = await Order.find({userId : userId}).sort({createdOn : -1})
+        const orderData = await Order.find({ userId: userId }).sort({ createdOn: -1 })
         // console.log(orderData);
-        res.render("profile", { user: userData, userAddress: addressData, order : orderData })
+        res.render("profile", { user: userData, userAddress: addressData, order: orderData })
     } catch (error) {
         console.log(error.message);
     }
@@ -136,7 +136,7 @@ const postEditAddress = async (req, res) => {
         console.log(req.body);
         const data = req.body
         const addressId = req.query.id
-        
+
         console.log(addressId, "address id")
         const user = req.session.user
         const findAddress = await Address.findOne({ "address._id": addressId });
@@ -163,8 +163,8 @@ const postEditAddress = async (req, res) => {
                 }
             }
         ).then((result) => {
-                
-           res.redirect("/profile")
+
+            res.redirect("/profile")
         })
     } catch (error) {
         console.log(error.message);
@@ -279,11 +279,11 @@ const verifyForgotPassOtp = async (req, res) => {
     try {
         const enteredOtp = req.body.otp
         if (enteredOtp === req.session.userOtp) {
-  
-            res.json({status : true})
+
+            res.json({ status: true })
         } else {
             console.log('jijijijij');
-            res.json({status:false})
+            res.json({ status: false })
         }
     } catch (error) {
         console.log(error.message);
@@ -303,23 +303,84 @@ const postNewPassword = async (req, res) => {
     try {
         const { newPass1, newPass2 } = req.body
         const email = req.session.email
-       if(newPass1 === newPass2){
-        const passwordHash = await securePassword(newPass1)
-        await User.updateOne(
-            { email: email },
-            {
-                $set : {
-                    password : passwordHash
+        if (newPass1 === newPass2) {
+            const passwordHash = await securePassword(newPass1)
+            await User.updateOne(
+                { email: email },
+                {
+                    $set: {
+                        password: passwordHash
+                    }
                 }
-            }
-        )
-        .then((data)=>console.log(data))
-        res.redirect("/login")
-       }else{
-        console.log("Password not match");
-        res.render("reset-password", {message : "Password not matching"})
-       }
+            )
+                .then((data) => console.log(data))
+            res.redirect("/login")
+        } else {
+            console.log("Password not match");
+            res.render("reset-password", { message: "Password not matching" })
+        }
 
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const verifyReferalCode = async (req, res) => {
+    try {
+        const referalCode = req.body.referalCode
+        const currentUser = await User.findOne({ _id: req.session.user })
+        console.log("currentUser=>>>", currentUser);
+        const codeOwner = await User.findOne({ referalCode: referalCode })
+        console.log("codeOwner=>>>", codeOwner);
+
+        if (currentUser.redeemed === true) {
+            res.json({ message: "You have already redeemed a referral code before!" })
+        }
+
+        if (!codeOwner || codeOwner._id.equals(currentUser._id)) {
+            res.json({ message: "Invalid referral code!" })
+        }
+
+        const alreadyRedeemed = codeOwner.redeemedUsers.includes(currentUser._id)
+
+        if (alreadyRedeemed) {
+            res.json({ message: "You have already used this referral code!" })
+        } else {
+
+            await User.updateOne(
+                { _id: req.session.user },
+                { $inc: { wallet: 100 } }
+            )
+                .then(data => console.log("currentUser Wallet = > ", data))
+
+            await User.updateOne(
+                { _id: codeOwner._id },
+                { $inc: { wallet: 200 } }
+            )
+                .then(data => console.log("codeOwner Wallet = > ", data))
+
+            await User.updateOne(
+                { _id: codeOwner._id },
+                { $unset: { referalCode: "" } }
+            )
+
+            await User.updateOne(
+                { _id: req.session.user },
+                { $set: { redeemed: true } }
+            )
+
+            await User.updateOne(
+                { _id: codeOwner._id },
+                { $push: { redeemedUsers: currentUser._id } }
+            )
+
+            console.log("Referral code redeemed successfully!");
+
+            res.json({ message: "Referral code verified successfully!" })
+
+        }
 
     } catch (error) {
         console.log(error.message);
@@ -339,5 +400,6 @@ module.exports = {
     forgotEmailValid,
     verifyForgotPassOtp,
     getResetPassPage,
-    postNewPassword
+    postNewPassword,
+    verifyReferalCode
 }

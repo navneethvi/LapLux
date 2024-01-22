@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer")
+const { v4: uuidv4 } = require("uuid");
 
 const bcrypt = require("bcrypt");
 const User = require("../models/userSchema");
@@ -209,12 +210,15 @@ const verifyOtp = async (req, res) => {
         if (otp === req.session.userOtp) {
             const user = req.session.userData
             const passwordHash = await securePassword(user.password)
+            const referalCode = uuidv4()
+            console.log("the referralCode  =>" + referalCode);
 
             const saveUserData = new User({
                 name: user.name,
                 email: user.email,
                 phone: user.phone,
-                password: passwordHash
+                password: passwordHash,
+                referalCode : referalCode
             })
 
             await saveUserData.save()

@@ -43,6 +43,12 @@
                                                     class="fi-rs-shopping-cart-check mr-10"></i>Wallet History</a>
                                         </li>
                                         <li class="nav-item">
+                                            <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab"
+                                                href="#referal" role="tab" aria-controls="track-orders"
+                                                aria-selected="false"><i
+                                                    class="fi-rs-shopping-cart-check mr-10"></i>Referals</a>
+                                        </li>
+                                        <li class="nav-item">
                                             <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address"
                                                 role="tab" aria-controls="address" aria-selected="true"><i
                                                     class="fi-rs-marker mr-10"></i>My Address</a>
@@ -157,14 +163,16 @@
                                                         <form>
                                                             <div class="form-group">
                                                                 <label for="walletAmount" class="h4">Amount</label>
-                                                                <div class="h3">₹<%= user.wallet %></div>
+                                                                <div class="h3">₹<%= user.wallet %>
+                                                                </div>
                                                             </div>
-                                                
-                                                            <button type="button" class="btn btn-success" onclick="addMoney()">Add Money</button>
+
+                                                            <button type="button" class="btn btn-success"
+                                                                onclick="addMoney()">Add Money</button>
                                                         </form>
                                                     </div>
                                                 </div>
-                                                
+
 
 
                                             </div>
@@ -177,7 +185,8 @@
 
 
 
-                                    <div class="tab-pane fade" id="wallet-history" role="tabpanel" aria-labelledby="orders-tab">
+                                    <div class="tab-pane fade" id="wallet-history" role="tabpanel"
+                                        aria-labelledby="orders-tab">
                                         <div class="card">
                                             <div class="card-header">
                                                 <h5 class="mb-0">Wallet History</h5>
@@ -199,21 +208,22 @@
                                                                 <% for (let i=0; i < user.history.length; i++) { %>
                                                                     <tr>
                                                                         <td>
-                                                                            <% 
-                                                                                const dateObject = (user.history[i].date instanceof Date) ? user.history[i].date : new Date(user.history[i].date);
-                                                                            %>
-                                                                            <%= dateObject.toLocaleDateString() %>
+                                                                            <% const dateObject=(user.history[i].date
+                                                                                instanceof Date) ? user.history[i].date
+                                                                                : new Date(user.history[i].date); %>
+                                                                                <%= dateObject.toLocaleDateString() %>
                                                                         </td>
-                                                                        
+
                                                                         <td>
                                                                             <%= user.history[i].status %>
                                                                         </td>
                                                                         <td>
-                                                                            <% if (user.history[i].status === "debit") { %>
-                                                                                -<%= user.history[i].amount %>  
-                                                                            <% }else{ %>
-                                                                                <%= user.history[i].amount %> 
-                                                                                <% } %>
+                                                                            <% if (user.history[i].status==="debit" ) {
+                                                                                %>
+                                                                                -<%= user.history[i].amount %>
+                                                                                    <% }else{ %>
+                                                                                        <%= user.history[i].amount %>
+                                                                                            <% } %>
                                                                         </td>
                                                                     </tr>
                                                                     <% } %>
@@ -236,7 +246,58 @@
 
 
 
-                                    
+
+                                    <div class="tab-pane fade" id="referal" role="tabpanel"
+                                        aria-labelledby="track-orders-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Referal Offer</h5>
+                                            </div>
+                                            <div class="card-body contact-from-area">
+
+                                                <div class="row">
+                                                    <div class="col-lg-8 mx-auto text-center mt-50">
+                                                        <form onsubmit="verifyReferalCode()" method="post">
+                                                            <div class="form-group">
+                                                                <label for="walletAmount" class="h4">Your referal
+                                                                    code</label>
+                                                                <% if (locals.user.referalCode) { %>
+                                                                    <br>
+                                                                    <h5>
+                                                                        <%= locals.user.referalCode %>
+                                                                    </h5>
+                                                                    <% }else{ %>
+                                                                        <br>
+                                                                        <h5>No referal code found</h5>
+                                                                        <% } %>
+                                                            </div>
+
+                                                            <div class="mt-60">
+                                                                <h5>Do you have a code?</h5>
+                                                                <br>
+                                                                <input class="border-1" id="referalCode" type="text"
+                                                                    name="referalCode" required
+                                                                    style="border: 1px solid #000; width: 200px;">
+                                                                <br><br>
+                                                                <button type="submit">Get reward</button>
+                                                            </div>
+
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+
                                     <div class="tab-pane fade" id="address" role="tabpanel"
                                         aria-labelledby="address-tab">
                                         <div class="row">
@@ -339,86 +400,136 @@
             </div>
         </section>
 
-                                                        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-                                                        <script>
-                                                            async function addMoney() {
-                                                                const { value: amount } = await Swal.fire({
-                                                                    title: 'Enter the Amount',
-                                                                    input: 'number',
-                                                                    inputLabel: 'Amount',
-                                                                    inputPlaceholder: '₹'
-                                                                })
-                                                                $.ajax({
-                                                                    url: "/addMoney",
-                                                                    method: "post",
-                                                                    data: {
-                                                                        total: amount
-                                                                    },
-                                                                    success: (data) => {
-                                                                        if (data.razorpay) {
-                                                                            var options = {
-                                                                                "key": "rzp_test_sPwoxcRC0hnSFO",
-                                                                                "amount": data.order.amount,
-                                                                                "currency": "INR",
-                                                                                "name": "LapLux",
-                                                                                "description": "Test Transaction",
-                                                                                "image": "https://example.com/your_logo",
-                                                                                "order_id": data.order.id,
-                                                                                "handler": function (response) {
-                                                                                    verifyPayment(response, data);
-                                                                                },
-                                                                                "prefill": {
-                                                                                    "name": "Customer Name",
-                                                                                    "email": "customer@example.com",
-                                                                                    "contact": "9000090000"
-                                                                                },
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script>
+            async function addMoney() {
+                const { value: amount } = await Swal.fire({
+                    title: 'Enter the Amount',
+                    input: 'number',
+                    inputLabel: 'Amount',
+                    inputPlaceholder: '₹'
+                })
+                $.ajax({
+                    url: "/addMoney",
+                    method: "post",
+                    data: {
+                        total: amount
+                    },
+                    success: (data) => {
+                        if (data.razorpay) {
+                            var options = {
+                                "key": "rzp_test_sPwoxcRC0hnSFO",
+                                "amount": data.order.amount,
+                                "currency": "INR",
+                                "name": "LapLux",
+                                "description": "Test Transaction",
+                                "image": "https://example.com/your_logo",
+                                "order_id": data.order.id,
+                                "handler": function (response) {
+                                    verifyPayment(response, data);
+                                },
+                                "prefill": {
+                                    "name": "Customer Name",
+                                    "email": "customer@example.com",
+                                    "contact": "9000090000"
+                                },
 
-                                                                                "theme": {
-                                                                                    "color": "#3399cc"
-                                                                                }
-                                                                            }
-                                                                            console.log(options);
-                                                                            var rzp1 = new Razorpay(options);
-                                                                            rzp1.open();
-                                                                        }
-                                                                    }
-                                                                })
-                                                            }
-
-
-
-                                                            function verifyPayment(response, order) {
-                                                              
-                                                                $.ajax({
-                                                                    url: '/verify-payment',
-                                                                    method: 'post',
-                                                                    data: {
-                                                                        order,
-                                                                        response,
-                                                                        from: "wallet"
-                                                                    }, success: (response) => {
-                                                                        if (response) {
-                                                                            Swal.fire({
-                                                                                title: "Success",
-                                                                                text: "Payment has been succeed",
-                                                                                icon: "success",
-
-                                                                            }).then(function () {
-                                                                                location.reload()
-                                                                            });
-                                                                        } else {
-                                                                            Swal.fire("PAYMENT ERROR!", "Something wrong occured while processing the payment.", "error");
-                                                                            location.reload()
-                                                                        }
-
-                                                                    }
-                                                                })
-                                                            }
+                                "theme": {
+                                    "color": "#3399cc"
+                                }
+                            }
+                            console.log(options);
+                            var rzp1 = new Razorpay(options);
+                            rzp1.open();
+                        }
+                    }
+                })
+            }
 
 
 
-                                                        </script>
+            function verifyPayment(response, order) {
+
+                $.ajax({
+                    url: '/verify-payment',
+                    method: 'post',
+                    data: {
+                        order,
+                        response,
+                        from: "wallet"
+                    }, success: (response) => {
+                        if (response) {
+                            Swal.fire({
+                                title: "Success",
+                                text: "Payment has been succeed",
+                                icon: "success",
+
+                            }).then(function () {
+                                location.reload()
+                            });
+                        } else {
+                            Swal.fire("PAYMENT ERROR!", "Something wrong occured while processing the payment.", "error");
+                            location.reload()
+                        }
+
+                    }
+                })
+            }
+
+
+            function verifyReferalCode() {
+              
+                let referalCode = document.getElementById("referalCode").value
+          
+                $.ajax({
+                    url: "/verifyReferalCode",
+                    method: "post",
+                    data: {
+                        referalCode
+                    },
+                    success: (response) => {
+                        console.log(response.message);
+                        if (response.message == "Referral code verified successfully!") {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Referal offer redeemed successfully!',
+                            })
+                        }else if(response.message == "You have already used this referral code!"){
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Oops',
+                                text: 'You have already used this referral code!',
+                            })
+                        }else if(response.message == "Invalid referral code!"){
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Oops',
+                                text: 'Invalid referral code!',
+                            }) 
+                        }else if(response.message == "You have already redeemed a referral code before!"){
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Oops',
+                                text: 'You have already redeemed a referral code before!',
+                            }) 
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: '',
+                            })
+                        }
+
+
+                    }
+                })
+            }
 
 
 
-<%- include("../partials/footer") %>
+        </script>
+
+
+
+        <%- include("../partials/footer") %>

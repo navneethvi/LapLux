@@ -23,7 +23,8 @@
     "razorpay": "^2.9.2",
     "sharp": "^0.33.2",
     "stream": "^0.0.2",
-    "sweetalert": "^2.1.2"
+    "sweetalert": "^2.1.2",
+    "uuid": "^9.0.1"
   },
   "name": "laplux-main",
   "version": "1.0.0",

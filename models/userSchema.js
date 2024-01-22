@@ -34,16 +34,31 @@ const userSchema = Mongoose.Schema({
     cart: {
         type: Array
     },
-    wishlist : {
-        type : Array
+    wishlist: {
+        type: Array
     },
-    wallet : {
-        type : Number,
-        default : 0
+    wallet: {
+        type: Number,
+        default: 0
     },
-    history : {
-        type : Array
-    }
+    history: {
+        type: Array
+    },
+    referalCode: {
+        type: String,
+        required: true,
+    },
+    redeemed: {
+        type: Boolean,
+        default: false,
+    },
+    redeemedUsers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "user",
+            required: true,
+        }
+    ],
 });
 
 
