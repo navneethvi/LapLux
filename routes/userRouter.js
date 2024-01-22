@@ -58,7 +58,7 @@ Router.get("/cancelOrder", isLogged, orderController.cancelOrder)
 Router.get("/return", isLogged, orderController.returnOrder)
 Router.get("/checkoutCart", isLogged, orderController.getCartCheckoutPage)
 Router.post("/verifyPayment", isLogged, orderController.verify)
-Router.get("/invoice", isLogged, orderController.getInvoice)
+Router.get("/invoice", orderController.getInvoice)
 Router.post("/applyCoupon", isLogged, userController.applyCoupon)
 
 // Wallet

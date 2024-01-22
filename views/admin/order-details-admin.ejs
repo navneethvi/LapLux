@@ -35,7 +35,17 @@
                         <div class="col-lg-4 col-md-4 ms-auto text-md-end">
                             <% if (orders.status !== "Canceled") { %>
                                 <% if (orders.status === "Delivered") { %>
-                                    <h4 class="text-success">Delivered</h4>
+                                    <div class="row">
+                                   <div class="col-2 ">
+                                    <a href="/invoice?id=<%= orders._id %>"><button  class="btn btn-primary">Invoice</button></a>
+                                        </div>
+                                        <div class="col-5" style="margin-top: 10px; margin-left: 50px;">
+
+
+
+                                            <h4 class="text-success">Delivered</h4>
+                                        </div>
+                                        </div>
                                 <% } else if (orders.status === "Returned") { %>
                                     <h4 class="text-warning">Returned</h4>
                                 <% } else { %>
@@ -214,6 +224,10 @@
         `,
       });
     }
+
+
+    
+        
   </script>
 
   <!-- Bootstrap Modal -->

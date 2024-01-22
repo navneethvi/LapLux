@@ -15,11 +15,18 @@ module.exports = {
             console.log("User:", userData);
 
             const address = result.address
-            
+            let total1 = 0
+            for (let i = 0; i < result.product.length; i++) {
+                total1 += result.product[i].price * result.product[i].quantity
+            }
+
+            console.log(total1);
+
             const order = {
                 id: id,
                 total: result.totalPrice,
-                date: result.createdOn, 
+                discount: total1 - result.totalPrice,
+                date: result.createdOn,
                 paymentMethod: result.payment,
                 orderStatus: result.status,
                 name: address[0].name,
@@ -29,15 +36,16 @@ module.exports = {
                 state: address[0].state,
                 items: result.product,
             };
-        
 
-            // console.log(order);
+
+            console.log(order.items.length,"order.dis");
+            // const discountAmount = order.discount / order.totalPrice;
 
             const products = order.items.map((product) => ({
-                description : product.name,
+                description: product.name,
                 quantity: parseInt(product.quantity),
-                price: parseInt(product.price),
-                total: order.total,
+            
+                price: product.price,
                 "tax-rate": 0,
 
             }));
@@ -47,16 +55,18 @@ module.exports = {
             const isoDate = new Date(isoDateString);
             const options = { year: "numeric", month: "long", day: "numeric" };
             const formattedDate = isoDate.toLocaleDateString("en-US", options);
+            const subtotal = products.reduce((acc, product) => acc + product.total, 0);
+            const total = order.total;
             const data = {
                 customize: {
-                    
+
                 },
                 images: {
-                    
-                  
+
+
                     background: "https://public.easyinvoice.cloud/img/watermark-draft.jpg",
                 },
-               
+
                 sender: {
                     company: "LapLux eCommerce",
                     address: "Kundannoor PO,Ernakulam",
@@ -70,18 +80,21 @@ module.exports = {
                     zip: order.pincode,
                 },
                 information: {
-                 
+
                     number: order.id,
-                    
+
                     date: formattedDate,
                 },
                 products: products,
+                discount: order.discount,
+                subtotal: subtotal,
+                total: total,
                 data: "This is dataaaa",
                 "bottom-notice": "Happy shopping and visit LapLux again",
             };
             const pdfResult = await easyinvoice.createInvoice(data);
-            
-            
+
+
             const pdfBuffer = Buffer.from(pdfResult.pdf, "base64");
             res.setHeader("Content-Disposition", 'attachment; filename="invoice.pdf"');
             res.setHeader("Content-Type", "application/pdf");

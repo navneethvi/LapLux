@@ -44,7 +44,7 @@
                                 <% if (orders.status==="Delivered" ) { %>
                                     <div class="row">
                                         <div class="col-2" style="margin-right: 40px; ">
-                                            <a class="btn custom-btn" href="/invoice?id=<%= orders._id%>">Invoice</a>
+                                            <a class="btn custom-btn" id="print-button">Invoice</a>
                                         </div>
                                         <div class="col-2">
                                             <a class="btn custom-btn"
@@ -264,6 +264,12 @@
         `,
             });
         }
+
+
+        function printInvoice(event){
+            window.print()
+        }
+       document.getElementById("print-button").addEventListener('click',printInvoice);
     </script>
 
     <!-- Bootstrap Modal -->
@@ -326,4 +332,3 @@
 
 
 
-    <%- include("../partials/footer") %>
