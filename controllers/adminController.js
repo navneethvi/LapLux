@@ -1,7 +1,8 @@
 const User = require("../models/userSchema");
 const Coupon = require("../models/couponSchema")
 
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+const Order = require("../models/orderSchema");
 
 
 
@@ -101,11 +102,23 @@ const getLogout = async (req, res) => {
     }
 }
 
+
+const getSalesReportPage = async (req, res)=>{
+    try {
+        const orders = await Order.find({status : "Delivered"})
+        console.log(orders);
+        res.render("salesReport", {data : orders})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 module.exports = {
     getDashboard,
     getLoginPage,
     verifyLogin,
     getCouponPageAdmin,
     createCoupon,
-    getLogout
+    getLogout,
+    getSalesReportPage
 }

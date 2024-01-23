@@ -26,7 +26,7 @@ app.use(nocache())
 app.use(session({
     secret: process.env.SESSION_SECRET_KEY,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
         maxAge: 72 * 60 * 60 * 1000,
         httpOnly: true

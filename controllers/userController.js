@@ -41,7 +41,7 @@ const getHomePage = async (req, res) => {
             startDate: { $lt: new Date(today) },
             endDate: { $gt: new Date(today) }
         });
-        console.log(findBanner);
+        // console.log(findBanner);
         const userData = await User.findOne({})
         const brandData = await Brand.find({ isBlocked: false })
         const productData = await Product.find({ isBlocked: false }).sort({ id: -1 }).limit(4)

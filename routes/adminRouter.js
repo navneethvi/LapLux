@@ -76,4 +76,7 @@ Router.get("/editBanner", isAdmin, bannerController.getEditBannerPage)
 Router.post("/editBanner", isAdmin,upload.single("images"), bannerController.postEditBanner)
 Router.get("/deleteBanner", isAdmin, bannerController.deleteBanner)
 
+// Sales Report
+Router.get("/salesReport", isAdmin, adminController.getSalesReportPage)
+
 module.exports = Router

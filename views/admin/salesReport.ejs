@@ -1,0 +1,110 @@
+<%- include("../partials/adminHeader") %>
+
+
+
+<div class="content-header row">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="content-title card-title">Sales Report</h2>
+
+    </div>
+</div>
+
+</div>
+
+
+
+
+<div class="right mt-5">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Order ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Product ID</th>
+                <th scope="col">Date</th>
+                <th scope="col">Payment</th>
+                <th scope="col">Status</th>
+                <th scope="col">Total Price</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <% if (locals.data) { %>
+                <% for(let i=0; i < data.length; i++) { %>
+                    <tr>
+                        <td>
+                            <%= data[i]._id %>
+                        </td>
+                        <td>
+                            <%= data[i].address[0].name %>
+                        </td>
+                        <td>
+                            <%= data[i].product[0].name %>
+                        </td>
+
+
+
+
+                        <td>
+                            <%= data[i].createdOn.toLocaleString('en-IN') %>
+                        </td>
+                        
+                        
+                        
+
+                        <td>
+                            <%= data[i].payment %>
+                            
+                        </td>
+
+                        <td>
+                            <p class="badge rounded-pill alert-success"><%= data[i].status %></p> 
+                        </td>
+
+                        <td>
+                            <%= data[i].totalPrice.toLocaleString() %>
+                        </td>
+
+                    </tr>
+                    <% } %>
+                        <% }else{ %>
+
+                            No Orders Found
+
+                            <% } %>
+        </tbody>
+
+    </table>
+
+
+
+
+    <!-- card-body end// -->
+</div> <!-- card end// -->
+
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <a href="/admin/addBanner">
+                <button class="btn btn-primary mt-3 mr-200" type="submit">Add Banner</button>
+            </a>
+        </div>
+    </div>
+</div>
+</div>
+<div class="container mt-3">
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mb-20" style="margin-right: 200px;">
+
+
+
+        </ul>
+    </nav>
+</div>
+
+
+
+
+
+
+<%- include("../partials/adminFooter") %>

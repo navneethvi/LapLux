@@ -111,9 +111,9 @@ const orderPlaced = async (req, res) => {
             // console.log(findProduct);
 
             const productDetails = {
-                ProductId: findProduct._id,
+                _id: findProduct._id,
                 price: findProduct.salePrice,
-                title: findProduct.productName,
+                name: findProduct.productName,
                 image: findProduct.productImage[0],
                 quantity: 1
             }
@@ -499,7 +499,7 @@ const getOrderDetailsPageAdmin = async (req, res) => {
 }
 
 const verify = (req, res) => {
-    console.log(req.body);
+    console.log(req.body,"end");
     let hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
     hmac.update(
         `${req.body.payment.razorpay_order_id}|${req.body.payment.razorpay_payment_id}`
