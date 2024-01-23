@@ -331,9 +331,9 @@ const verifyReferalCode = async (req, res) => {
     try {
         const referalCode = req.body.referalCode
         const currentUser = await User.findOne({ _id: req.session.user })
-        console.log("currentUser=>>>", currentUser);
+        // console.log("currentUser=>>>", currentUser);
         const codeOwner = await User.findOne({ referalCode: referalCode })
-        console.log("codeOwner=>>>", codeOwner);
+        // console.log("codeOwner=>>>", codeOwner);
 
         if (currentUser.redeemed === true) {
             console.log("You have already redeemed a referral code before!");
