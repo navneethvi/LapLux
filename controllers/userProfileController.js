@@ -336,28 +336,54 @@ const verifyReferalCode = async (req, res) => {
         console.log("codeOwner=>>>", codeOwner);
 
         if (currentUser.redeemed === true) {
+            console.log("You have already redeemed a referral code before!");
             res.json({ message: "You have already redeemed a referral code before!" })
+            return
         }
 
         if (!codeOwner || codeOwner._id.equals(currentUser._id)) {
+            console.log("Invalid referral code!");
             res.json({ message: "Invalid referral code!" })
+            return
         }
 
         const alreadyRedeemed = codeOwner.redeemedUsers.includes(currentUser._id)
 
         if (alreadyRedeemed) {
+            console.log("You have already used this referral code!");
             res.json({ message: "You have already used this referral code!" })
+            return
         } else {
 
             await User.updateOne(
                 { _id: req.session.user },
-                { $inc: { wallet: 100 } }
+                {
+                    $inc: { wallet: 100 },
+                    $push: {
+                        history: {
+                            amount: 100,
+                            status: "credit",
+                            date: Date.now()
+                        }
+                    }
+                }
             )
                 .then(data => console.log("currentUser Wallet = > ", data))
 
+
+
             await User.updateOne(
                 { _id: codeOwner._id },
-                { $inc: { wallet: 200 } }
+                {
+                    $inc: { wallet: 200 },
+                    $push: {
+                        history: {
+                            amount: 200,
+                            status: "credit",
+                            date: Date.now()
+                        }
+                    }
+                }
             )
                 .then(data => console.log("codeOwner Wallet = > ", data))
 
@@ -379,6 +405,7 @@ const verifyReferalCode = async (req, res) => {
             console.log("Referral code redeemed successfully!");
 
             res.json({ message: "Referral code verified successfully!" })
+            return
 
         }
 

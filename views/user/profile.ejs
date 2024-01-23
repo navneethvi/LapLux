@@ -257,7 +257,7 @@
 
                                                 <div class="row">
                                                     <div class="col-lg-8 mx-auto text-center mt-50">
-                                                        <form onsubmit="verifyReferalCode()" method="post">
+                                                        <form onsubmit="verifyReferalCode(event)" method="post" action="">
                                                             <div class="form-group">
                                                                 <label for="walletAmount" class="h4">Your referal
                                                                     code</label>
@@ -478,7 +478,7 @@
 
 
             function verifyReferalCode() {
-              
+                event.preventDefault();
                 let referalCode = document.getElementById("referalCode").value
           
                 $.ajax({
