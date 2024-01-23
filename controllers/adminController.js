@@ -52,7 +52,7 @@ const verifyLogin = async (req, res) => {
 const getCouponPageAdmin = async (req, res) => {
     try {
         const findCoupons = await Coupon.find({})
-        res.render("coupon", {coupons : findCoupons})
+        res.render("coupon", { coupons: findCoupons })
     } catch (error) {
         console.log(error.message);
     }
@@ -70,20 +70,20 @@ const createCoupon = async (req, res) => {
         };
 
         const newCoupon = new Coupon({
-            name : data.couponName,
-            createdOn : data.startDate,
-            expireOn : data.endDate,
-            offerPrice : data.offerPrice,
-            minimumPrice : data.minimumPrice
+            name: data.couponName,
+            createdOn: data.startDate,
+            expireOn: data.endDate,
+            offerPrice: data.offerPrice,
+            minimumPrice: data.minimumPrice
         })
 
         await newCoupon.save()
-        .then(data=>console.log(data))
+            .then(data => console.log(data))
 
         res.redirect("/admin/coupon")
-        
-console.log(data);
-        
+
+        console.log(data);
+
     } catch (error) {
         console.log(error.message);
     }
@@ -103,12 +103,67 @@ const getLogout = async (req, res) => {
 }
 
 
-const getSalesReportPage = async (req, res)=>{
+const getSalesReportPage = async (req, res) => {
     try {
-        const orders = await Order.find({status : "Delivered"}).sort({createdOn : -1})
-        console.log(orders);
+        // const orders = await Order.find({ status: "Delivered" }).sort({ createdOn: -1 })
+        // // console.log(orders);
 
-        
+        // let itemsPerPage = 5
+        // let currentPage = parseInt(req.query.page) || 1
+        // let startIndex = (currentPage - 1) * itemsPerPage
+        // let endIndex = startIndex + itemsPerPage
+        // let totalPages = Math.ceil(orders.length / 3)
+        // const currentOrder = orders.slice(startIndex, endIndex)
+
+        // res.render("salesReport", { data: currentOrder, totalPages, currentPage })
+
+        console.log(req.query.day);
+        let filterBy = req.query.day
+        if (filterBy) {
+            res.redirect(`/admin/${req.query.day}`)
+        } else {
+            res.redirect(`/admin/salesToday`)
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const salesToday = async (req, res) => {
+    try {
+        let today = new Date()
+        const startOfTheDay = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+            0,
+            0,
+            0,
+            0
+        )
+
+        const endOfTheDay = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+            23,
+            59,
+            59,
+            999
+        )
+
+        const orders = await Order.aggregate([
+            {
+                $match: {
+                    createdOn: {
+                        $gte: startOfTheDay,
+                        $lt: endOfTheDay
+                    },
+                    status: "Delivered"
+                }
+            }
+        ]).sort({ createdOn: -1 })
+
         let itemsPerPage = 5
         let currentPage = parseInt(req.query.page) || 1
         let startIndex = (currentPage - 1) * itemsPerPage
@@ -116,11 +171,58 @@ const getSalesReportPage = async (req, res)=>{
         let totalPages = Math.ceil(orders.length / 3)
         const currentOrder = orders.slice(startIndex, endIndex)
 
-        res.render("salesReport", {data : currentOrder, totalPages, currentPage})
+        res.render("salesReport", { data: currentOrder, totalPages, currentPage, salesToday: true })
+
     } catch (error) {
         console.log(error.message);
     }
 }
+
+
+const salesWeekly = async (req, res) => {
+    try {
+        let currentDate = new Date()
+        const startOfTheWeek = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            currentDate.getDate() - currentDate.getDay()
+        )
+
+        const endOfTheWeek = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            currentDate.getDate() + (6 - currentDate.getDay()),
+            23,
+            59,
+            59,
+            999
+        )
+
+        const orders = await Order.aggregate([
+            {$match : {
+                createdOn : {
+                    $gte : startOfTheWeek,
+                    $lt : endOfTheWeek
+                },
+                status : "Delivered"
+            }}
+        ]).sort({createdOn : -1})
+
+        let itemsPerPage = 5
+        let currentPage = parseInt(req.query.page) || 1
+        let startIndex = (currentPage - 1) * itemsPerPage
+        let endIndex = startIndex + itemsPerPage
+        let totalPages = Math.ceil(orders.length / 3)
+        const currentOrder = orders.slice(startIndex, endIndex)
+
+        res.render("salesReport", { data: currentOrder, totalPages, currentPage, salesWeekly: true })
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
 
 module.exports = {
     getDashboard,
@@ -129,5 +231,7 @@ module.exports = {
     getCouponPageAdmin,
     createCoupon,
     getLogout,
-    getSalesReportPage
+    getSalesReportPage,
+    salesToday,
+    salesWeekly
 }
