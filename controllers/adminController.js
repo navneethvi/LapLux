@@ -105,9 +105,18 @@ const getLogout = async (req, res) => {
 
 const getSalesReportPage = async (req, res)=>{
     try {
-        const orders = await Order.find({status : "Delivered"})
+        const orders = await Order.find({status : "Delivered"}).sort({createdOn : -1})
         console.log(orders);
-        res.render("salesReport", {data : orders})
+
+        
+        let itemsPerPage = 5
+        let currentPage = parseInt(req.query.page) || 1
+        let startIndex = (currentPage - 1) * itemsPerPage
+        let endIndex = startIndex + itemsPerPage
+        let totalPages = Math.ceil(orders.length / 3)
+        const currentOrder = orders.slice(startIndex, endIndex)
+
+        res.render("salesReport", {data : currentOrder, totalPages, currentPage})
     } catch (error) {
         console.log(error.message);
     }
