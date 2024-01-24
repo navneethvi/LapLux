@@ -80,7 +80,7 @@ Router.get("/deleteBanner", isAdmin, bannerController.deleteBanner)
 Router.get("/salesReport", isAdmin, adminController.getSalesReportPage)
 Router.get("/salesToday", isAdmin, adminController.salesToday)
 Router.get("/salesWeekly", isAdmin, adminController.salesWeekly)
-// Router.get("/salesMonthly", isAdmin, adminController.salesMonthly)
+Router.get("/salesMonthly", isAdmin, adminController.salesMonthly)
 // Router.get("/salesYearly", isAdmin, adminController.salesYearly)
 
 module.exports = Router

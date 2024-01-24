@@ -122,7 +122,7 @@ const getSalesReportPage = async (req, res) => {
         if (filterBy) {
             res.redirect(`/admin/${req.query.day}`)
         } else {
-            res.redirect(`/admin/salesToday`)
+            res.redirect(`/admin/salesMonthly`)
         }
     } catch (error) {
         console.log(error.message);
@@ -199,14 +199,16 @@ const salesWeekly = async (req, res) => {
         )
 
         const orders = await Order.aggregate([
-            {$match : {
-                createdOn : {
-                    $gte : startOfTheWeek,
-                    $lt : endOfTheWeek
-                },
-                status : "Delivered"
-            }}
-        ]).sort({createdOn : -1})
+            {
+                $match: {
+                    createdOn: {
+                        $gte: startOfTheWeek,
+                        $lt: endOfTheWeek
+                    },
+                    status: "Delivered"
+                }
+            }
+        ]).sort({ createdOn: -1 })
 
         let itemsPerPage = 5
         let currentPage = parseInt(req.query.page) || 1
@@ -216,6 +218,49 @@ const salesWeekly = async (req, res) => {
         const currentOrder = orders.slice(startIndex, endIndex)
 
         res.render("salesReport", { data: currentOrder, totalPages, currentPage, salesWeekly: true })
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const salesMonthly = async (req, res) => {
+    try {
+        let currentMonth = new Date().getMonth() + 1
+        const startOfTheMonth = new Date(
+            new Date().getFullYear(),
+            currentMonth - 1,
+            1, 0, 0, 0, 0
+        )
+        const endOfTheMonth = new Date(
+            new Date().getFullYear(),
+            currentMonth,
+            0, 23, 59, 59, 999
+        )
+        const orders = await Order.aggregate([
+            {
+                $match: {
+                    createdOn: {
+                        $gte: startOfTheMonth,
+                        $lt: endOfTheMonth
+                    },
+                    status: "Delivered"
+                }
+            }
+        ]).sort({ createdOn: -1 })
+        // .then(data=>console.log(data))
+        // console.log("ethi");
+
+        let itemsPerPage = 5
+        let currentPage = parseInt(req.query.page) || 1
+        let startIndex = (currentPage - 1) * itemsPerPage
+        let endIndex = startIndex + itemsPerPage
+        let totalPages = Math.ceil(orders.length / 3)
+        const currentOrder = orders.slice(startIndex, endIndex)
+
+        res.render("salesReport", { data: currentOrder, totalPages, currentPage, salesMonthly: true })
+
 
     } catch (error) {
         console.log(error.message);
@@ -233,5 +278,6 @@ module.exports = {
     getLogout,
     getSalesReportPage,
     salesToday,
-    salesWeekly
+    salesWeekly,
+    salesMonthly
 }
