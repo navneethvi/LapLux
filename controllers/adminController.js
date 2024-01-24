@@ -310,45 +310,39 @@ const generatePdf = async (req, res) => {
       doc.text('Sales Report', { align: 'center', fontSize: 16 });
       const margin = 5;
       doc
-        .moveTo(margin, margin) // Top-left corner (x, y)
-        .lineTo(600 - margin, margin) // Top-right corner (x, y)
-        .lineTo(600 - margin, 842 - margin) // Bottom-right corner (x, y)
-        .lineTo(margin, 842 - margin) // Bottom-left corner (x, y)
-        .lineTo(margin, margin) // Back to top-left to close the rectangle
-        .lineTo(600 - margin, margin) // Draw line across the bottom edge
+        .moveTo(margin, margin) 
+        .lineTo(600 - margin, margin) 
+        .lineTo(600 - margin, 842 - margin) 
+        .lineTo(margin, 842 - margin) 
+        .lineTo(margin, margin) 
+        .lineTo(600 - margin, margin) 
         .lineWidth(3)
         .strokeColor('#000000')
         .stroke();
       
       doc.moveDown();
       
-      // Define table headers with 4 columns
-      const headers = ['Order ID', 'Name', 'Date', 'Total']; // Add the new column header
+      const headers = ['Order ID', 'Name', 'Date', 'Total']; 
       
-      // Calculate position for headers
       let headerX = 20;
       const headerY = doc.y + 10;
       
-      // Adjust the spacing for the "Order ID" column to give it more space
-      doc.text(headers[0], headerX, headerY); // Adjusted position for "Order ID" header
-      headerX += 200; // Adjust spacing for the remaining headers
+      doc.text(headers[0], headerX, headerY); 
+      headerX += 200; 
       
-      // Draw headers for the other columns
       headers.slice(1).forEach(header => {
         doc.text(header, headerX, headerY);
-        headerX += 130; // Adjust spacing as needed for the remaining headers
+        headerX += 130; 
       });
       
-      // Calculate position for data
       let dataY = headerY + 25;
       
-      // Loop through your data and add rows to the table with the new column values
       orders.forEach(order => {
-        doc.text(order.dataId, 20, dataY); // Adjusted position for "Order ID" data
+        doc.text(order.dataId, 20, dataY); 
         doc.text(order.name, 210, dataY);
         doc.text(order.date, 350, dataY);
         doc.text(order.totalAmount, 480, dataY);
-        dataY += 30; // Adjust vertical spacing as needed
+        dataY += 30; 
 
       });
       
