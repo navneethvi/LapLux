@@ -4,6 +4,8 @@ const Coupon = require("../models/couponSchema")
 const bcrypt = require("bcrypt");
 const Order = require("../models/orderSchema");
 
+const PDFDocument=require('pdfkit')
+
 
 
 const getDashboard = async (req, res) => {
@@ -110,7 +112,7 @@ const getSalesReportPage = async (req, res) => {
 
         // res.render("salesReport", { data: currentOrder, totalPages, currentPage })
 
-        console.log(req.query.day);
+        // console.log(req.query.day);
         let filterBy = req.query.day
         if (filterBy) {
             res.redirect(`/admin/${req.query.day}`)
@@ -268,16 +270,18 @@ const salesYearly = async (req, res) => {
         const endofYear = new Date(currentYear, 11, 31, 23, 59, 59, 999)
 
         const orders = await Order.aggregate([
-            {$match : {
-                createdOn : {
-                    $gte : startofYear,
-                    $lt : endofYear
-                },
-                status : "Delivered"
-            }}
+            {
+                $match: {
+                    createdOn: {
+                        $gte: startofYear,
+                        $lt: endofYear
+                    },
+                    status: "Delivered"
+                }
+            }
         ])
 
-        
+
         let itemsPerPage = 5
         let currentPage = parseInt(req.query.page) || 1
         let startIndex = (currentPage - 1) * itemsPerPage
@@ -285,8 +289,70 @@ const salesYearly = async (req, res) => {
         let totalPages = Math.ceil(orders.length / 3)
         const currentOrder = orders.slice(startIndex, endIndex)
 
-        res.render("salesReport", { data: currentOrder, totalPages, currentPage, salesYearly : true })
+        res.render("salesReport", { data: currentOrder, totalPages, currentPage, salesYearly: true })
 
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
+const generatePdf = async (req, res) => {
+    try {
+        const doc = new PDFDocument();
+      const filename = 'sales-report.pdf';
+      const orders = req.body;
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+      doc.pipe(res);
+      doc.fontSize(12);
+      doc.text('Sales Report', { align: 'center', fontSize: 16 });
+      const margin = 5;
+      doc
+        .moveTo(margin, margin) // Top-left corner (x, y)
+        .lineTo(600 - margin, margin) // Top-right corner (x, y)
+        .lineTo(600 - margin, 842 - margin) // Bottom-right corner (x, y)
+        .lineTo(margin, 842 - margin) // Bottom-left corner (x, y)
+        .lineTo(margin, margin) // Back to top-left to close the rectangle
+        .lineTo(600 - margin, margin) // Draw line across the bottom edge
+        .lineWidth(3)
+        .strokeColor('#000000')
+        .stroke();
+      
+      doc.moveDown();
+      
+      // Define table headers with 4 columns
+      const headers = ['Order ID', 'Name', 'Date', 'Total']; // Add the new column header
+      
+      // Calculate position for headers
+      let headerX = 20;
+      const headerY = doc.y + 10;
+      
+      // Adjust the spacing for the "Order ID" column to give it more space
+      doc.text(headers[0], headerX, headerY); // Adjusted position for "Order ID" header
+      headerX += 200; // Adjust spacing for the remaining headers
+      
+      // Draw headers for the other columns
+      headers.slice(1).forEach(header => {
+        doc.text(header, headerX, headerY);
+        headerX += 130; // Adjust spacing as needed for the remaining headers
+      });
+      
+      // Calculate position for data
+      let dataY = headerY + 25;
+      
+      // Loop through your data and add rows to the table with the new column values
+      orders.forEach(order => {
+        doc.text(order.dataId, 20, dataY); // Adjusted position for "Order ID" data
+        doc.text(order.name, 210, dataY);
+        doc.text(order.date, 350, dataY);
+        doc.text(order.totalAmount, 480, dataY);
+        dataY += 30; // Adjust vertical spacing as needed
+
+      });
+      
+      doc.end();
     } catch (error) {
         console.log(error.message);
     }
@@ -305,5 +371,6 @@ module.exports = {
     salesToday,
     salesWeekly,
     salesMonthly,
-    salesYearly
+    salesYearly,
+    generatePdf
 }

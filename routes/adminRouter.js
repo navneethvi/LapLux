@@ -82,5 +82,6 @@ Router.get("/salesToday", isAdmin, adminController.salesToday)
 Router.get("/salesWeekly", isAdmin, adminController.salesWeekly)
 Router.get("/salesMonthly", isAdmin, adminController.salesMonthly)
 Router.get("/salesYearly", isAdmin, adminController.salesYearly)
+Router.post("/generatePdf", isAdmin, adminController.generatePdf)
 
 module.exports = Router

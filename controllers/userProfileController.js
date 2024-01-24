@@ -390,7 +390,7 @@ const verifyReferalCode = async (req, res) => {
 
             await User.updateOne(
                 { _id: codeOwner._id },
-                { $unset: { referalCode: "" } }
+                { $set: { referalCode: "" } }
             )
 
             await User.updateOne(

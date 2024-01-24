@@ -11,7 +11,7 @@
             margin: 0 5px;
             padding: 5px 10px;
             background-color: #f0f0f0;
-            border: 1px solid #ccc;
+            bdata: 1px solid #ccc;
             text-decoration: none;
             color: #333;
         }
@@ -25,6 +25,11 @@
         .btn:hover {
             /* Add styles for button hover state */
             background-color: #ddd;
+        }
+
+        .table-spacing th,
+        .table-spacing td {
+            padding-left: 80px; /* Adjust the value as needed for the desired spacing */
         }
     </style>
 
@@ -65,6 +70,9 @@
                                         <% } %>
                     </select>
                 </div>
+                <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                    <a href="" id="createSalesReport" class="btn btn-primary mb-2">Sales Report</a>
+                </div>
             </div>
         </header>
     </div>
@@ -72,106 +80,128 @@
 
 
 
-    <div class="right mt-5">
-        <table class="table table-striped">
+    <div class="right mt-5 container">
+        <table id="salesTable" class="table table-hover">
             <thead>
                 <tr>
-                    <th scope="col">Order ID</th>
+                    <th>#</th>
+                    <th> data ID</th>
                     <th scope="col">Name</th>
-                    <th scope="col">Product ID</th>
-                    <th scope="col">Date and Time</th>
-                    <th scope="col">Payment</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">payment</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Total Price</th>
-
+                    <th scope="col" class="text-end"> Total Price </th>
                 </tr>
             </thead>
             <tbody>
-                <% if (locals.data) { %>
-                    <% for(let i=0; i < data.length; i++) { %>
+                
+
+                    <% for (let i = 0; i < data.length; i++) { %>
+                
                         <tr>
-                            <td>
-                                <%= data[i]._id %>
-                            </td>
-                            <td>
-                                <%= data[i].address[0].name %>
-                            </td>
-                            <td>
-                                <%= data[i].product[0].name %>
-                            </td>
-
-
-
-
-                            <td>
-                                <%= data[i].createdOn.toLocaleString('en-IN') %>
-                            </td>
-
-
-
-
-                            <td>
-                                <%= data[i].payment %>
-
-                            </td>
-
-                            <td>
-                                <p class="badge rounded-pill alert-success">
-                                    <%= data[i].status %>
-                                </p>
-                            </td>
-
-                            <td>
-                                <%= data[i].totalPrice.toLocaleString() %>
-                            </td>
-
+                          <td><%= i + 1 %></td>
+                          <td><%= data[i]._id %></td>
+                          <td><b><%= data[i].address[0].name %></b></td>
+                        
+                          <td><b><%= data[i].product[0]._id %></b></td>
+                        
+                          <td><%= data[i].createdOn.toLocaleString('en-IN') %></td>
+                          <td><%= data[i].payment %></td>
+                          <td>
+                            <%= data[i].status %>
+                          </td>
+                          <td class="text-end"><%= data[i].totalPrice %></td>
                         </tr>
-                        <% } %>
-                            <% }else{ %>
-
-                                No Orders Found
-
-                                <% } %>
+                    
+                      <% } %>
             </tbody>
-
         </table>
 
 
         <% if (totalPages) { %>
             <div class="pagination">
                 <% if (currentPage> 1) { %>
-                    <button class="btn btn-sm"><a
-                            href="/admin/salesReport?page=<%= currentPage - 1 %>">Previous</a></button>
+                    <button class="btn btn-sm"><a href="?page=<%= currentPage - 1 %>">Previous</a></button>
                     <% } %>
 
                         <% for (let i=1; i <=totalPages; i++) { %>
                             <button class="btn btn-sm <%= i === currentPage ? 'active' : '' %>">
-                                <a href="/admin/salesReport?page=<%= i %>">
+                                <a href="?page=<%= i %>">
                                     <%= i %>
                                 </a>
                             </button>
                             <% } %>
 
                                 <% if (currentPage < totalPages) { %>
-                                    <button class="btn btn-sm"><a
-                                            href="/admin/salesReport?page=<%= currentPage + 1 %>">Next</a></button>
+                                    <button class="btn btn-sm"><a href="?page=<%= currentPage + 1 %>">Next</a></button>
                                     <% } %>
             </div>
             <% } %>
 
 
 
-
-                <div class="container mt-3">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center mb-20" style="margin-right: 200px;">
+                <script>
 
 
+document.getElementById('createSalesReport').addEventListener('click', async (event) => {
+            event.preventDefault();
+            // Get a reference to the table
+            const salesTable = document.getElementById('salesTable');
 
-                        </ul>
-                    </nav>
-                </div>
+            const tableBody = salesTable.querySelector('tbody');
 
+            const salesData = []
+            // Iterate through rows in the table
+            for (const row of tableBody.rows) {
+                // Access individual cells in the row
+                const dataId = row.cells[1].textContent.trim();
+                const name = row.cells[2].textContent;
+                const date = row.cells[4].textContent;
+                let totalAmount = row.cells[7].textContent.trim();
+                totalAmount = parseFloat(totalAmount.replace(/[^0-9]/g, ''), 10);
+     // Do something with these values, for example, log them                
+                const dataData = {
+                    dataId: dataId,
+                    name:name,
+                    date: date,
+                    totalAmount: totalAmount
+                }
+
+                salesData.push(dataData);
+            }
+
+
+            try {
+                const response = await fetch('/admin/generatePdf', {
+                    method: 'post',
+                    headers: {
+                        "Content-Type": 'application/json'
+                    },
+                    body: JSON.stringify(salesData)
+                })
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'report.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                } else {
+                    console.error('Failed to generate PDF');
+                }
+            } catch (error) {
+                console.log(error.message);
+            }
+
+        })
+
+
+
+                </script>
 
 
 
