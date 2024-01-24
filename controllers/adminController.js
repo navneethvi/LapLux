@@ -108,13 +108,6 @@ const getSalesReportPage = async (req, res) => {
         // const orders = await Order.find({ status: "Delivered" }).sort({ createdOn: -1 })
         // // console.log(orders);
 
-        // let itemsPerPage = 5
-        // let currentPage = parseInt(req.query.page) || 1
-        // let startIndex = (currentPage - 1) * itemsPerPage
-        // let endIndex = startIndex + itemsPerPage
-        // let totalPages = Math.ceil(orders.length / 3)
-        // const currentOrder = orders.slice(startIndex, endIndex)
-
         // res.render("salesReport", { data: currentOrder, totalPages, currentPage })
 
         console.log(req.query.day);
