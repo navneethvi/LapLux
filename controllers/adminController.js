@@ -268,6 +268,38 @@ const salesMonthly = async (req, res) => {
 }
 
 
+const salesYearly = async (req, res) => {
+    try {
+        const currentYear = new Date().getFullYear()
+        const startofYear = new Date(currentYear, 0, 1, 0, 0, 0, 0)
+        const endofYear = new Date(currentYear, 11, 31, 23, 59, 59, 999)
+
+        const orders = await Order.aggregate([
+            {$match : {
+                createdOn : {
+                    $gte : startofYear,
+                    $lt : endofYear
+                },
+                status : "Delivered"
+            }}
+        ])
+
+        
+        let itemsPerPage = 5
+        let currentPage = parseInt(req.query.page) || 1
+        let startIndex = (currentPage - 1) * itemsPerPage
+        let endIndex = startIndex + itemsPerPage
+        let totalPages = Math.ceil(orders.length / 3)
+        const currentOrder = orders.slice(startIndex, endIndex)
+
+        res.render("salesReport", { data: currentOrder, totalPages, currentPage, salesYearly : true })
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
 
 module.exports = {
     getDashboard,
@@ -279,5 +311,6 @@ module.exports = {
     getSalesReportPage,
     salesToday,
     salesWeekly,
-    salesMonthly
+    salesMonthly,
+    salesYearly
 }

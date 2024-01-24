@@ -81,6 +81,6 @@ Router.get("/salesReport", isAdmin, adminController.getSalesReportPage)
 Router.get("/salesToday", isAdmin, adminController.salesToday)
 Router.get("/salesWeekly", isAdmin, adminController.salesWeekly)
 Router.get("/salesMonthly", isAdmin, adminController.salesMonthly)
-// Router.get("/salesYearly", isAdmin, adminController.salesYearly)
+Router.get("/salesYearly", isAdmin, adminController.salesYearly)
 
 module.exports = Router
