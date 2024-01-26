@@ -324,7 +324,7 @@ const generatePdf = async (req, res) => {
 
 
 
-      
+    //   console.log("nothing");
       
       const headers = ['Order ID', 'Name', 'Date', 'Total']; 
       
