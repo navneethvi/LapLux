@@ -9,10 +9,16 @@ const nocache = require("nocache")
 // const morgan = require("morgan")
 const PORT = process.env.PORT || 3000
 const dotenv = require("dotenv");
+const googlePassport = require("./helpers/passport")
+const passport = require("passport")
 // const cors = require('cors');
 dotenv.config();
 
 require("./DB/dataBase")
+
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
