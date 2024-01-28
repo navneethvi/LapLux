@@ -1,87 +1,255 @@
 <%- include("../partials/adminHeader") %>
 
 
-<section class="content-main">
-    <div class="content-header">
-        <div>
-            <h2 class="content-title card-title">Dashboard </h2>
-            <p>Whole data about your business here</p>
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Dashboard </h2>
+                <p>Whole data about your business here</p>
+            </div>
+
         </div>
-        <div>
-            <a href="#" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create report</a>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-3">
-            <div class="card card-body mb-4">
-                <article class="icontext">
-                    <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons md-monetization_on"></i></span>
-                    <div class="text">
-                        <h6 class="mb-1 card-title">Revenue</h6>
-                        <span>$13,456.5</span>
-                        <span class="text-sm">
-                            Shipping fees are not included
-                        </span>
-                    </div>
-                </article>
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-primary-light"><i
+                                class="text-primary material-icons md-monetization_on"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Revenue</h6>
+                            <span>₹<%= totalRevenue.toLocaleString() %></span>
+                            <span class="text-sm">
+                                Shipping fees are not included
+                            </span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-success-light"><i
+                                class="text-success material-icons md-local_shipping"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Orders</h6> <span>
+                                <%= locals.orderCount %>
+                            </span>
+                            <span class="text-sm">
+                                Excluding orders in transit
+                            </span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-warning-light"><i
+                                class="text-warning material-icons md-qr_code"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Products</h6> <span>
+                                <%= locals.productCount %>
+                            </span>
+                            <span class="text-sm">
+                                In <%= categoryCount %> Categories
+                            </span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-info-light"><i
+                                class="text-info material-icons md-shopping_basket"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Monthly Earning</h6> <span>₹<%= monthlyRevenue.toLocaleString()
+                                    %></span>
+                            <span class="text-sm">
+                                Based in your local time.
+                            </span>
+                        </div>
+                    </article>
+                </div>
             </div>
         </div>
-        <div class="col-lg-3">
-            <div class="card card-body mb-4">
-                <article class="icontext">
-                    <span class="icon icon-sm rounded-circle bg-success-light"><i class="text-success material-icons md-local_shipping"></i></span>
-                    <div class="text">
-                        <h6 class="mb-1 card-title">Orders</h6> <span>53.668</span>
-                        <span class="text-sm">
-                            Excluding orders in transit
-                        </span>
-                    </div>
-                </article>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="card card-body mb-4">
-                <article class="icontext">
-                    <span class="icon icon-sm rounded-circle bg-warning-light"><i class="text-warning material-icons md-qr_code"></i></span>
-                    <div class="text">
-                        <h6 class="mb-1 card-title">Products</h6> <span>9.856</span>
-                        <span class="text-sm">
-                            In 19 Categories
-                        </span>
-                    </div>
-                </article>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="card card-body mb-4">
-                <article class="icontext">
-                    <span class="icon icon-sm rounded-circle bg-info-light"><i class="text-info material-icons md-shopping_basket"></i></span>
-                    <div class="text">
-                        <h6 class="mb-1 card-title">Monthly Earning</h6> <span>$6,982</span>
-                        <span class="text-sm">
-                            Based in your local time.
-                        </span>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xl-11 col-lg-12">
-            <div class="card mb-4">
-                <article class="card-body">
-                    <h5 class="card-title">Sale statistics</h5>
+        <div class="row">
+            <div class="col-xl-11 col-lg-12">
+                <div class="card mb-4">
+
                     <canvas id="myChart" height="120px"></canvas>
-                </article>
+
+                </div>
+                <div class="row">
+
+                    <div class="col-lg-7">
+                        <div class="card mb-4">
+                            <article class="card-body">
+                                <h5 class="card-title">Recent activities</h5>
+                                <ul class="verti-timeline list-unstyled font-sm">
+                                    <li class="event-list">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>
+                                                        <%= latestOrders[0].createdOn.toLocaleDateString() %>
+                                                    </span> <i
+                                                        class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i>
+                                                </h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>
+                                                    <%= latestOrders[0].status %>: -
+                                                        <%= latestOrders[0].totalPrice %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="event-list active">
+                                        <div class="event-timeline-dot">
+                                            <i
+                                                class="material-icons md-play_circle_outline font-xxl animation-fade-right"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>
+                                                        <%= latestOrders[1].createdOn.toLocaleDateString() %>
+                                                    </span> <i
+                                                        class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i>
+                                                </h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>
+                                                    <%= latestOrders[1].status %>: -
+                                                        <%= latestOrders[1].totalPrice %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="event-list">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>
+                                                        <%= latestOrders[2].createdOn.toLocaleDateString() %>
+                                                    </span> <i
+                                                        class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i>
+                                                </h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>
+                                                    <%= latestOrders[2].status %>: -
+                                                        <%= latestOrders[2].totalPrice %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="event-list">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>
+                                                        <%= latestOrders[3].createdOn.toLocaleDateString() %>
+                                                    </span> <i
+                                                        class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i>
+                                                </h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>
+                                                    <%= latestOrders[3].status %>: -
+                                                        <%= latestOrders[3].totalPrice %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="event-list">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>
+                                                        <%= latestOrders[4].createdOn.toLocaleDateString() %>
+                                                    </span> <i
+                                                        class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i>
+                                                </h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>
+                                                    <%= latestOrders[4].status %>: -
+                                                        <%= latestOrders[4].totalPrice %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </article>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="row">
-                
-            </div>
+
         </div>
-       
-    </div>
-   
-</section> <!-- content-main end// -->
 
 
-<%- include("../partials/adminFooter") %>
+    </section> <!-- content-main end// -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var productPerMonth = <%= JSON.stringify(productPerMonth) %>;
+            var monthlySalesArray = <%= JSON.stringify(monthlySalesArray) %>;
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+
+            var existingChart = Chart.getChart(ctx);
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            // alert('Before initializing Chart');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Products',
+                        tension: 0.3,
+                        fill: true,
+                        backgroundColor: 'rgba(44, 120, 220, 0.2)',
+                        borderColor: 'rgba(44, 120, 220)',
+                        data: productPerMonth
+                    },
+                    {
+
+                        label: 'Sales',
+                        tension: 0.3,
+                        fill: true,
+                        backgroundColor: 'rgba(4, 209, 130, 0.2)',
+                        borderColor: 'rgb(4, 209, 130)',
+                        data: monthlySalesArray,
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            labels: {
+                                usePointStyle: true,
+                            },
+                        }
+                    }
+                }
+
+
+            });
+            // alert('After initializing Chart');
+        });
+
+    </script>
+
+
+    <%- include("../partials/adminFooter") %>

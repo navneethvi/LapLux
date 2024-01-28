@@ -16,7 +16,7 @@ const { isAdmin } = require("../Authentication/auth")
 Router.get("/login", adminController.getLoginPage)
 Router.post("/login", adminController.verifyLogin)
 Router.get("/logout", isAdmin, adminController.getLogout)
-Router.get("/", isAdmin, adminController.getDashboard)
+Router.get("/", isAdmin, adminController.adminDashboard)
 
 
 // Category Management
