@@ -132,13 +132,14 @@ const orderPlaced = async (req, res) => {
             console.log("Order placed")
             findProduct.quantity = findProduct.quantity - 1
 
-            await findProduct.save()
+            
 
 
             let orderDone; 
 
             if (newOrder.payment == 'cod') {
                 console.log('Order Placed with COD');
+                await findProduct.save()
                 orderDone = await newOrder.save();
                 res.json({ payment: true, method: "cod", order: orderDone, quantity: 1, orderId: userId });
             } else if (newOrder.payment == 'online') {
@@ -146,6 +147,7 @@ const orderPlaced = async (req, res) => {
                 orderDone = await newOrder.save();
                 const generatedOrder = await generateOrderRazorpay(orderDone._id, orderDone.totalPrice);
                 console.log(generatedOrder, "order generated");
+                await findProduct.save()
                 res.json({ payment: false, method: "online", razorpayOrder: generatedOrder, order: orderDone, orderId: orderDone._id, quantity: 1 });
             } else if (newOrder.payment == "wallet") {
                 if (newOrder.totalPrice <= findUser.wallet) {
@@ -158,7 +160,7 @@ const orderPlaced = async (req, res) => {
                     };
                     findUser.history.push(newHistory);
                     await findUser.save();
-            
+                    await findProduct.save()
                     orderDone = await newOrder.save();
             
                     res.json({ payment: true, method: "wallet", order: orderDone, orderId: orderDone._id, quantity: 1, success: true });
