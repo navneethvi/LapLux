@@ -27,6 +27,8 @@ Router.get("/listCategory", isAdmin, categoryController.getListCategory)
 Router.get("/unListCategory", isAdmin, categoryController.getUnlistCategory)
 Router.get("/editCategory", isAdmin, categoryController.getEditCategory)
 Router.post("/editCategory/:id", isAdmin, categoryController.editCategory)
+Router.post("/addCategoryOffer", isAdmin, categoryController.addCategoryOffer)
+Router.post("/removeCategoryOffer", isAdmin, categoryController.removerCategoryOffer)
 
 
 // Customer Management

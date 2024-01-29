@@ -12,6 +12,10 @@ const categorySchema =  Mongoose.Schema({
     isListed : {
         type : Boolean,
         default : true
+    },
+    categoryOffer : {
+        type : Number,
+        default : 0
     }
 })
 

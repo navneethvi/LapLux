@@ -58,14 +58,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
-                                    <div class="mb-4">
-                                        <label class="form-label">Sale price</label>
-                                        <input placeholder="$" name="salePrice" type="text" class="form-control border">
-                                        <div id="salePrice-error" class="error-message"></div>
-
-                                    </div>
-                                </div>
+                               
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <label class="form-label">Quantity</label>
@@ -242,17 +235,9 @@
                 isValid = false;
             }
 
-            if (isNaN(salePrice) || salePrice <= 0) {
-                displayErrorMessage("salePrice-error", "Sale price must be a positive number");
-                isValid = false;
-            }
+          
 
-            // Check if sale price is less than regular price
-            if (parseFloat(salePrice) >= parseFloat(regularPrice)) {
-                displayErrorMessage("salePrice-error", "Sale price must be less than Regular price");
-                isValid = false;
-            }
-
+            
             // Check if quantity is a positive integer
             if (!/^[1-9]\d*$/.test(quantity)) {
                 displayErrorMessage("quantity-error", "Quantity must be a positive integer");
