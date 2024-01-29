@@ -60,6 +60,10 @@ Router.post("/editProduct/:id", isAdmin, upload.array("images", 5), productContr
 Router.post("/deleteImage", isAdmin, productController.deleteSingleImage)
 Router.get("/blockProduct", isAdmin, productController.getBlockProduct)
 Router.get("/unBlockProduct", isAdmin, productController.getUnblockProduct)
+Router.post("/addProductOffer", isAdmin, productController.addProductOffer)
+Router.post("/removeProductOffer", isAdmin, productController.removeProductOffer)
+
+
 
 // Order Management
 Router.get("/orderList", isAdmin, orderContoller.getOrderListPageAdmin)

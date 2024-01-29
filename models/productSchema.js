@@ -56,6 +56,10 @@ const productSchema = Mongoose.Schema({
     processor : {
         type : String,
         required : true
+    },
+    productOffer : {
+        type : Number,
+        default : 0
     }
 })
 

@@ -1,6 +1,11 @@
 <%- include("../partials/adminHeader") %>
 
 
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+
+</head>
+
 <div class="content-header">
     <div>
         <h2 class="content-title card-title">Products</h2>
@@ -27,17 +32,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     <div class="right mt-5">
         <table class="table table-striped">
             <thead>
@@ -45,7 +39,11 @@
                 <th scope="col"><b>Product name</b></th>
                 <th scope="col"><b>Brand</b></th>
                 <th scope="col"><b>Category</b></th>
+                <th scope="col"><b>Regular Price</b></th>
                 <th scope="col"><b>Sale Price</b></th>
+                <th scope="col"><b>Offer Price</b></th>
+                <th scope="col"><b>Offer</b></th>
+
                 <th scope="col"><b>Action</b></th>
                 <th scope="col"><b>Edit</b></th>
               </tr>
@@ -56,8 +54,29 @@
                         <td><%= data[i].productName %></td>
                         <td><%= data[i].brand %></td>
                         <td><%= data[i].category %></td>
+                        <td>₹<%= data[i].regularPrice %></td>
                         <td>₹<%= data[i].salePrice %></td>
-                        
+                        <td>
+                            <% if (locals.data[i].productOffer) { %>
+                                <%= data[i].productOffer %>%
+                                    <% }else{ %>
+                                        0%
+                                        <% } %>
+                        </td>
+                        <td>
+                            <% if (locals.data[i].productOffer===0) { %>
+                                <button class="btn btn-info" onclick="addOffer('<%= data[i]._id %>')"
+                                    style="width: 100px;">
+                                    <a href="#" class="text-white">Add Offer</a>
+                                </button>
+                                <% }else{ %>
+                                    <button class="btn btn-info"
+                                        onclick="removeOffer('<%= data[i]._id %>')"
+                                        style="width: 100px;">
+                                        <a href="#" class="text-white">Remove</a>
+                                    </button>
+                                    <% } %>
+                        </td>
                         <td> 
                            <% if (data[i].isBlocked === false) { %>
                                 <button class="btn btn-danger" style="width: 80px;">
@@ -100,5 +119,90 @@
         </ul>
     </nav>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
+<script>
+
+    async function addOffer(productId){
+        // alert("hi")
+        const { value: amount } = await Swal.fire({
+                title: 'Offer in percentage',
+                input: 'number',
+                inputLabel: 'Percentage',
+                inputPlaceholder: '%'
+            })
+
+            $.ajax({
+                url: "/admin/addProductOffer",
+                method: "post",
+                data: {
+                    percentage: amount,
+                    productId : productId
+                },
+                success: (response) => {
+                    console.log(response);
+                    if (response.status === true) {
+                        location.reload()
+                        // Swal.fire('Offer added', 'The offer has been removed.', 'success');
+
+                    } else {
+                        alert("failed")
+                    }
+                }
+            })
+        }
+
+        function removeOffer(productId){
+            // alert(productId)
+            try {
+                Swal.fire({
+                    title: 'Remove Offer',
+                    text: 'Are you sure you want to remove this offer?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, remove it!',
+                    timer: 5000,  // 5 seconds
+                    timerProgressBar: true
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "/admin/removeProductOffer",
+                            method: "post",
+                            data: {
+                                productId: productId
+                            },
+                            success: (response) => {
+                            console.log(response);
+                            if (response.status === true) {
+                                // Swal.fire('Removed!', 'The offer has been removed.', 'success');
+                                location.reload()
+                            } else if (response.status === false) {
+                                Swal.fire('failed');
+                            } else {
+                                alert("failed")
+                            }
+                        }
+                        });
+
+                        
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+    
+
+
+</script>
+
+
 
 <%- include("../partials/adminFooter") %>

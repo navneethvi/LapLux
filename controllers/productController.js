@@ -87,11 +87,11 @@ const deleteSingleImage = async (req, res) => {
         if (fs.existsSync(imagePath)) {
             await fs.unlinkSync(imagePath);
             console.log(`Image ${image} deleted successfully`);
-            res.json({success : true})
+            res.json({ success: true })
         } else {
             console.log(`Image ${image} not found`);
         }
-        
+
         // res.redirect(`/admin/editProduct?id=${product._id}`)
 
     } catch (error) {
@@ -169,7 +169,7 @@ const getAllProducts = async (req, res) => {
                 { brand: { $regex: new RegExp(".*" + search + ".*", "i") } }
             ],
         })
-            .sort({createdOn : -1})
+            .sort({ createdOn: -1 })
             .limit(limit * 1)
             .skip((page - 1) * limit)
             .exec()
@@ -221,6 +221,43 @@ const getUnblockProduct = async (req, res) => {
 
 
 
+const addProductOffer = async (req, res) => {
+    try {
+        // console.log(req.body);
+        const { productId, percentage } = req.body
+        const findProduct = await Product.findOne({ _id: productId })
+        // console.log(findProduct);
+
+        findProduct.salePrice = findProduct.salePrice - Math.floor(findProduct.regularPrice * (percentage / 100))
+        findProduct.productOffer = parseInt(percentage)
+        await findProduct.save()
+
+        res.json({ status: true })
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
+const removeProductOffer = async (req, res) => {
+    try {
+        // console.log(req.body);
+        const {productId} = req.body
+        const findProduct = await Product.findOne({_id : productId})
+        // console.log(findProduct);
+        const percentage = findProduct.productOffer
+        findProduct.salePrice = findProduct.salePrice + Math.floor(findProduct.regularPrice * (percentage / 100))
+        findProduct.productOffer = 0
+        await findProduct.save()
+        res.json({status : true})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
 
 
 module.exports = {
@@ -231,5 +268,7 @@ module.exports = {
     getUnblockProduct,
     getEditProduct,
     editProduct,
-    deleteSingleImage
+    deleteSingleImage,
+    addProductOffer,
+    removeProductOffer
 }
