@@ -3,7 +3,7 @@ const Coupon = require("../models/couponSchema")
 const Category = require("../models/categorySchema")
 const Product = require("../models/productSchema")
 const Order = require("../models/orderSchema")
-
+const ExcelJS = require("exceljs")
 const bcrypt = require("bcrypt");
 // const Order = require("../models/orderSchema");
 
@@ -360,6 +360,45 @@ const generatePdf = async (req, res) => {
 }
 
 
+const downloadExcel = async (req, res)=>{
+    try {
+       
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Sales Report');
+
+        worksheet.columns = [
+            { header: 'Order ID', key: 'orderId', width: 50 },
+            { header: 'Customer', key: 'customer', width: 30 },
+            { header: 'Date', key: 'date', width: 30 },
+            { header: 'Total', key: 'totalAmount', width: 15 },
+            { header: 'Payment', key: 'payment', width: 15 },
+        ];
+
+        const orders = req.body;
+
+        orders.forEach(order => {
+            worksheet.addRow({
+                orderId: order.orderId,
+                customer: order.name,
+                date: order.date,
+                totalAmount: order.totalAmount,
+                payment: order.payment,
+                products: order.products,
+            });
+        });
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', `attachment; filename=salesReport.xlsx`);
+
+        await workbook.xlsx.write(res);
+        res.end();
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
 const adminDashboard = async (req, res) => {
     try {
         const category = await Category.find({ isListed: true })
@@ -458,5 +497,6 @@ module.exports = {
     salesWeekly,
     salesMonthly,
     salesYearly,
-    generatePdf
+    generatePdf,
+    downloadExcel
 }

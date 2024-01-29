@@ -6,15 +6,7 @@
             justify-content: center;
         }
 
-        .btn {
-            /* Add your button styling here */
-            margin: 0 5px;
-            padding: 5px 10px;
-            background-color: #f0f0f0;
-            bdata: 1px solid #ccc;
-            text-decoration: none;
-            color: #333;
-        }
+       
 
         .active {
             /* Add styles for the active page */
@@ -29,7 +21,8 @@
 
         .table-spacing th,
         .table-spacing td {
-            padding-left: 80px; /* Adjust the value as needed for the desired spacing */
+            padding-left: 80px;
+            /* Adjust the value as needed for the desired spacing */
         }
     </style>
 
@@ -71,8 +64,10 @@
                     </select>
                 </div>
                 <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                    <a href="" id="createSalesReport" class="btn btn-primary mb-2">Sales Report</a>
+                    <a href="" id="createSalesReport" class="btn btn-primary mb-2">Generate PDF</a>
+                    <a href="" id="downloadExcelReport" class="btn btn-success mb-2">Download Excel</a>
                 </div>
+                
             </div>
         </header>
     </div>
@@ -95,26 +90,40 @@
                 </tr>
             </thead>
             <tbody>
-                
 
-                    <% for (let i = 0; i < data.length; i++) { %>
-                
-                        <tr>
-                          <td><%= i + 1 %></td>
-                          <td><%= data[i]._id %></td>
-                          <td><b><%= data[i].address[0].name %></b></td>
-                        
-                          <td><b><%= data[i].product[0]._id %></b></td>
-                        
-                          <td><%= data[i].createdOn.toLocaleString('en-IN') %></td>
-                          <td><%= data[i].payment %></td>
-                          <td>
+
+                <% for (let i=0; i < data.length; i++) { %>
+
+                    <tr>
+                        <td>
+                            <%= i + 1 %>
+                        </td>
+                        <td>
+                            <%= data[i]._id %>
+                        </td>
+                        <td><b>
+                                <%= data[i].address[0].name %>
+                            </b></td>
+
+                        <td><b>
+                                <%= data[i].product[0]._id %>
+                            </b></td>
+
+                        <td>
+                            <%= data[i].createdOn.toLocaleString('en-IN') %>
+                        </td>
+                        <td>
+                            <%= data[i].payment %>
+                        </td>
+                        <td>
                             <%= data[i].status %>
-                          </td>
-                          <td class="text-end"><%= data[i].totalPrice %></td>
-                        </tr>
-                    
-                      <% } %>
+                        </td>
+                        <td class="text-end">
+                            <%= data[i].totalPrice %>
+                        </td>
+                    </tr>
+
+                    <% } %>
             </tbody>
         </table>
 
@@ -144,60 +153,117 @@
                 <script>
 
 
-document.getElementById('createSalesReport').addEventListener('click', async (event) => {
-            event.preventDefault();
-            // Get a reference to the table
-            const salesTable = document.getElementById('salesTable');
+                    document.getElementById('createSalesReport').addEventListener('click', async (event) => {
+                        event.preventDefault();
+                        // Get a reference to the table
+                        const salesTable = document.getElementById('salesTable');
 
-            const tableBody = salesTable.querySelector('tbody');
+                        const tableBody = salesTable.querySelector('tbody');
 
-            const salesData = []
-            // Iterate through rows in the table
-            for (const row of tableBody.rows) {
-                // Access individual cells in the row
-                const dataId = row.cells[1].textContent.trim();
-                const name = row.cells[2].textContent;
-                const date = row.cells[4].textContent;
-                let totalAmount = row.cells[7].textContent.trim();
-                totalAmount = parseFloat(totalAmount.replace(/[^0-9]/g, ''), 10);
-     // Do something with these values, for example, log them                
-                const dataData = {
-                    dataId: dataId,
-                    name:name,
-                    date: date,
-                    totalAmount: totalAmount
-                }
+                        const salesData = []
+                        // Iterate through rows in the table
+                        for (const row of tableBody.rows) {
+                            // Access individual cells in the row
+                            const dataId = row.cells[1].textContent.trim();
+                            const name = row.cells[2].textContent;
+                            const date = row.cells[4].textContent;
+                            let totalAmount = row.cells[7].textContent.trim();
+                            totalAmount = parseFloat(totalAmount.replace(/[^0-9]/g, ''), 10);
+                            // Do something with these values, for example, log them                
+                            const dataData = {
+                                dataId: dataId,
+                                name: name,
+                                date: date,
+                                totalAmount: totalAmount
+                            }
 
-                salesData.push(dataData);
-            }
+                            salesData.push(dataData);
+                        }
 
 
-            try {
-                const response = await fetch('/admin/generatePdf', {
-                    method: 'post',
-                    headers: {
-                        "Content-Type": 'application/json'
-                    },
-                    body: JSON.stringify(salesData)
-                })
+                        try {
+                            const response = await fetch('/admin/generatePdf', {
+                                method: 'post',
+                                headers: {
+                                    "Content-Type": 'application/json'
+                                },
+                                body: JSON.stringify(salesData)
+                            })
 
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'report.pdf';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                } else {
-                    console.error('Failed to generate PDF');
-                }
-            } catch (error) {
-                console.log(error.message);
-            }
+                            if (response.ok) {
+                                const blob = await response.blob();
+                                const url = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = 'report.pdf';
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                            } else {
+                                console.error('Failed to generate PDF');
+                            }
+                        } catch (error) {
+                            console.log(error.message);
+                        }
 
-        })
+                    })
+
+
+                    document.getElementById('downloadExcelReport').addEventListener('click', async (event) => {
+                        event.preventDefault();
+                        // Get a reference to the table
+                        const salesTable = document.getElementById('salesTable');
+
+                        const tableBody = salesTable.querySelector('tbody');
+
+                        const salesData = []
+                        // Iterate through rows in the table
+                        for (const row of tableBody.rows) {
+                            // Access individual cells in the row
+                            const orderId = row.cells[1].textContent
+                            const name = row.cells[2].textContent;
+                            const date = row.cells[4].textContent;
+                            const payment = row.cells[5].textContent
+                            let totalAmount = row.cells[7].textContent.trim();
+                            totalAmount = parseFloat(totalAmount.replace(/[^0-9]/g, ''), 10);
+                            // Do something with these values, for example, log them                
+                            const dataData = {
+                                orderId: orderId,
+                                name: name,
+                                date: date,
+                                totalAmount: totalAmount,
+                                payment : payment
+                            }
+
+                            salesData.push(dataData);
+                        }
+
+                        try {
+                            const response = await fetch('/admin/downloadExcel', {
+                                method: 'post',
+                                headers: {
+                                    "Content-Type": 'application/json'
+                                },
+                                body: JSON.stringify(salesData)
+                            })
+
+                            if (response.ok) {
+                                const blob = await response.blob();
+                                const url = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = 'report.xlsx';
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                            } else {
+                                console.error('Failed to download Excel file');
+                            }
+                        } catch (error) {
+                            console.log(error.message);
+                        }
+                    })
+
 
 
 
