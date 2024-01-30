@@ -306,6 +306,7 @@ const generatePdf = async (req, res) => {
         const doc = new PDFDocument();
         const filename = 'sales-report.pdf';
         const orders = req.body;
+        // console.log(orders);
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
         doc.pipe(res);
@@ -331,27 +332,32 @@ const generatePdf = async (req, res) => {
 
         const headers = ['Order ID', 'Name', 'Date', 'Total'];
 
-        let headerX = 20;
-        const headerY = doc.y + 10;
+let headerX = 20;
+const headerY = doc.y + 10;
 
-        doc.text(headers[0], headerX, headerY);
-        headerX += 200;
+doc.text(headers[0], headerX, headerY);
+headerX += 200;
 
-        headers.slice(1).forEach(header => {
-            doc.text(header, headerX, headerY);
-            headerX += 130;
-        });
+headers.slice(1).forEach(header => {
+    doc.text(header, headerX, headerY);
+    headerX += 130;
+});
 
-        let dataY = headerY + 25;
+let dataY = headerY + 25;
 
-        orders.forEach(order => {
-            doc.text(order.dataId, 20, dataY);
-            doc.text(order.name, 210, dataY);
-            doc.text(order.date, 350, dataY);
-            doc.text(order.totalAmount, 480, dataY);
-            dataY += 30;
+orders.forEach(order => {
+    const cleanedDataId = order.dataId.trim();
+    const cleanedName = order.name.trim();
 
-        });
+    doc.text(cleanedDataId, 20, dataY, { width: 200 });
+    doc.text(cleanedName, 230, dataY);
+    doc.text(order.date, 350, dataY, { width: 120 }); 
+    doc.text(order.totalAmount, 490, dataY);
+    
+    dataY += 30;
+});
+
+        
 
         doc.end();
     } catch (error) {
@@ -360,9 +366,9 @@ const generatePdf = async (req, res) => {
 }
 
 
-const downloadExcel = async (req, res)=>{
+const downloadExcel = async (req, res) => {
     try {
-       
+
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Sales Report');
 
