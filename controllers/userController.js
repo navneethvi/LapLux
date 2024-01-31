@@ -302,11 +302,17 @@ const getProductDetailsPage = async (req, res) => {
         const id = req.query.id
         console.log(id);
         const findProduct = await Product.findOne({ id: id });
+        const findCategory = await Category.findOne({name : findProduct.category})
+        // console.log(findCategory);
+        let totalOffer
+        if(findCategory.categoryOffer || findProduct.productOffer){
+            totalOffer = findCategory.categoryOffer + findProduct.productOffer
+        }
         console.log(findProduct.id, "Hello world");
         if (user) {
-            res.render("product-details", { data: findProduct, user: user })
+            res.render("product-details", { data: findProduct, totalOffer, user: user })
         } else {
-            res.render("product-details", { data: findProduct })
+            res.render("product-details", { data: findProduct, totalOffer })
         }
     } catch (error) {
         console.log(error.message);

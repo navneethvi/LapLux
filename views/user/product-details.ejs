@@ -51,7 +51,13 @@
                                                         </span></ins>
                                             <ins><span class="old-price font-md ml-15">₹<%=
                                                         data.regularPrice.toLocaleString('en-IN') %></span></ins>
-                                            <span class="save-price  font-md color3 ml-15">25% Off</span>
+                                            <span class="save-price  font-md color3 ml-15">
+                                                <% if (!totalOffer) { %>
+                                                        No Offers
+                                                <% }else{ %>
+                                                    <%= totalOffer %>% Offer
+                                                    <% } %>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="bt-1 border-color-1 mt-15 mb-15"></div>
