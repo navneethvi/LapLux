@@ -42,12 +42,12 @@ const getCartPage = async (req, res) => {
         // console.log(products)
         let grandTotal = 0;
         for(let i=0;i<data.length;i++){
-            console.log("sale prices ==>" , data[i].productDetails[0].salePrice)
-            console.log("Quantity ==>" ,data[i].quantity )
+            // console.log("sale prices ==>" , data[i].productDetails[0].salePrice)
+            // console.log("Quantity ==>" ,data[i].quantity )
             if (products[i]) {
                 grandTotal += data[i].productDetails[0].salePrice * data[i].quantity;
             }
-            console.log(grandTotal,'hsihishi ',i)
+            // console.log(grandTotal,'hsihishi ',i)
             req.session.grandTotal = grandTotal
         }
         // console.log(grandTotal)
@@ -111,7 +111,7 @@ const addToCart = async (req, res) => {
                     );
                     res.json({ status: true })
                 }else{
-                    console.log("Poda vana");
+                    // console.log("Poda");
                     res.json({ status: "Out of stock" })
                 }
                 // console.log(productInCart, "product", newQuantity);

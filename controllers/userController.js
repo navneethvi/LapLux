@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer")
 const { v4: uuidv4 } = require("uuid");
 
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const User = require("../models/userSchema");
 const Brand = require("../models/brandSchema")
 const Product = require("../models/productSchema");
