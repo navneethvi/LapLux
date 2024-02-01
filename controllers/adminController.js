@@ -4,7 +4,7 @@ const Category = require("../models/categorySchema")
 const Product = require("../models/productSchema")
 const Order = require("../models/orderSchema")
 const ExcelJS = require("exceljs")
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 // const Order = require("../models/orderSchema");
 
 const PDFDocument = require('pdfkit')

@@ -3,7 +3,7 @@ const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
 const Order = require("../models/orderSchema")
 const nodemailer = require("nodemailer")
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcryptjs")
 
 
 const getUserProfile = async (req, res) => {
