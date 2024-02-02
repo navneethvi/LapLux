@@ -7,12 +7,13 @@ const bodyParser = require("body-parser")
 const session = require("express-session")
 const nocache = require("nocache")
 // const morgan = require("morgan")
-const PORT = process.env.PORT || 3000
 const dotenv = require("dotenv");
+dotenv.config();
+
+const PORT = process.env.PORT || 3000
 // const googlePassport = require("./helpers/passport")
 // const passport = require("passport")
 // const cors = require('cors');
-dotenv.config();
 
 require("./DB/dataBase")
 

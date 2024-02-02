@@ -403,6 +403,7 @@
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script>
             async function addMoney() {
+               
                 const { value: amount } = await Swal.fire({
                     title: 'Enter the Amount',
                     input: 'number',
@@ -418,7 +419,7 @@
                     success: (data) => {
                         if (data.razorpay) {
                             var options = {
-                                "key": "rzp_test_sPwoxcRC0hnSFO",
+                                "key": "rzp_test_kkytoEMYHJ1dn3",
                                 "amount": data.order.amount,
                                 "currency": "INR",
                                 "name": "LapLux",
