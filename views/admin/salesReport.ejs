@@ -6,7 +6,7 @@
             justify-content: center;
         }
 
-       
+
 
         .active {
             /* Add styles for the active page */
@@ -63,11 +63,15 @@
                                         <% } %>
                     </select>
                 </div>
+                <div class="col-md-2 col-6">
+                    <input type="date" id="selectedDate" class="form-control" value="<%= locals.date ? date : '' %>" onchange="dateWiseFilter()">
+
+                </div>
                 <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                     <a href="" id="createSalesReport" class="btn btn-primary mb-2">Generate PDF</a>
                     <a href="" id="downloadExcelReport" class="btn btn-success mb-2">Download Excel</a>
                 </div>
-                
+
             </div>
         </header>
     </div>
@@ -106,7 +110,11 @@
                             </b></td>
 
                         <td><b>
-                                <%= data[i].product[0]._id %>
+
+                                <%= data[i].product[0]._id || data[i].product._id %>
+
+
+
                             </b></td>
 
                         <td>
@@ -149,6 +157,7 @@
             <% } %>
 
 
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
                 <script>
 
@@ -233,7 +242,7 @@
                                 name: name,
                                 date: date,
                                 totalAmount: totalAmount,
-                                payment : payment
+                                payment: payment
                             }
 
                             salesData.push(dataData);
@@ -265,6 +274,25 @@
                         }
                     })
 
+
+                   
+                    function dateWiseFilter() {
+                        const selectedDate = document.getElementById("selectedDate").value;
+                        // alert(selectedDate);
+                        window.location.href = `/admin/dateWiseFilter?date=${selectedDate}`
+                        // $.ajax({
+                        //     url : "/admin/dateWiseFilter",
+                        //     method : "post",
+                        //     data : {
+                        //         date : selectedDate
+                        //     },
+                        //     success : (response)=>{
+                        //         if(response.status  === true){
+                        //             alert("done")
+                        //         }
+                        //     }
+                        // })
+                    }
 
 
 

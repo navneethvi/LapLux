@@ -3,6 +3,7 @@ const Coupon = require("../models/couponSchema")
 const Category = require("../models/categorySchema")
 const Product = require("../models/productSchema")
 const Order = require("../models/orderSchema")
+const moment = require('moment');
 const ExcelJS = require("exceljs")
 const bcrypt = require("bcryptjs");
 // const Order = require("../models/orderSchema");
@@ -111,7 +112,7 @@ const getLogout = async (req, res) => {
 const getSalesReportPage = async (req, res) => {
     try {
         // const orders = await Order.find({ status: "Delivered" }).sort({ createdOn: -1 })
-        // // console.log(orders);
+        // console.log(orders);
 
         // res.render("salesReport", { data: currentOrder, totalPages, currentPage })
 
@@ -162,12 +163,15 @@ const salesToday = async (req, res) => {
             }
         ]).sort({ createdOn: -1 })
 
+
         let itemsPerPage = 5
         let currentPage = parseInt(req.query.page) || 1
         let startIndex = (currentPage - 1) * itemsPerPage
         let endIndex = startIndex + itemsPerPage
         let totalPages = Math.ceil(orders.length / 3)
         const currentOrder = orders.slice(startIndex, endIndex)
+
+        console.log(currentOrder, "currOrder");
 
         res.render("salesReport", { data: currentOrder, totalPages, currentPage, salesToday: true })
 
@@ -248,7 +252,8 @@ const salesMonthly = async (req, res) => {
             }
         ]).sort({ createdOn: -1 })
         // .then(data=>console.log(data))
-        // console.log("ethi");
+        console.log("ethi");
+        console.log(orders);
 
         let itemsPerPage = 5
         let currentPage = parseInt(req.query.page) || 1
@@ -491,6 +496,42 @@ const adminDashboard = async (req, res) => {
 
 
 
+const dateWiseFilter = async (req, res)=>{
+    try {
+        console.log(req.query);
+        const date = moment(req.query.date).startOf('day').toDate();
+
+        const orders = await Order.aggregate([
+            {
+                $match: {
+                    createdOn: {
+                        $gte: moment(date).startOf('day').toDate(),
+                        $lt: moment(date).endOf('day').toDate(),
+                    },
+                    status: "Delivered"
+                }
+            }
+        ]);
+
+        console.log(orders);
+
+        let itemsPerPage = 5
+        let currentPage = parseInt(req.query.page) || 1
+        let startIndex = (currentPage - 1) * itemsPerPage
+        let endIndex = startIndex + itemsPerPage
+        let totalPages = Math.ceil(orders.length / 3)
+        const currentOrder = orders.slice(startIndex, endIndex)
+
+        res.render("salesReport", { data: currentOrder, totalPages, currentPage, salesMonthly: true , date})
+       
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
 module.exports = {
     adminDashboard,
     getLoginPage,
@@ -503,6 +544,7 @@ module.exports = {
     salesWeekly,
     salesMonthly,
     salesYearly,
+    dateWiseFilter,
     generatePdf,
     downloadExcel
 }
