@@ -18,7 +18,7 @@ const getProductAddPage = async (req, res) => {
 
 const addProducts = async (req, res) => {
     try {
-        console.log("working");
+        console.log("working newwww");
 
         const products = req.body
         console.log(products);
