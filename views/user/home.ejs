@@ -5,43 +5,54 @@
 
 </head>
 
+<style>
+    .home-slider {
+        overflow: hidden; /* Hide any content that overflows the container */
+    }
+
+    .swiper-container {
+        max-width: 100%; /* Limit the maximum width to 100% of the parent container */
+        overflow: hidden; /* Hide any content that overflows the container */
+    }
+
+    .swiper-wrapper {
+        display: flex; /* Ensure the wrapper items are displayed in a row */
+    }
+
+    .swiper-slide {
+        width: 100%; /* Make each slide take up the full width of the container */
+        box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    }
+</style>
+
 
     <main class="main">
-        <section class="home-slider position-relative pt-70 pb-50">
-            <div class="swiper-container">
-                <div class="swiper-wrapper">
-        
-                    <% for (let i = 0; i < banner.length; i++) { %>
-                        <div class="swiper-slide">
-                            <div class="single-hero-slider single-animation-wrap">
-                                <div class="container">
-                                    <div class="row align-items-center slider-animated-1">
-                                        <div class="col-lg-12">
-                                            <div class="single-slider-img single-slider-img-1">
-                                                <!-- Place your banner image here -->
-                                                <img class="animated slider-1-1" src="/uploads/product-images/<%= banner[i].image %>" alt="" style="width: 100%; height: auto;">
-                                            </div>
-                                        </div>
+    
+<section class="home-slider position-relative pt-70 pb-50">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <% for (let i = 0; i < banner.length; i++) { %>
+                <div class="swiper-slide">
+                    <div class="single-hero-slider single-animation-wrap">
+                        <div class="container">
+                            <div class="row align-items-center slider-animated-1">
+                                <div class="col-lg-12">
+                                    <div class="single-slider-img single-slider-img-1">
+                                        <!-- Place your banner image here -->
+                                        <img class="animated slider-1-1" src="/uploads/product-images/<%= banner[i].image %>" alt="" style="width: 100%; height: auto;">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    <% } %>
-        
+                    </div>
                 </div>
-                <div class="swiper-pagination"></div>
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-            </div>
-        </section>
-
-
-
-
-        <!-- Popular Categories -->
-
-
-
+            <% } %>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+</section>
 
         <section class="popular-categories section-padding mt-15 mb-25">
             <div class="container wow fadeIn animated">
