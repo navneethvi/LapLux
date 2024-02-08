@@ -106,7 +106,7 @@ const orderPlaced = async (req, res) => {
             // const findAddress = address.find(item => item._id.toString() === addressId);
             const findAddress = address.address.find(item => item._id.toString() === addressId);
             console.log(findAddress);
-            console.log("Before product search")
+            // console.log("Before product search")
             const findProduct = await Product.findOne({ _id: productId })
             // console.log(findProduct);
 
@@ -117,7 +117,7 @@ const orderPlaced = async (req, res) => {
                 image: findProduct.productImage[0],
                 quantity: 1
             }
-            console.log("Before order placed")
+            // console.log("Before order placed")
             const newOrder = new Order(({
                 product: productDetails,
                 totalPrice: totalPrice,
