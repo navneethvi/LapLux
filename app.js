@@ -1,4 +1,3 @@
-
 const express = require("express")
 const app = express()
 
@@ -52,6 +51,12 @@ app.use("/", userRoutes)
 app.use("/admin", adminRoutes)
 app.get('*', function (req, res) {
     res.redirect("/pageNotFound");
+    console.log("here");
 });
+
+
+
+
+
 
 app.listen(PORT, () => console.log(`Server running on  http://localhost:${PORT}`))
