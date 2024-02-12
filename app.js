@@ -51,7 +51,7 @@ app.use("/", userRoutes)
 app.use("/admin", adminRoutes)
 app.get('*', function (req, res) {
     res.redirect("/pageNotFound");
-    console.log("here");
+    // console.log("here");
 });
 
 
