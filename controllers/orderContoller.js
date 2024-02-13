@@ -329,7 +329,7 @@ const getOrderListPageAdmin = async (req, res) => {
 
         // console.log(req.query);
 
-        let itemsPerPage = 3
+        let itemsPerPage = 5
         let currentPage = parseInt(req.query.page) || 1
         let startIndex = (currentPage - 1) * itemsPerPage
         let endIndex = startIndex + itemsPerPage
