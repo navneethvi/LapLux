@@ -97,10 +97,12 @@ const orderPlaced = async (req, res) => {
         if (req.body.isSingle === "true") {
             const { totalPrice, addressId, payment, productId } = req.body
             const userId = req.session.user
+            console.log(req.session.grandTotal,"from session");
+            const grandTotal = req.session.grandTotal
             // console.log(req.body)
-            //console.log(totalPrice, date, addressId, payment, productId);
+            // console.log(totalPrice, addressId, payment, productId);
             const findUser = await User.findOne({ _id: userId })
-            console.log("Find user ===>", findUser);
+            // console.log("Find user ===>", findUser);
             const address = await Address.findOne({ userId: userId })
             // console.log(address);
             // const findAddress = address.find(item => item._id.toString() === addressId);
@@ -120,7 +122,7 @@ const orderPlaced = async (req, res) => {
             // console.log("Before order placed")
             const newOrder = new Order(({
                 product: productDetails,
-                totalPrice: totalPrice,
+                totalPrice: grandTotal,
                 address: findAddress,
                 payment: payment,
                 userId: userId,
@@ -181,7 +183,8 @@ const orderPlaced = async (req, res) => {
             const userId = req.session.user
             const findUser = await User.findOne({ _id: userId })
             const productIds = findUser.cart.map(item => item.productId)
-
+            const grandTotal = req.session.grandTotal
+            console.log(grandTotal, "grandTotal");
             //  const addres= await Address.find({userId:userId})
 
             const findAddress = await Address.findOne({ 'address._id': addressId });
@@ -213,7 +216,7 @@ const orderPlaced = async (req, res) => {
 
                 const newOrder = new Order({
                     product: orderedProducts,
-                    totalPrice: totalPrice,
+                    totalPrice: grandTotal,
                     address: desiredAddress,
                     payment: payment,
                     userId: userId,
